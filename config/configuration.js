@@ -1,7 +1,7 @@
 module.exports = {
 	mongo : {
    		user: 		"admin",
-   		password: 	"bdyM1_js4hLn",
+   		password: 	"zNha1IzjZeP6",
    		db: 		"skyshares"
    	}
 };
