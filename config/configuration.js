@@ -1,9 +1,9 @@
 module.exports = {
 	mongo : {
    		user: 		"admin",
-   		password: 	"DMNKRYnlMmrS",
+   		password: 	"bdyM1_js4hLn",
    		db: 		"skyshares"
    	}
 };
 
-//ssh://54c1503c4382ec64790000af@skyshares-socialkantract.rhcloud.com/~/git/skyshares.git/
+//ssh://54f87d6ae0b8cddfbc00021b@skyshares-walice.rhcloud.com/~/git/skyshares.git/
