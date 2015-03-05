@@ -1,13 +1,25 @@
-#!/bin/env node
-//  OpenShift sample Node application
+//
+// module dependencies.
+//
 var express = require('express');
+var routes = require('./routes');
+var data = require('./routes/data');
+var country = require('./routes/country');
+var admin = require('./routes/admin');
+var editor = require('./routes/editor');
+var importer = require('./routes/importer'); 
+var model = require('./routes/model'); 
+var mac = require('./routes/mac'); 
+var http = require('http');
+var path = require('path');
+var mongo = require('mongoskin');
+
 var fs      = require('fs');
 
-
 /**
- *  Define the sample application.
+ *  Define the skyshares application.
  */
-var SampleApp = function() {
+var SkyShares = function() {
 
     //  Scope.
     var self = this;
@@ -21,10 +33,10 @@ var SampleApp = function() {
      *  Set up server IP address and port # using env variables/defaults.
      */
     self.setupVariables = function() {
-        //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-
+		//  Set the environment variables we need.
+		self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
+		self.port      = process.env.OPENSHIFT_NODEJS_PORT || 80;
+	
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
@@ -93,32 +105,133 @@ var SampleApp = function() {
      *  Create the routing table entries + handlers for the application.
      */
     self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
-        };
-    };
-
-
+		//
+		// routes
+		//
+		self.app.get('/', routes.index);
+		//
+		// routes
+		//
+		self.app.get('/', routes.index);
+		self.app.get('/admin', admin.admin);
+		//
+		// data routes
+		//
+		//
+		// data GET / list
+		//
+		self.app.get('/data', data.listall(self.db));
+		self.app.get('/data/:type', data.listdataoftype(self.db));
+		//
+		// data GET single entry
+		//
+		self.app.get('/data/constant/:name', data.getdatabyname(self.db));
+		self.app.get('/data/variable/:name', data.getdatabyname(self.db));
+		self.app.get('/data/dataset/:name', data.getdatabyname(self.db));
+		self.app.get('/data/function/:name', data.getdatabyname(self.db));
+		self.app.get('/data/byname/:name', data.getdatabyname(self.db)); // TODO: find correct RESTfull solution to this
+		self.app.get('/data/bygroup/:group/:name', data.getdatabygroup(self.db));
+		//
+		// data POST / add
+		//
+		self.app.post('/data', data.post(self.db));
+		//
+		// data PUT / update
+		//
+		self.app.put('/data/:id', data.put(self.db));
+		//
+		// data DELETE / update
+		//
+		self.app.delete('/data/:id', data.delete(self.db));
+		//
+		// country routes
+		//
+		//
+		// data GET / list
+		//
+		self.app.get('/country', country.listall(self.db));
+		//
+		// MAC routes
+		//
+		//
+		// MAC GET / list
+		//
+		self.app.get('/mac', mac.listall(self.db));
+		self.app.get('/mac/:year', mac.get(self.db));
+		//
+		// MAC POST
+		//
+		self.app.post( '/mac/:year', mac.post(self.db) );
+		//
+		// MAC PUT
+		//
+		self.app.put( '/mac/:year', mac.put(self.db) );
+		//
+		// MAC DELETE
+		//
+		self.app.delete( '/mac/:year', mac.delete(self.db) );
+		//
+		// editor ui
+		//
+		self.app.get( '/editor/new/:type', editor.new() ); 
+		self.app.get( '/editor/edit/:id', editor.edit(self.db) ); 
+		//
+		// import
+		//
+		self.app.get( '/import/:type', importer.import() );
+		//
+		// model
+		//
+		self.app.get( '/model', model.model() );    
+	};
+    
     /**
      *  Initialize the server (express) and create the routes and register
      *  the handlers.
      */
     self.initializeServer = function() {
+    	//
+    	//
+    	//
+    	var connection_string = '127.0.0.1:27017/skyshares';
+		if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+			connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+			process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+			process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+			process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+			process.env.OPENSHIFT_APP_NAME;
+		}
+		console.log( 'mongodb://'+connection_string );
+    	self.db = mongo.db('mongodb://'+connection_string, {native_parser:true});
+    	//
+    	//
+    	//
+        self.app = express();
+		//
+		// environment
+		//
+		self.app.set('port', self.port);
+		self.app.set('views', path.join(__dirname, 'views'));
+		self.app.set('view engine', 'jade');
+		self.app.use(express.favicon());
+		self.app.use(express.logger('dev'));
+		self.app.use(express.json());
+		self.app.use(express.urlencoded());
+		self.app.use(express.methodOverride());
+		self.app.use(self.app.router);
+		self.app.use(express.static(path.join(__dirname, 'public')));
+		self.app.use(express.json({limit: '50mb'}));
+		//self.app.use(bodyParser.urlencoded({limit: '5m0b'}));		
+		//
+		// development only
+		//
+		if ('development' == self.app.get('env')) {
+		  self.app.use(express.errorHandler());
+		}
+		//
+		//
+		//
         self.createRoutes();
-        self.app = express.createServer();
-
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
-        }
     };
 
 
@@ -153,7 +266,6 @@ var SampleApp = function() {
 /**
  *  main():  Main code.
  */
-var zapp = new SampleApp();
-zapp.initialize();
-zapp.start();
-
+var sapp = new SkyShares();
+sapp.initialize();
+sapp.start();

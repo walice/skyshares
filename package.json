@@ -1,19 +1,20 @@
 {
-  "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "skyshares",
+  "version": "0.0.1",
+  "description": "SkyShares Application",
   "keywords": [
     "OpenShift",
     "Node.js",
     "application",
-    "openshift"
+    "openshift",
+    "SkyShares"
   ],
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://www.openshift.com/"
+    "name": "Soda",
+    "email": "jons@soda.co.uk",
+    "url": "http://soda.co.uk/"
   },
-  "homepage": "http://www.openshift.com/",
+  "homepage": "http://soda.co.uk/",
   "repository": {
     "type": "git",
     "url": "https://github.com/openshift/origin-server"
@@ -25,7 +26,13 @@
   },
 
   "dependencies": {
-    "express": "~3.4.4"
+    "express": "3.5.1",
+    "jade": "*",
+    "mongodb": "*",
+    "mongoskin": "*",
+    "mathjs": "*",
+    "numbers": "*",
+    "numeral": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

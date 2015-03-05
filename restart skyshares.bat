@@ -1,0 +1,1 @@
+rhc app restart -a skyshares

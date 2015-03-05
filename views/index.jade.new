@@ -1,0 +1,133 @@
+doctype html
+html
+	block head
+		title= title
+		
+		link( href='http://fonts.googleapis.com/css?family=Muli', rel='stylesheet', type='text/css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		
+		script( src='http://d3js.org/d3.v3.min.js' charset='utf-8' )
+		script( src="http://d3js.org/topojson.v0.min.js" )
+		script(src='/javascripts/math.js')
+		script(src='/javascripts/numeric-1.2.6.js')
+		script(src='/javascripts/paper-full.js')
+		script(src='/javascripts/skyshares.js')
+		script(src='/javascripts/skyshares.rest.js')
+		script(src='/javascripts/skyshares.map.js')
+		script(src='/javascripts/skyshares.importer.js')
+		script(src='/javascripts/skyshares.filereader.js')
+		script(src='/javascripts/skyshares.math.js')
+		script(src='/javascripts/skyshares.chart.js')
+		script(src='/javascripts/skyshares.geometry.js')
+		script(src='/javascripts/skyshares.ui.js')
+
+		script(type='text/javascript').
+			var map = null;
+			function init() {
+				//skyshares.init( '#{mode}' );
+				//map = skyshares.map.newmap('map');
+				var width = 960,
+					height = 560;
+
+				var projection = d3.geo.mercator();
+				
+				var svg = d3.select("#mapcontainer").append("svg")
+					.attr("width", width)
+					.attr("height", height);
+
+				var path = d3.geo.path()
+					.projection(projection);
+
+				var g = svg.append("g");
+
+				// load and display the World
+				d3.json("maps/world-countries.json", function(error, topology) {
+					g.selectAll("path")
+						.data(topology.features)
+						.enter().append("svg:path")
+						.attr("d", path)
+						.append("svg:title")
+						.text(function(d) { return d.properties.name; });
+				});
+
+				// zoom and pan
+				var zoom = d3.behavior.zoom()
+					.on("zoom",function() {
+						g.attr("transform","translate("+ 
+							d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+						g.selectAll("circle")
+							.attr("d", path.projection(projection));
+						g.selectAll("path")  
+							.attr("d", path.projection(projection)); 
+
+				  });
+
+				svg.call(zoom);
+				// include ../public/maps/skyshares-map.svg
+
+			}  
+			function toggletab( name ) {
+				var target_tab = name + '_tab_content';
+				var tabs = document.getElementsByClassName( 'tabcontent' );
+				for ( var i = 0; i < tabs.length; i++ ) {
+					var tab = tabs[ i ];
+					if ( tab.id === target_tab ) {
+						if ( tab.classList.contains( 'open' ) ) {
+							tab.classList.remove( 'open' );
+						} else {
+							tab.classList.add( 'open' );
+						}
+					} else {
+						if ( tab.classList.contains( 'open' ) ) {
+							tab.classList.remove( 'open' );
+						}
+					}
+				}
+			} 
+			
+			function setriskscenario( name ) {
+				var target_light = name + '_riskscenario';
+				var lights = document.getElementsByClassName( 'trafficlight' );
+				for ( var i = 0; i < lights.length; i++ ) {
+					var light = lights[ i ];
+					if ( light.id === target_light ) {
+						if ( light.classList.contains( 'selected' ) ) {
+							light.classList.remove( 'selected' );
+						} else {
+							light.classList.add( 'selected' );
+						}
+					} else {
+						if ( light.classList.contains( 'selected' ) ) {
+							light.classList.remove( 'selected' );
+						}
+					}
+				}
+			}
+			
+		//meta(name='viewport' content='minimal-ui' )
+	body( onload='init()' )
+		block content
+			#wrapper
+				#mapcontainer.unselectable
+				#account_tab_content.tabcontent
+				#document_tab_content.tabcontent
+				#graph_tab_content.tabcontent
+				#map_tab_content.tabcontent
+				#rule_tab_content.tabcontent
+					#riskscenario.trafficlightcontainer
+						#pessimistic_riskscenario( class='trafficlight red' onclick='setriskscenario("pessimistic")' )
+						#cautious_riskscenario( class='trafficlight amber' onclick='setriskscenario("cautious")' )
+						#optimistic_riskscenario( class='trafficlight green' onclick='setriskscenario("optimistic")' )
+					.thermometer
+				#tool_tab_content.tabcontent
+				#tabcontainer
+					#account_tab.tab( onclick='toggletab("account")' )
+					#document_tab.tab( onclick='toggletab("document")' )
+					#graph_tab.tab( onclick='toggletab("graph")' )
+					#map_tab.tab( onclick='toggletab("map")' )
+					#rule_tab.tab( onclick='toggletab("rule")' )
+					#tool_tab.tab( onclick='toggletab("tool")' )
+				input( type='range' min='2014' max='2100' step='1' )
+				#countries
+				#groups
+

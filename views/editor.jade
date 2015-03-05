@@ -1,0 +1,125 @@
+doctype html
+html
+	block head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src='/javascripts/numeric-1.2.6.js')
+		script(src='/javascripts/math.js')
+		script(src='/javascripts/skyshares.js')
+		script(src='/javascripts/skyshares.rest.js')
+		script(src='/javascripts/skyshares.editor.js')
+		script(src='/javascripts/skyshares.math.js')
+		script(src='/javascripts/skyshares.filereader.js')
+	body( onload='skyshares.editor.init("#{ type }");' )
+		block content
+			form#editor()
+				if data
+					input#dataid( type='hidden' value= data._id )
+				label( for='name' ) name
+				br
+				if data
+					input#name( type='text' placeholder='Name' required value= data.name ) 
+				else
+					input#name( type='text' placeholder='Name' required ) 
+				br
+				label( for='description' ) description
+				br
+				if data
+					textarea#description( placeholder='Description' required )= data.description 
+				else
+					textarea#description( placeholder='Description' required )
+				br
+				case type
+					when 'constant'
+						label( for='value' ) value
+						br
+						if data
+							input#value( type='number' placeholder='0' step='any' required value= data.value )
+						else
+							input#value( type='number' placeholder='0' step='any' required )
+					when 'variable'
+						label( for='value' ) value
+						br
+						if data
+							input#value( type='number' placeholder='0' step='any' required value= data.value )
+						else
+							input#value( type='number' placeholder='0' step='any' required )
+						br
+						label( for='min_value' ) minimum value
+						br
+						if data
+							input#min_value( type='number' step='any' value= data.min_value )
+						else 
+							input#min_value( type='number' step='any' value='0' )
+						br
+						label( for='max_value' ) maximum value
+						br
+						if data
+							input#max_value( type='number' step='any' value= data.max_value )
+						else
+							input#max_value( type='number' step='any' value='0' )
+					when 'dataset'
+						label( for='file' ) Select csv file
+						br
+						input#csvfile( type='file' onchange='skyshares.editor.import();' )
+						div.datacontainer
+							table.data#displayarea( class='data' )
+								if data
+									each member, i in data.members
+										if i == 0
+											tr
+												td ISO
+												- for (var index = member.index.min_index; index <= member.index.max_index; index++) {
+												td= index
+												- }											
+										tr( class=(i % 2 == 0) ? 'data odd' : 'data even' contenteditable='true' ) 
+											td( class='data' )= member.iso
+											each item in member.data
+												if member.dimension == 2
+													td( class='data' )= item.x + ',' + item.y
+												else
+													td( class='data' )= item
+						div.datacontrols#datacontrols
+							label( for='headerrow' ) header row
+							input#headerrow( type='number' )
+							br
+							label( for='indexcolumn' ) index column
+							input#indexcolumn( type='number' )
+							br
+							label( for='datastartcolumn' ) data start column
+							input#datastartcolumn( type='number' )
+							br
+							label( for='dataendcolumn' ) data end column
+							input#dataendcolumn( type='number' )
+							br
+							label( for='datastartrow' ) data start row
+							input#datastartrow( type='number' )
+							br
+							label( for='dataendrow' ) data end row
+							input#dataendrow( type='number' )
+						div#datamodifiers
+							label( for='multiplier' ) multiplier
+							input#multiplier( type='number' value='1' )
+							if data
+								input#multiply( type='button' value='multiply' onclick='skyshares.editor.multiplydataset()' )
+					when 'function'
+						label( for='source' ) Function source
+						br
+						if data
+							textarea#source( placeholder='Source' required )= data.source
+						else
+							textarea#source( placeholder='Source' required )
+						br
+						input#evaluate( type='button' value='evaluate' onclick='skyshares.editor.evaluatefunction();' )
+						br
+					when 'group'
+						label( for='members' ) Group members
+						br
+						if data
+							textarea#members( placeholder='Group members' )= data.members
+						else
+							textarea#members( placeholder='Group members' )
+						br
+				br
+				input#save( type='submit' value='save' )
+				input#cancel( type='button' value='cancel' onclick='window.location="/admin";' )

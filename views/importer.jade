@@ -1,0 +1,50 @@
+doctype html
+html
+	block head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src='/javascripts/math.js')
+		script(src='/javascripts/numeric-1.2.6.js')
+		script(src='/javascripts/paper-full.js')
+		script(src='/javascripts/skyshares.js')
+		script(src='/javascripts/skyshares.rest.js')
+		script(src='/javascripts/skyshares.importer.js')
+		script(src='/javascripts/skyshares.filereader.js')
+		script(src='/javascripts/skyshares.math.js')
+		script(src='/javascripts/skyshares.chart.js')
+		script(src='/javascripts/skyshares.geometry.js')
+		script(src='/javascripts/excellentexport.js')
+		script(type='text/javascript').
+			function init() {
+				skyshares.importer.init( '#{type}' );
+			}   
+	
+	body( onload='init()' )
+		block content
+			h1= title+type 
+
+			// Wrapper
+			#wrapper
+				case type
+					when 'countries'
+						input#categories( type='file' name='categories' value='Categories' )
+						div#output
+						input#upload( type='button' value='Upload' style='visibility:hidden' )
+					when 'mac'
+						label( for='mac' ) Raw MAC data
+						input#mac( type='file' name='mac' value='Raw MAC data')
+						div#mac_output
+						label( for='bau' ) BAU Shares data
+						input#bau( type='file' name='bau' value='BAU Shares data' visibility='hidden' )
+						div#bau_output
+						input#process( type='button' name='process' value='process' )
+						div#process_output
+					when 'bau'
+						input#process( type='button' name='process' value='generate bau' )
+					when 'map'
+						canvas#map( width='1103' height='533' )
+						input#svg( type='file' name='svg' value='Choose SVG' )
+						br
+						textarea#output
+				#results
+			// /WRAPPER

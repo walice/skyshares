@@ -1,0 +1,657 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: rgb(55,195,244)
+}
+
+a {
+  color: #00B7FF;
+}
+
+div.list {
+	display: inline-block;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 256px;
+	height: 512px;
+	border: 1px solid darkGray;
+	margin: 32px;
+}
+
+div.listheader {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 32px;
+	background: lightGray;
+	padding: 8px;
+	border-bottom: 1px solid darkGray;
+}
+
+a.listleftbutton {
+	position: absolute;
+	left: 8px;
+	cursor: pointer;
+}
+
+a.listrightbutton {
+	position: absolute;
+	right: 8px;
+	cursor: pointer;
+}
+
+div.listbody {
+	position: absolute;
+	top: 32px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow-x: auto;
+	overflow-y: auto;
+	background: white;
+}
+
+div.listitem {
+	position: relative;
+	display: block;
+	left: 0px;
+	right: 0px;
+	height: 24px;
+	padding: 8px;
+	border-bottom: 1px solid darkGray;
+}
+
+/* input styling */
+input[type=text], input[type=password], input[type=email], input[type=search], input[type=number] {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: LightGray;
+    color: black;
+    height: 24px;
+    padding: 0px 6px 0px 6px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    border: none;
+}
+
+textarea {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: LightGray;
+    color: black;
+    width: 512px;
+    height: 64px;
+    padding: 4px;
+    border: none;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.datacontainer {
+	max-height: 512px;
+	max-width: 1024px;
+	overflow: auto;
+}
+
+div.datacontrols {
+	padding: 8px;
+	visibility: hidden;
+}
+
+table.data {
+	border: 1px solid black;	
+}
+
+tr.data {
+}
+
+	tr.data.odd {
+		background: lightGray;
+	}
+
+	tr.data.even {
+		background: white;
+	}
+
+td.data {
+	font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+div.backdrop {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+div.dialog {
+    position: relative;
+    margin: 32px auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 48px;
+    min-width: 256px;
+    min-height: 128px;
+    background-color: lightGray;
+    overflow: hidden;
+    /*
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+     */
+    -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.5);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+div.dialogclose {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	cursor: pointer;
+}
+
+div.dialogheader {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 32px;
+	padding: 4px;
+}
+
+div.dialogfooter {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 32px;
+	padding: 4px;
+}
+div.dialogbody {
+	position: absolute;
+	top: 32px;
+	left: 0px;
+	right: 0px;
+	bottom: 32px;
+	padding: 16px;
+	overflow: auto;
+}
+
+a.button {
+	display: inline-block;
+	color: white;
+	background: gray;
+	margin: 4px;
+	padding: 4px;
+	cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+	a.button:hover {
+		background: lightgray;
+	}
+
+*.unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+	
+.compass{
+    fill:  #fff;
+    stroke:  #000;
+    stroke-width:  1.5;
+  }
+  
+.navbutton{
+    fill:  #777;
+    stroke:  #FFF;
+    stroke-miterlimit:  6;
+    stroke-linecap:  round;
+  }
+  .navbutton:hover{
+    stroke-width:  2;
+  }
+  .plus-minus{
+    fill:  #fff;
+    pointer-events: none;
+  }
+
+polygon {
+   -moz-transition: all 0.3s;
+   -o-transition: all 0.3s;
+   -webkit-transition: all 0.3s;
+   transition: all 0.3s;
+}
+
+line {
+   -moz-transition: all 0.3s;
+   -o-transition: all 0.3s;
+   -webkit-transition: all 0.3s;
+   transition: all 0.3s;
+}
+
+svg text {
+	pointer-events: none;
+}
+
+.drawer {
+   -moz-transition: all 0.5s;
+   -moz-transition-timing-function: all ease-out;
+   -o-transition: all 0.5s;
+   -o-transition-timing-function: all ease-out;
+   -webkit-transition: all 0.5s;
+   -webkit-transition-timing-function: all ease-out;
+   transition: all 0.5s;
+   transition-timing-function: all ease-out;
+}
+
+.progresscircle {
+  stroke-dasharray: 32;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash 1s linear infinite;
+  -moz-animation: dash 1s linear infinite;
+  -o-animation: dash 1s linear infinite;
+  animation: dash 1s linear infinite;
+}
+
+.drawercontent {
+	color: white; 
+	font-family:'Muli'; 
+	font-size:12;
+}
+
+.selectlist {
+	width: 270px;
+	height: 80px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: rgb(55,195,244);
+	display: inline-block;
+	padding-left: 4px;
+	cursor: pointer;
+}
+
+span.selectlistitem:hover {
+	text-decoration: underline;
+}
+
+.drawerbutton {
+	cursor: pointer;
+}
+	.drawerbutton:hover {
+		text-decoration: underline;
+	}
+
+input.drawer {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: rgb(55,195,244);
+    color: white;
+    height: 24px;
+    padding: 0px 6px 0px 6px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    border: none;
+    pointer-events: visible;
+}
+
+div.chartcontainer {
+	display: inline-block;
+	background: rgb(55,195,244);
+	width: 400px;
+	height: 300px;
+	opacity: 0.75;
+	border-radius: 4px;
+}
+
+	div.chartcontainer.expanded {
+		width: 800px;
+		height: 600px;
+		opacity: 1.0;
+	}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: white;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+    color: white;
+}
+
+.label text {
+    font-family: sans-serif;
+    font-size: 11px;
+    color: white;
+}
+
+@-webkit-keyframes dash {
+  to {
+    stroke-dashoffset: 64;
+  }
+}
+@-moz-keyframes dash {
+  to {
+    stroke-dashoffset: 64;
+  }
+}
+@-o-keyframes dash {
+  to {
+    stroke-dashoffset: 64;
+  }
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 64;
+  }
+}
+
+@viewport {
+	orientation: landscape;
+	user-zoom: fixed;
+}
+
+/* version 2 styling */
+/*
+#wrapper {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 960px;
+	height: 560px;
+	overflow: hidden;
+}
+*/
+#tabcontainer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	width: 48px;
+}
+div.tab {
+	position: absolute;
+	right: 0px;
+	width: 48px;
+	height: 48px;
+	-webkit-border-top-left-radius: 24px;
+	-webkit-border-bottom-left-radius: 24px;
+	-moz-border-radius-topleft: 24px;
+	-moz-border-radius-bottomleft: 24px;
+	border-top-left-radius: 24px;
+	border-bottom-left-radius: 24px;
+	
+	background-color: #00C3FF;
+	background-position: center;
+}
+div.tab[ id='account_tab' ] {
+	top: 84px;
+	background-image: url( '../images/ui/account_icon.png' );
+}
+div.tab[ id='document_tab' ] {
+	top: 134px;
+	background-image: url( '../images/ui/document_icon.png' );
+}
+div.tab[ id='graph_tab' ] {
+	top: 362px;
+	background-image: url( '../images/ui/graph_icon.png' );
+}
+div.tab[ id='map_tab' ] {
+	top: 412px;
+	background-image: url( '../images/ui/map_icon.png' );
+}
+div.tab[ id='rule_tab' ] {
+	top: 462px;
+	background-image: url( '../images/ui/rule_icon.png' );
+}
+div.tab[ id='tool_tab' ] {
+	top: 512px;
+	background-image: url( '../images/ui/tool_icon.png' );
+}
+div.tabcontent {
+	position: absolute;
+	left: 100%;
+	width: 100%;
+	background-color: rgba( 0, 31, 255, 0.5 );
+	
+	/* transitions */
+   -moz-transition: all 0.5s;
+   -moz-transition-timing-function: all ease-out;
+   -o-transition: all 0.5s;
+   -o-transition-timing-function: all ease-out;
+   -webkit-transition: all 0.5s;
+   -webkit-transition-timing-function: all ease-out;
+   transition: all 0.5s;
+   transition-timing-function: all ease-out;
+}
+	div.tabcontent.open {
+		left: 0px;
+		right: 0px;
+		
+		/* transitions */
+	   -moz-transition: all 0.5s;
+	   -moz-transition-timing-function: all ease-out;
+	   -o-transition: all 0.5s;
+	   -o-transition-timing-function: all ease-out;
+	   -webkit-transition: all 0.5s;
+	   -webkit-transition-timing-function: all ease-out;
+	   transition: all 0.5s;
+	   transition-timing-function: all ease-out;
+	}
+
+div.tabcontent[ id='graph_tab_content' ] {
+	top: 362px;
+	height: 198px;
+}
+div.tabcontent[ id='map_tab_content' ] {
+	top: 362px;
+	height: 198px;
+}
+div.tabcontent[ id='rule_tab_content' ] {
+	top: 362px;
+	height: 198px;
+}
+
+/* tooltip */
+#tooltip {
+	position: absolute;
+	visibility: hidden;
+	display: block;
+	padding: 8px;
+	border-radius: 4px;
+	font-size: 18px;
+	color: black;
+	background: white;
+	opacity: 0.85;
+}
+.tooltip_bold {
+	font-weight: bold;
+}
+.tooltip_light {
+	font-weight: light;
+}
+
+/* inprogress */
+.centre {
+	position: absolute;
+	top: 	50%;
+	left: 	50%;
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+/* input styling */
+input:focus{
+    outline: 0;
+}
+
+input[type='range'] {
+    -webkit-appearance: none;
+} 
+
+input[type='range']::-webkit-slider-runnable-track {
+    background-color: #00C3FF;
+    height: 16px;
+    width: 300px;
+    border-radius: 8px;
+} 
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+    width:8px;
+    height: 24px;
+    margin-top: 16px;
+    background: #00C3FF;
+}
+
+input[type='range']::-moz-range-track {
+    background-color: #00C3FF;
+    height: 16px;
+    width: 300px;
+    border-radius: 8px;
+}
+
+input[type='range']::-moz-range-thumb {
+    width:8px;
+    height: 24px;
+    margin-top: 16px;
+    background: #00C3FF;
+}
+
+input[type='range']::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+    background-color: #00C3FF;
+    height: 16px;
+    width: 300px;
+    border-radius: 8px;
+}
+
+input[type=range]::-ms-fill-upper {
+    background-color: #00C3FF;
+    height: 16px;
+    width: 300px;
+    border-radius: 8px;
+}
+
+input[type=range]::-ms-thumb {
+    width:8px;
+    height: 24px;
+    margin-top: 16px;
+    background: #00C3FF;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+/* traffic lights */
+div.trafficlightcontainer {
+	position: absolute;
+	width: 40px;
+	background-color: white;
+	text-align: center;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	opacity: 1.0;
+}
+
+div.trafficlight {
+	width: 24px;
+	height: 24px;
+	margin: 8px;	
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	opacity: 0.5;
+}
+div.trafficlight.red {
+	color: red;
+	background-color: red;
+}
+div.trafficlight.amber {
+	color: #FFBF00;
+	background-color: #FFBF00;
+}
+div.trafficlight.green {
+	color: green;
+	background-color: green;
+}
+
+div.trafficlight.selected {
+	-webkit-box-shadow: 0px 0px 16px 0px;
+	-moz-box-shadow: 0px 0px 16px 0px;
+	box-shadow: 0px 0px 16px 0px;
+	opacity: 1.0;
+}
+
+div.thermometer {
+	position: absolute;
+	top: 22px;
+	left: 64px;
+	width: 24px;
+	height: 104px;
+	background-image: url( '../images/ui/thermometer.png' );
+	background-repeat: no-repeat;
+}
+
+input.thermometer[type=range] {
+	position: absolute;
+	top: 22px;
+	left: 64px;
+	width: 104px;
+	height: 24px;
+	-webkit-appearance: none; 
+	writing-mode: bt-lr;
+	background-image: url( '../images/ui/thermometer.png' );
+	background-repeat: no-repeat;
+	-webkit-transform: rotate(90deg);
+}
+
+input.thermometer[type=range]::-webkit-slider-runnable-track {
+	-webkit-appearance: none;
+	background-color: transparent;
+	color: red;
+	width: 104px;
+	height: 16px;
+}
+input.thermometer[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: transparent;
+	width: 16px;
+	height: 16px;
+}
+

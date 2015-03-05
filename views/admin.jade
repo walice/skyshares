@@ -1,0 +1,53 @@
+extends layout
+
+block header
+  script(src='/javascripts/math.js')  
+    
+block content
+  h1= title
+
+  // Wrapper
+  #wrapper
+
+    // CONSTANTS
+    div.list
+      div.listheader
+        | <strong>Constants</strong>
+        a.listrightbutton( onclick='skyshares.addConstant();' ) +
+      #constants.listbody
+    // /CONSTANTS
+    
+    // DATASETS
+    div.list
+      div.listheader
+        | <strong>Datasets</strong>
+        a.listrightbutton( onclick='skyshares.addDataset();' ) +
+      #datasets.listbody
+    // /DATASETS
+
+    // GROUPS
+    div.list
+      div.listheader
+        | <strong>Groups</strong>
+        a.listrightbutton( onclick='skyshares.addGroup();' ) +
+      #groups.listbody
+    // /GROUPS
+    
+    // FUNCTIONS
+    div.list
+      div.listheader
+        | <strong>Functions</strong>
+        a.listrightbutton( onclick='skyshares.addFunction();' ) +
+      #functions.listbody
+    // /FUNCTIONS
+
+    // VARIABLES
+    div.list
+      div.listheader
+        | <strong>Variables</strong>
+        a.listrightbutton( onclick='skyshares.addVariable();' ) +
+      #variables.listbody
+    // /VARIABLES
+
+  // /WRAPPER
+

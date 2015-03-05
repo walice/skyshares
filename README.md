@@ -1,3 +1,3 @@
 The OpenShift `nodejs` cartridge documentation can be found at:
 
-http://openshift.github.io/documentation/oo_cartridge_guide.html#nodejs
+https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-nodejs/README.md
