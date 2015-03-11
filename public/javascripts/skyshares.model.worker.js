@@ -6,7 +6,7 @@
 	}
 
 	var format = numberWithCommas(15416)
-	console.log(format);
+	//console.log("numbers with commas: " + format);
 
 	var numberArray = [40, 1, 5, 200];
 	function compareNumbers(a, b) {
@@ -767,6 +767,7 @@ var model = {
 		var mac_value_incr 	= 5;
 		function COWpMAC( i ) {
 			return i == 0 ? 0 : i;
+			//Not sure this works see Evernote
 		};
 		var abat = self.getfunction( 'abat' );
 		self.EQPrice = [];
@@ -792,8 +793,8 @@ var model = {
 					//
 					for ( var i = 0; i <= mac_value_max; i += mac_value_incr ) {
 						cow_mac_iqREDUC.data[ i / mac_value_incr ] = {
-							x : 0.0,
-							y : COWpMAC( i )
+						x : 0.0,
+						y : COWpMAC( i )
 						};
 					}
 					//
@@ -843,6 +844,7 @@ var model = {
 					//
 					var EQyear = {
 						year	: cow_mac_iqREDUC.year,
+						//price	: skyshares.math.linerinterp(cow_mac_iqREDUC.data,abatement_target)
 						price	: Math.max( 0, skyshares.math.linerinterp(cow_mac_iqREDUC.data,abatement_target) )
 					};
 
@@ -934,6 +936,7 @@ var model = {
 		self.EQPrice.sort(compare);
 		self.EQPrice_pre.sort(compare);
 		self.EQPrice_fin.sort(compare);
+		//console.log('EQPrice= ' + JSON.stringify(self.EQPrice));
 		//console.log('EQPrice_pre= ' + JSON.stringify(self.EQPrice_pre));
 		//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM BITCHES THIS WORKS
 
@@ -1133,6 +1136,7 @@ var model = {
 			}
 		},
 		decarbcost : function( i, t ) {
+			//This has been changed and now error 0.26% as opposed to 2.96% but still weird pre2021
 			var self 	= model;
 			var domAbat = self.scope[ 'domAbat' ];
 			var mac 	= self.getcountrymac( 'MAC', i, t );
@@ -1141,17 +1145,25 @@ var model = {
 				var v0 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac0.data, u ) );
 				var v1 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac1.data, u ) );
 				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );
+				if ( i == 9 ) {
+					//log('v0: ' + v0);
+					//log('v1: ' + v1);
+					//log('value: ' + value);
+				}				
 				return value;
 			};
+
 			var domabat = domAbat( i, t );
 			if ( domabat <= 0 ) return 0;
-			var cost = skyshares.math.numintegrate( interpolateMAC, Math.min( 0, domabat ) , Math.max( 0, domabat ) );
+			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , domabat );
 			
-			if ( i == 31 ) {
-				//log( 'CAN MAC 0 : ' + mac.mac_member0.year + ' : ' + JSON.stringify( mac.country_mac0.data ) );
-				//log( 'CAN MAC 1 : ' + mac.mac_member1.year + ' : ' + JSON.stringify( mac.country_mac1.data ) );
-				//log( 'domabat : ' + domabat );
-				//log( 'cost : ' + cost );
+
+			if ( i == 9 ) {
+				log(interpolateMAC);
+				//log( 'AUS MAC 0 : ' + mac.mac_member0.year + ' : ' + JSON.stringify( mac.country_mac0.data ) );
+				//log( 'AUS MAC 1 : ' + mac.mac_member1.year + ' : ' + JSON.stringify( mac.country_mac1.data ) );
+				log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
+				log( 'cost : ' + numberWithCommas(cost) );
 			}
 			
 			return cost;

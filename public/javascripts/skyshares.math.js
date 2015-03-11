@@ -566,6 +566,20 @@ skyshares.math = {
 		var val = self.adaptivesimpson(f, a, b, precision_parameter || 0.000000001, s, fa, fb, fc, max_recursion || 10);                   
 		return val;
 	},
+	numintegrate_bis : function(f, lower_bound, upper_bound ) {
+		var self = skyshares.math;
+		var a = lower_bound;
+		var b = upper_bound;
+		var c = (a + b)/2.0;
+		var h = b - a;                                                                  
+		var fa = f(a);
+		var fb = f(b);
+		var fc = f(c);                                                           
+		var s = (h/6.0)*(fa + 4.0*fc + fb);                                                                
+		var val = s;                   
+		return val;
+	},
+
 	numintegrateint : function( f, lower_bound, upper_bound ) {
 		var self = skyshares.math;
 		var Fa = f( lower_bound );
