@@ -1109,26 +1109,31 @@ var model = {
 				var price = wpEQ(t);
 				var price0 = price_pre(t);
 				var price1 = price_fin(t); 
-				if (t%5 != 0) {
-					var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
-				} else {
-					var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price );
-				}
-				if (t%5 != 0) {
-				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
-			} else {
-				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price );
-			}
-				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
 
+					if (t%5 != 0) {
+						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
+					} else {
+						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price );
+					}
+					if (t%5 != 0) {
+					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
+					} else {
+					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price );
+					}
+
+				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
 				//log('price0: ' + price0);
 				//log( "domAbat : " + trading_scenario + " : pEQ(" + t + ")=" + price + " : iso=" + mac.country_mac0.iso + " : interpolating between : " + value0 + " and " + value1 + " by " + u + " value=" + value );
 				return value;
 
 			} else if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
 				var regul = self.getfunction( 'regul' );
-				var value = abat(i,t) * regul(i);
-				//log( "domAbat : " + trading_scenario + " : value=" + value );
+				if ( abat(i,t) > 0 ) {
+					var value = abat(i,t) * ( regul(i,t) / 100 );
+					//log( "domAbat : " + trading_scenario + " : value=" + value );
+				} else {
+					return 0;
+				}
 				return value;
 
 			} else {
