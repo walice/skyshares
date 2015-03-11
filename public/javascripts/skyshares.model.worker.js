@@ -1158,13 +1158,13 @@ var model = {
 			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , domabat );
 			
 
-			if ( i == 9 ) {
-				log(interpolateMAC);
+			//if ( i == 9 ) {
+			//	log(interpolateMAC);
 				//log( 'AUS MAC 0 : ' + mac.mac_member0.year + ' : ' + JSON.stringify( mac.country_mac0.data ) );
 				//log( 'AUS MAC 1 : ' + mac.mac_member1.year + ' : ' + JSON.stringify( mac.country_mac1.data ) );
-				log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
-				log( 'cost : ' + numberWithCommas(cost) );
-			}
+			//	log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
+			//	log( 'cost : ' + numberWithCommas(cost) );
+			//}
 			
 			return cost;
 		},
