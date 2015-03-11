@@ -889,12 +889,12 @@ skyshares.ui = {
 		ui.prototype.getcountrytooltip = function( country_group ) {
 			var country 	= this.getcountry( country_group.id );
 			var year_index 	= this.current_time - this.time.min;
-			text = country.name + '<br /><span class="tooltip_light" style="font-size: 90%;" >Emissions</span> <span class="tooltip_bold">' + Math.round( country_group.emissions[ year_index ] / 1000000 ) + '</span><span class="tooltip_light" style="font-size: 60%;" >GtCO<sub>2</sub></span>';
+			text = country.name + '<br /><span class="tooltip_light" style="font-size: 90%;" >Emissions</span> <span class="tooltip_bold">' + Math.round( country_group.emissions[ year_index ] / 1000000 ) + '</span><span class="tooltip_light" style="font-size: 60%;" >MtCO<sub>2</sub></span>';
 			if ( country_group.decarb_cost ) {
-				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Total Cost</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.decarb_cost[ year_index ],0 ) + '</span>';
+				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Decarbonisation Costs</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.decarb_cost[ year_index ],0 ) + '</span>';
 			}
 			if ( country_group.total_cost ) {
-				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Total Cost</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.total_cost[ year_index ],0 ) + '</span>';
+				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Total Costs</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.total_cost[ year_index ],0 ) + '</span>';
 			}
 			return 	text;
 		};

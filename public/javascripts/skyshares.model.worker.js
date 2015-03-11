@@ -468,6 +468,7 @@ var model = {
 				country.allowances = [];
 				country.percapitaallowances = [];
 				country.domabat = [];
+				country.decarbcostGDP = [];
 				postMessage( { command: 'update_country', parameter: country } );
 			});
 
@@ -564,6 +565,7 @@ var model = {
 			var transf = self.getfunction( 'transf' );
 			var qBar = self.getfunction( 'qBar' );
 			var domAbat = self.getfunction( 'domAbat' );
+			var decarbcostGDP = self.getfunction( 'decarbcostGDP' );	
 			
 			var p = self.getdata( 'p' );
 			
@@ -578,6 +580,7 @@ var model = {
 				country.allowances = [];
 				country.percapitaallowances = [];
 				country.domabat = [];
+				country.decarbcostGDP = [];
 				if ( self.cow_countries.indexOf( country ) >= 0 ) {
 					//log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
 					for ( var year = 2010; year <= 2100; year++ ) {
@@ -587,6 +590,7 @@ var model = {
 						country.decarb_cost.push( decarbcost( country.iso_index, year ) );
 						country.total_cost.push( totalcost( country.iso_index, year ) );
 						country.transf.push( transf( country.iso_index, year ) );
+						country.decarbcostGDP.push( decarbcostGDP( country.iso_index, year ) );
 						var allowances = qBar( country.iso_index, year );
 						country.allowances.push( allowances );
 						var population = parseFloat( skyshares.math.getcolumn( p, country.iso_index, year ) );
@@ -1157,8 +1161,8 @@ var model = {
 				}				
 				return value;
 			};
-
 			var domabat = domAbat( i, t );
+
 			if ( domabat <= 0 ) return 0;
 			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , domabat );
 			
@@ -1173,6 +1177,7 @@ var model = {
 			
 			return cost;
 		},
+
 		//
 		// this is a very inefficient recursive function
 		//
