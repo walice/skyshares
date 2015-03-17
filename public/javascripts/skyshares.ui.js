@@ -554,15 +554,15 @@ skyshares.ui = {
 				{ r: 34, g: 181, b: 115 }
 			] );
 			self.variables = {
-				target_temperature : 3,
+				target_temperature : 2,
 				risk_scenario : 1,
-				allocation_rule : 2,
+				allocation_rule : 0,
 				mitigation_start : 2015,
 				convergence_date : 2050,
-				trading_scenario : 2,
+				trading_scenario : 0,
 				regulated_share	: 1.0
 			};
-			self.current_time = 2014;
+			self.current_time = 2015;
 			//
 			//
 			//
@@ -667,10 +667,10 @@ skyshares.ui = {
 			//
 			self.time = new slider( 'ui.time', {
 				orientation: 'horizontal',
-				steps: 87,
-				min:2014,
+				steps: 86,
+				min:2015,
 				max:2100,
-				value: 2014
+				value: 2015
 			});
 			self.time.addEventListener( 'change', function( evt ) {
 				console.log( 'time changed to: ' + self.time.value );
@@ -739,21 +739,24 @@ skyshares.ui = {
 			//
 			//
 			self.allocation_rule = new radiobutton( 'ui.allocation_rule', {
-				value: self.variables.trading_scenario
+				value: self.variables.allocation_rule
 			});
 			self.allocation_rule.addEventListener( 'change', function( evt ) {
 				console.log( 'allocation_rule changed to: ' + self.allocation_rule.value );
 				//self.variables.allocation_rule = self.allocation_rule.value;
 				switch ( self.allocation_rule.value ) {
 					case 0 : 
-						self.variables.trading_scenario = 3; // BAU
+						self.variables.allocation_rule = 1; // carbon_debt
 						break;
 					case 1 :
-						self.variables.trading_scenario = 1; // No Trade
+						self.variables.allocation_rule = 0; //per_capita
 						break;
 					case 2 :
-						self.variables.trading_scenario = 0; // Full Trade
+						self.variables.allocation_rule = 2; // GDP_basis
 						break;
+					//case 3 :
+						//self.variables.allocation_rule = 3; // historical_responsibilities
+						//break;
 				}
 				self.model.postMessage( { command: 'setvariables', parameter: self.variables } );
 			}, false );

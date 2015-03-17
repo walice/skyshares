@@ -272,7 +272,9 @@ skyshares.math = {
 			getcolumn : skyshares.math.getcolumn,
 			getrow : skyshares.math.getrow,
 			sum : skyshares.math.sum,
+			sumbis : skyshares.math.sumbis,			
 			sumrow : skyshares.math.sumrow,
+			sumrowbounds : skyshares.math.sumrowbounds,
 			sumcolumn : skyshares.math.sumcolumn,
 			tospline : skyshares.math.tospline,
 			interpolator : skyshares.math.interpolator,
@@ -322,6 +324,10 @@ skyshares.math = {
 		var self = skyshares.math;
 		return self.sumcolumn( dataset, t );
 	},
+	sumbis : function( dataset, i ) {
+		var self = skyshares.math;
+		return self.sumrow( dataset, i );
+	},
 	sumcolumn : function( dataset, t, clamp ) {
 		var self = skyshares.math;
 		if ( dataset.type !== 'dataset' ) {
@@ -366,6 +372,19 @@ skyshares.math = {
 		var sum = 0;
 		var member = dataset.members[ i ];
 		for ( var t = 0; t < member.data.length; t++ ) {
+			sum += member.data[ t ];
+		}
+		return sum;
+	},
+	// temp hard coding bounds
+	sumrowbounds : function( dataset, i ) {
+		var sum = 0;
+		//i = 0;
+		var member = dataset.members[ i ];
+		var HistoricalRespDate = 1800;
+		var tmin = HistoricalRespDate - 1751;
+		var tmax = 2013 - 1751;
+		for ( var t = tmin; t <= tmax; t++ ) {
 			sum += member.data[ t ];
 		}
 		return sum;

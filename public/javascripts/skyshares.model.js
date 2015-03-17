@@ -83,7 +83,6 @@ skyshares.model = {
 		
 		self.ui.setriskscenario();
 		self.ui.settradingscenario();
-		self.ui.setexogenousprice();
 		//
 		//
 		//
@@ -276,8 +275,8 @@ skyshares.model = {
 			//document.getElementById( 'exogenous_price_block' ).style.visibility = show_price_block ? 'visible' : 'hidden';
 			//document.getElementById( 'exogenous_price_block' ).style.display = show_price_block ? 'block' : 'none';
 		},
-		setexogenousprice : function() {
-			self.exogenous_price = parseFloat( document.getElementById( 'exogenous_price' ).value );
+		setallocationrule : function() {
+			self.allocation_rule = parseFloat( document.getElementById( 'allocation_rule' ).value );
 		},
 		addtocow : function( country ) {
 			//
@@ -378,9 +377,9 @@ skyshares.model = {
 			mitigation_start: parseInt(document.getElementById( 'mitigation_start' ).value),
 			convergence_date: parseInt(document.getElementById( 'convergence_date' ).value),
 			trading_scenario: parseInt( document.getElementById( 'trading_scenario' ).selectedIndex ), // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2, endogenous.BAU = 3,  exogenous = 4
-			exogenous_price: parseFloat(document.getElementById( 'exogenous_price' ).value),
 			regulated_share: parseInt(document.getElementById( 'regulated_share' ).value), // endogenous = 0 to infinity, exogenous = 1
 			reference_date: parseInt(document.getElementById( 'reference_date' ).value),
+			allocation_rule: parseInt(document.getElementById( 'allocation_rule' ).value),
 			force_run: true // invoke run
 		};
 		self.worker.postMessage( { command: 'setvariables', parameter: variables } );
@@ -1255,11 +1254,11 @@ skyshares.model = {
 	risk_scenario : 1, // optimistic = 0, cautious = 1, pessimistic = 2
 	target_temperature : 2,
 	mitigation_start: 2015,
-	convergence_date: 2020,
-	trading_scenario: 0, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2, endogenous.BAU = 3,  exogenous = 4
-	exogenous_price: 1,
-	regulated_share: 1.0, // endogenous = 0 to infinity, exogenous = 1
+	convergence_date: 2030,
+	trading_scenario: 0, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2
+	regulated_share: 100, // endogenous = 0 to infinity, exogenous = 1
 	reference_date: 2009,
+	allocation_rule: 0, // per_capita = 0, carbon_debt = 1, GDP_basis = 2, historical_responsibilities = 3
 	//
 	//
 	//

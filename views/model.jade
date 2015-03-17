@@ -54,24 +54,28 @@ html
 					input#mitigation_start( type='number' value='2015' min='2015' max='2060' step='1' )
 					p
 					label( for='convergence_date' ) convergence date:&nbsp;
-					input#convergence_date( type='number' value='2020' min='2015' max='2100' step='1' )
+					input#convergence_date( type='number' value='2030' min='2015' max='2100' step='1' )
 					p
 					label( for='trading_scenario' ) trading scenario:&nbsp;
 					select#trading_scenario( onchange='skyshares.model.ui.settradingscenario()' )
 						option( value='0' ) endogenous fulltrade
 						option( value='1' ) endogenous no trade
 						option( value='2' ) endogenous regulation
-						option( value='3' selected ) endogenous BAU
-						option( value='4' ) exogenous
 					&nbsp;
-					label( for='regulated_share' ) regulated share:&nbsp;
-					input#regulated_share( type='number' value='1'  )
+					label( for='regulated_share' ) % of mandated decarbonisation:&nbsp;
+					input#regulated_share( type='number' value='40'  )
 					&nbsp;
-					label( for='exogenous_price' ) exogenous price:&nbsp;
-					input#exogenous_price( type='number' value='0' min='0' step='1' onchange='skyshares.model.ui.setexogenousprice()' )
 					p
 					label( for='reference_date' ) reference year:&nbsp;
 					input#reference_date( type='number' value='2009' min='2009' max='2100' step='1' )
+					&nbsp;
+					p
+					label( for='allocation rule' ) allocation rule:&nbsp;
+					select#allocation_rule( onchange='skyshares.model.ui.setallocationrule()' )
+						option( value='0' ) per capita
+						option( value='1' ) carbon debt
+						option( value='2' ) GDP basis
+						option( value='3' ) historical responsibilities
 					&nbsp;
 					p
 					input#run( type='button' value='run' onclick='skyshares.model.run();' )

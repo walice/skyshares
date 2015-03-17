@@ -588,7 +588,7 @@ div.trafficlightcontainer {
 	border-radius: 8px;
 	opacity: 1.0;
 }
-
+/*
 div.trafficlight {
 	width: 24px;
 	height: 24px;
@@ -617,7 +617,7 @@ div.trafficlight.selected {
 	box-shadow: 0px 0px 16px 0px;
 	opacity: 1.0;
 }
-
+*/
 div.thermometer {
 	position: absolute;
 	top: 22px;
