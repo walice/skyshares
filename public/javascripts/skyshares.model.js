@@ -327,12 +327,6 @@ skyshares.model = {
 	//
 	//
 	run : function() {
-		function numberWithCommas(x) {
-	    var parts = x.toString().split(".");
-	    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	    return parts.join(".");
-		};
-
 		var self = skyshares.model;
 		//
 		// test linterpv
@@ -766,6 +760,7 @@ skyshares.model = {
 		//
 		// alowances
 		//
+		/*
 		self.generatetable( {
 			title : 'Summary Country Allowances',
 			range : {
@@ -833,6 +828,7 @@ skyshares.model = {
 				return Math.round( self.all_countries[ i ].total_cost[ t - 2010 ] );	
 			}
 		} );
+		*/
 		//
 		// total cost
 		//
