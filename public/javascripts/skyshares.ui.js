@@ -558,9 +558,9 @@ skyshares.ui = {
 				risk_scenario : 1,
 				allocation_rule : 0,
 				mitigation_start : 2015,
-				convergence_date : 2050,
+				convergence_date : 2030,
 				trading_scenario : 0,
-				regulated_share	: 1.0
+				regulated_share	: 100
 			};
 			self.current_time = 2015;
 			//
@@ -667,8 +667,8 @@ skyshares.ui = {
 			//
 			self.time = new slider( 'ui.time', {
 				orientation: 'horizontal',
-				steps: 86,
-				min:2015,
+				steps: 91,
+				min:2010,
 				max:2100,
 				value: 2015
 			});
@@ -770,7 +770,7 @@ skyshares.ui = {
 			});
 			self.trading_scenario.addEventListener( 'change', function( evt ) {
 				console.log( 'trading_scenario changed to: ' + self.trading_scenario.value );
-				self.variables.regulated_share = self.trading_scenario.value / 100.0;
+				self.variables.regulated_share = self.trading_scenario.value ;
 			}, false );
 			self.trading_scenario.addEventListener( 'change_end', function( evt ) {
 				self.model.postMessage( { command: 'setvariables', parameter: self.variables } );
