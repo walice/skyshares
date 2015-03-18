@@ -122,6 +122,7 @@ skyshares.model = {
 							local_country.domabat			= country.domabat;
 							local_country.decarbcostGDP		= country.decarbcostGDP;
 							local_country.totalcostGDP		= country.totalcostGDP;
+							local_country.emissionscapita	= country.emissionscapita;
 							
 							self.countries_to_process--;
 							self.countries_processsed++;
@@ -840,7 +841,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].domabat[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].domabat[ t - 2010 ],0,",",".","" );	
 			}
 		} );
 		//
@@ -875,7 +876,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].abatement_target[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].abatement_target[ t - 2010 ],0,",",".","" );	
 			}
 		} );
 		self.generatetable( {
@@ -886,7 +887,18 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].emissions[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].emissions[ t - 2010 ],0,",",".","" );	
+			}
+		} );
+		self.generatetable( {
+			title : 'Emissions per capita',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatcurrency(self.all_countries[ i ].emissionscapita[ t - 2010 ],2,",",".","" );	
 			}
 		} );
 		/*
@@ -910,7 +922,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].transfer[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].transfer[ t - 2010 ],0,",",".","" );	
 			}
 		} );
 		self.generatetable( {
@@ -921,7 +933,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].flow[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].flow[ t - 2010 ],0,",",".","$" );	
 			}
 		} );
 		self.generatetable( {
@@ -932,7 +944,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].decarb_cost[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].decarb_cost[ t - 2010 ],0,",",".","$" );	
 			}
 		} );
 		self.generatetable( {
@@ -943,7 +955,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].total_cost[ t - 2010 ] );	
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].total_cost[ t - 2010 ],0,",",".","$" );	
 			}
 		} );
 		self.generatetable( {
@@ -954,7 +966,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return self.all_countries[ i ].decarbcostGDP[ t - 2010 ].toFixed(2);	
+				return skyshares.utility.formatpercent( self.all_countries[ i ].decarbcostGDP[ t - 2010 ] );	
 			}
 		} );
 		self.generatetable( {
@@ -965,7 +977,7 @@ skyshares.model = {
 				step : 1
 			},
 			f : function( i, t ) {
-				return self.all_countries[ i ].totalcostGDP[ t - 2010 ].toFixed(2);	
+				return skyshares.utility.formatpercent( self.all_countries[ i ].totalcostGDP[ t - 2010 ] );	
 			}
 		} );	
 		if ( self.EQPrice ) {
