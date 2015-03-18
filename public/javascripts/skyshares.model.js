@@ -121,6 +121,7 @@ skyshares.model = {
 							local_country.percapitaallowances 	= country.percapitaallowances;
 							local_country.domabat			= country.domabat;
 							local_country.decarbcostGDP		= country.decarbcostGDP;
+							local_country.totalcostGDP		= country.totalcostGDP;
 							
 							self.countries_to_process--;
 							self.countries_processsed++;
@@ -718,7 +719,17 @@ skyshares.model = {
 				return self.all_countries[ i ].decarbcostGDP[ t - 2010 ];	
 			}
 		} );
-
+		self.generatesummarygroupstable( {
+			title : 'Group total costs as a share of GDP',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 10
+			},
+			f : function( i, t ) {
+				return self.all_countries[ i ].totalcostGDP[ t - 2010 ];	
+			}
+		} );
 		self.generatesummarygroupstable( {
 			title : 'Group Summary Flows',
 			range : {
@@ -939,7 +950,28 @@ skyshares.model = {
 				return Math.round( self.all_countries[ i ].total_cost[ t - 2010 ] );	
 			}
 		} );
-	
+		self.generatetable( {
+			title : 'Decarbonisation Costs as a share of GDP',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return self.all_countries[ i ].decarbcostGDP[ t - 2010 ].toFixed(2);	
+			}
+		} );
+		self.generatetable( {
+			title : 'Total Costs as a share of GDP',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return self.all_countries[ i ].totalcostGDP[ t - 2010 ].toFixed(2);	
+			}
+		} );	
 		if ( self.EQPrice ) {
 			function pEQ( t ) { 
 				if ( t <= self.EQPrice[ 0 ].year ) { // extrapolate back from first point
