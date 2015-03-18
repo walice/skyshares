@@ -125,6 +125,7 @@ skyshares.model = {
 							local_country.flowGDP			= country.flowGDP;
 							local_country.emissionscapita	= country.emissionscapita;
 							local_country.allowancescapita	= country.allowancescapita;
+							//local_country.transf			= country.transf;	
 							//local_country.qBar				= country.qBar;								
 							self.countries_to_process--;
 							self.countries_processsed++;

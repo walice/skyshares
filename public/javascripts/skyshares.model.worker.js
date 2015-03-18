@@ -614,6 +614,7 @@ var model = {
 						country.flowGDP.push( flowGDP( country.iso_index, year ) );
 						country.emissionscapita.push( emissionscapita( country.iso_index, year ) );
 						country.allowancescapita.push( allowancescapita( country.iso_index, year ) );
+						//country.transf.push( transf( country.iso_index, year ) );
 						//country.qBar.push( qBar( country.iso_index, year ) );
 						var allowances = qBar( country.iso_index, year );
 						country.allowances.push( allowances );
