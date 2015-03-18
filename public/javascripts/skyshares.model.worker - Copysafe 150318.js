@@ -419,6 +419,10 @@ var model = {
 			self.regulated_share = variables.regulated_share;
 			update = true;
 		}
+		if ( self.allocation_rule != variables.allocation_rule ) {
+		self.allocation_rule = variables.allocation_rule;
+		update = true;
+		}
 		
 		if ( update ) {
 			self.run();
@@ -468,6 +472,7 @@ var model = {
 				country.allowances = [];
 				country.percapitaallowances = [];
 				country.domabat = [];
+				country.decarbcostGDP = [];
 				postMessage( { command: 'update_country', parameter: country } );
 			});
 
@@ -497,7 +502,8 @@ var model = {
 			self.scope[ 'tM' ] = parseInt(self.mitigation_start);
 			self.scope[ 'tC' ] = parseInt(self.convergence_date);
 			self.scope[ 'trading_scenario' ] = parseInt( self.trading_scenario );
-			self.scope[ 'regulatedShare' ] = parseFloat( self.regulated_share );
+			self.scope[ 'regulated_share' ] = parseFloat( self.regulated_share );
+			self.scope[ 'allocation_rule' ] = parseFloat( self.allocation_rule );
 			//
 			// find mitigation rate
 			//
@@ -539,13 +545,13 @@ var model = {
 			for ( var year = 2010; year <= 2100; year += 1 ) {
 				log( 'pEQ( ' + year + ' ) = ' +  pEQ( year ) );
 			}
-			
+			*/			
 			log( 'testing wpEQ' );
 			var wpEQ = self.getfunction( 'wpEQ' );
 			for ( var year = 2010; year <= 2100; year += 1 ) {
 				log( 'wpEQ( ' + year + ' ) = ' +  wpEQ( year ) );
 			}
-			*/
+			
 			//This is OK even if sometimes what is outputted to UI is different ==> display issue?
 			
 			//postMessage( { command: 'cancel_run' } );
@@ -564,7 +570,9 @@ var model = {
 			var transf = self.getfunction( 'transf' );
 			var qBar = self.getfunction( 'qBar' );
 			var domAbat = self.getfunction( 'domAbat' );
-			
+			var decarbcostGDP = self.getfunction( 'decarbcostGDP' );	
+			var regul = self.getfunction( 'regul' );	
+
 			var p = self.getdata( 'p' );
 			
 			var country = self.all_countries[ 0 ];
@@ -578,6 +586,7 @@ var model = {
 				country.allowances = [];
 				country.percapitaallowances = [];
 				country.domabat = [];
+				country.decarbcostGDP = [];
 				if ( self.cow_countries.indexOf( country ) >= 0 ) {
 					//log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
 					for ( var year = 2010; year <= 2100; year++ ) {
@@ -587,6 +596,7 @@ var model = {
 						country.decarb_cost.push( decarbcost( country.iso_index, year ) );
 						country.total_cost.push( totalcost( country.iso_index, year ) );
 						country.transf.push( transf( country.iso_index, year ) );
+						country.decarbcostGDP.push( decarbcostGDP( country.iso_index, year ) );
 						var allowances = qBar( country.iso_index, year );
 						country.allowances.push( allowances );
 						var population = parseFloat( skyshares.math.getcolumn( p, country.iso_index, year ) );
@@ -750,6 +760,7 @@ var model = {
 		try {
 		var self = model;
 		var mac = self.scope[ 'MAC' ];
+		var trading_scenario = self.scope[ 'trading_scenario' ];
 		//
 		var cow_mac = {
 			name: 'COW_MAC',
@@ -789,7 +800,7 @@ var model = {
 					};
 					//log( "Processing year: " + mac_member.year );
 					//
-					// generate prices from 0.01 to mac_value_max
+					// generate prices from 0 to mac_value_max
 					//
 					for ( var i = 0; i <= mac_value_max; i += mac_value_incr ) {
 						cow_mac_iqREDUC.data[ i / mac_value_incr ] = {
@@ -832,7 +843,28 @@ var model = {
 						//
 						//
 						//
-						abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );
+
+					if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
+						var regul = self.getfunction( 'regul' );
+						var regul = regul( country.iso_index, cow_mac_iqREDUC.year );
+						//log(regul/100);
+						if ( abat( country.iso_index, cow_mac_iqREDUC.year ) > 0 ) {
+							abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )* ((100-regul)/100);
+						}
+						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
+						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );
+						//abatement_target = abatement_target * ((100-regul)/100);
+						for ( var y = 2015; y <= 2100; y++ ) {
+							if( y == cow_mac_iqREDUC.year ){
+								//log(cow_mac_iqREDUC.year + ": " + numberWithCommas(abatement_target) );
+								//log((100-regul)/100);
+							}
+						};
+						
+					} else {
+						abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );						
+					}
+
 					});
 					//
 					// store COW_MAC for year
@@ -914,7 +946,24 @@ var model = {
 						cow_mac_iqREDUC_pre.data[ i / mac_value_incr ].x += y_pre;
 						cow_mac_iqREDUC_fin.data[ i / mac_value_incr ].x += y_fin;
 					}
-					abatement_target_bis += abat( country.iso_index, yr );
+					if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
+						var regul = self.getfunction( 'regul' );
+						var regul = regul( country.iso_index, yr );
+						//log(regul/100);
+						if ( abat( country.iso_index, yr ) > 0 ) {
+							abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100)
+						}
+						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
+						//abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100);
+						for ( var y = 2015; y <= 2100; y++ ) {
+							if( y == yr ){
+								//log(yr + ": " + numberWithCommas(abatement_target_bis) );
+							}
+						};
+						
+					} else {
+						abatement_target_bis += abat( country.iso_index, yr );						
+					}
 				});
 
 				cow_mac.members.push(cow_mac_iqREDUC_pre);
@@ -1007,9 +1056,7 @@ var model = {
 	//
 	//
 	//
-	
 	runtime_functions : {
-		//
 		// functions which are dependant on variable number of MAC curves so can't currently be expressed as mathjs functions
 		// to be added to scope used to run model 
 		//
@@ -1104,31 +1151,38 @@ var model = {
 				var value = abat(i,t);
 				//log( "domAbat : " + trading_scenario + " : value=" + value );
 				return value;
-			} else if ( trading_scenario == self.getdata( 'endogenous_fulltrade' ).value || trading_scenario == self.getdata( 'endogenous_BAU' ).value ) {
+			} else if ( trading_scenario == self.getdata( 'endogenous_fulltrade' ).value ) {
 				var u = Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) ); // clamp interpolation
 				var price = wpEQ(t);
 				var price0 = price_pre(t);
 				var price1 = price_fin(t); 
-				if (t%5 != 0) {
-					var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
-				} else {
-					var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price );
-				}
-				if (t%5 != 0) {
-				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
-			} else {
-				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price );
-			}
-				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
 
+					if (t%5 != 0) {
+						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
+					} else {
+						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price );
+					}
+					if (t%5 != 0) {
+					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
+					} else {
+					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price );
+					}
+
+				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
 				//log('price0: ' + price0);
 				//log( "domAbat : " + trading_scenario + " : pEQ(" + t + ")=" + price + " : iso=" + mac.country_mac0.iso + " : interpolating between : " + value0 + " and " + value1 + " by " + u + " value=" + value );
 				return value;
 
 			} else if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
 				var regul = self.getfunction( 'regul' );
-				var value = abat(i,t) * regul(i);
-				//log( "domAbat : " + trading_scenario + " : value=" + value );
+				if ( abat(i,t) > 0 ) {
+					var value = abat(i,t) * ( regul(i,t) / 100 );
+					//var test = ( regul(i,t) / 100 );
+					//log( test );
+					//log( "domAbat : " + trading_scenario + " : value=" + numberWithCommas(value) );
+				} else {
+					return 0;
+				}
 				return value;
 
 			} else {
@@ -1146,26 +1200,29 @@ var model = {
 				var v1 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac1.data, u ) );
 				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );
 				if ( i == 9 ) {
-					log('v0: ' + v0);
-					log('v1: ' + v1);
-					log('value: ' + value);
+					//log('v0: ' + v0);
+					//log('v1: ' + v1);
+					//log('value: ' + value);
 				}				
 				return value;
 			};
 			var domabat = domAbat( i, t );
+
 			if ( domabat <= 0 ) return 0;
 			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , domabat );
 			
 
-			if ( i == 9 ) {
+			//if ( i == 9 ) {
+			//	log(interpolateMAC);
 				//log( 'AUS MAC 0 : ' + mac.mac_member0.year + ' : ' + JSON.stringify( mac.country_mac0.data ) );
 				//log( 'AUS MAC 1 : ' + mac.mac_member1.year + ' : ' + JSON.stringify( mac.country_mac1.data ) );
-				log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
-				log( 'cost : ' + numberWithCommas(cost) );
-			}
+			//	log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
+			//	log( 'cost : ' + numberWithCommas(cost) );
+			//}
 			
 			return cost;
 		},
+
 		//
 		// this is a very inefficient recursive function
 		//
@@ -1246,11 +1303,11 @@ var model = {
 	risk_scenario : -1, // optimistic = 0, cautious = 1, pessimistic = 2
 	target_temperature : -1,
 	mitigation_start: 2015,
-	convergence_date: 2020,
-	trading_scenario: -1, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2, endogenous.BAU = 3,  exogenous = 4
-	exogenous_price: 1,
+	convergence_date: 2030,
+	trading_scenario: 0, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2
 	regulated_share: 1, // endogenous = 0 to infinity, exogenous = 1
 	reference_date: 2009,
+	allocation_rule: 0, // per_capita = 0, carbon_debt = 1, GDP_basis = 2, historical_responsibilities = 3
 	download_queue : new downloadqueue(),
 	ready: false,
 	running: false,

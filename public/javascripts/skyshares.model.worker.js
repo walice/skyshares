@@ -848,14 +848,16 @@ var model = {
 						var regul = self.getfunction( 'regul' );
 						var regul = regul( country.iso_index, cow_mac_iqREDUC.year );
 						//log(regul/100);
-						//if ( abat(i,t) > 0 ) {
-							//var value = abat(i,t) * ( regul(i,t) / 100 );
-						//}
+						if ( abat( country.iso_index, cow_mac_iqREDUC.year ) > 0 ) {
+							abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )* ((100-regul)/100);
+						}
 						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
-						abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*((100-regul)/100);
+						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );
+						//abatement_target = abatement_target * ((100-regul)/100);
 						for ( var y = 2015; y <= 2100; y++ ) {
 							if( y == cow_mac_iqREDUC.year ){
 								//log(cow_mac_iqREDUC.year + ": " + numberWithCommas(abatement_target) );
+								//log((100-regul)/100);
 							}
 						};
 						
@@ -948,22 +950,11 @@ var model = {
 						var regul = self.getfunction( 'regul' );
 						var regul = regul( country.iso_index, yr );
 						//log(regul/100);
-						//if ( abat(i,t) > 0 ) {
-							//var value = abat(i,t) * ( regul(i,t) / 100 );
-						//}
+						if ( abat( country.iso_index, yr ) > 0 ) {
+							abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100)
+						}
 						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
-						abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100);
-
-
-
-
-
-
-
-						//if ( abat(i,t) > 0 ) {
-							//var value = abat(i,t) * ( regul(i,t) / 100 );
-						//}
-						//abatement_target_bis += abat( country.iso_index, yr )*(60/100);
+						//abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100);
 						for ( var y = 2015; y <= 2100; y++ ) {
 							if( y == yr ){
 								//log(yr + ": " + numberWithCommas(abatement_target_bis) );
