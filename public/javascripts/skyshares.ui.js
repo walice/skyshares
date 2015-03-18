@@ -898,6 +898,9 @@ skyshares.ui = {
 			var country 	= this.getcountry( country_group.id );
 			var year_index 	= this.current_time - this.time.min;
 			text = country.name + '<br /><span class="tooltip_light" style="font-size: 90%;" >Allowances</span> <span class="tooltip_bold">' + Math.round( country_group.allowances[ year_index ] / 1000000 ) + '</span><span class="tooltip_light" style="font-size: 60%;" >MtCO<sub>2</sub></span><span class="tooltip_light" style="font-size: 90%;" > or </span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.allowancescapita[ year_index ],2,",",".","") + '</span><span class="tooltip_light" style="font-size: 90%;" > per capita</span>';
+			if ( country_group.transf ) {
+				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Transfers</span> <span class="tooltip_bold">' + Math.round( country_group.transf[ year_index ] / 1000000 ) + '</span><span class="tooltip_light" style="font-size: 60%;" >MtCO<sub>2</sub></span>';
+			}				
 			if ( country_group.emissions ) {
 				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Emissions</span> <span class="tooltip_bold">' + Math.round( country_group.emissions[ year_index ] / 1000000 ) + '</span><span class="tooltip_light" style="font-size: 60%;" >MtCO<sub>2</sub></span><span class="tooltip_light" style="font-size: 90%;" > or </span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.emissionscapita[ year_index ],2,",",".","") + '</span><span class="tooltip_light" style="font-size: 90%;" > per capita</span>';
 			}				
