@@ -861,6 +861,7 @@ skyshares.ui = {
 							self.map.countries[ country.iso ].domabat 				= country.domabat;
 							self.map.countries[ country.iso ].decarbcostGDP 		= country.decarbcostGDP;
 							self.map.countries[ country.iso ].totalcostGDP 			= country.totalcostGDP;
+							self.map.countries[ country.iso ].flowGDP 			= country.flowGDP;
 							self.map.countries[ country.iso ].emissionscapita		= country.emissionscapita;							self.updateranges();
 							self.updatecountry(country.iso);
 						}
@@ -902,7 +903,7 @@ skyshares.ui = {
 				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Total Costs</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.total_cost[ year_index ],0 ) + '</span><span class="tooltip_light" style="font-size: 90%;" > or </span> <span class="tooltip_bold">' + skyshares.utility.formatpercent( country_group.totalcostGDP[ year_index ],2 ) + '</span><span class="tooltip_light" style="font-size: 90%;" > of GDP</span>';
 			}
 			if ( country_group.flow ) {
-				text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Financial Flows</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.flow[ year_index ],0 ) + '</span>';
+			//	text += '<br /><span class="tooltip_light" style="font-size: 90%;" >Financial Flows</span> <span class="tooltip_bold">' + skyshares.utility.formatcurrency( country_group.flow[ year_index ],0 ) + '</span><span class="tooltip_light" style="font-size: 90%;" > or </span> <span class="tooltip_bold">' + skyshares.utility.formatpercent( country_group.flowGDP[ year_index ],2 ) + '</span><span class="tooltip_light" style="font-size: 90%;" > of GDP</span>';
 			}
 			return 	text;
 		};

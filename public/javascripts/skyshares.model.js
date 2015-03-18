@@ -122,8 +122,10 @@ skyshares.model = {
 							local_country.domabat			= country.domabat;
 							local_country.decarbcostGDP		= country.decarbcostGDP;
 							local_country.totalcostGDP		= country.totalcostGDP;
+							local_country.flowGDP			= country.flowGDP;
 							local_country.emissionscapita	= country.emissionscapita;
-							
+							local_country.allowancescapita	= country.allowancescapita;
+							//local_country.qBar				= country.qBar;								
 							self.countries_to_process--;
 							self.countries_processsed++;
 							if ( self.countries_to_process > 0 ) {
@@ -833,17 +835,7 @@ skyshares.model = {
 		//
 		// total cost
 		//
-		self.generatetable( {
-			title : 'Domestic Abatement',
-			range : {
-				min : 2010,
-				max : 2100,
-				step : 1
-			},
-			f : function( i, t ) {
-				return skyshares.utility.formatcurrency( self.all_countries[ i ].domabat[ t - 2010 ],0,",",".","" );	
-			}
-		} );
+
 		//
 		// all data
 		//
@@ -869,6 +861,28 @@ skyshares.model = {
 		local_country.domabat			= country.domabat;
 		*/
 		self.generatetable( {
+			title : 'Allowances',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].allowances[ t - 2010 ],0,",",".","" );	
+			}
+		} );
+		self.generatetable( {
+			title : 'Allowances per capita',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatcurrency(self.all_countries[ i ].allowancescapita[ t - 2010 ],2,",",".","" );	
+			}
+		} );
+		self.generatetable( {
 			title : 'Abatement Targets',
 			range : {
 				min : 2010,
@@ -877,6 +891,17 @@ skyshares.model = {
 			},
 			f : function( i, t ) {
 				return skyshares.utility.formatcurrency( self.all_countries[ i ].abatement_target[ t - 2010 ],0,",",".","" );	
+			}
+		} );
+		self.generatetable( {
+			title : 'Domestic Abatement',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].domabat[ t - 2010 ],0,",",".","" );	
 			}
 		} );
 		self.generatetable( {
@@ -958,6 +983,17 @@ skyshares.model = {
 				return skyshares.utility.formatcurrency( self.all_countries[ i ].total_cost[ t - 2010 ],0,",",".","$" );	
 			}
 		} );
+		self.generatetable( {
+			title : 'Financial Flows as a share of GDP',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatpercent( self.all_countries[ i ].flowGDP[ t - 2010 ] );	
+			}
+		} );	
 		self.generatetable( {
 			title : 'Decarbonisation Costs as a share of GDP',
 			range : {
