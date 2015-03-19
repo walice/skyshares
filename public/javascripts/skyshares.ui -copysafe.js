@@ -766,7 +766,7 @@ skyshares.ui = {
 			self.trading_scenario = new dial( 'ui.trading_scenario', {
 				min:0,
 				max:100,
-				value: 50
+				value: 100
 			});
 			/*
 			self.trading_scenario.addEventListener( 'load', function( evt ) {
@@ -784,9 +784,6 @@ skyshares.ui = {
 					case 100 : 
 						self.variables.trading_scenario = 0; // full trade
 						break;
-					default :
-						self.variables.trading_scenario = 2; // full trade
-						break;					
 				}
 				self.model.postMessage( { command: 'setvariables', parameter: self.variables } );
 			}, false );

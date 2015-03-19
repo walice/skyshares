@@ -125,6 +125,7 @@ skyshares.model = {
 							local_country.flowGDP			= country.flowGDP;
 							local_country.emissionscapita	= country.emissionscapita;
 							local_country.allowancescapita	= country.allowancescapita;
+							local_country.abatement_target_bis 	= country.abatement_target_bis;
 							//local_country.transf			= country.transf;	
 							//local_country.qBar				= country.qBar;								
 							self.countries_to_process--;
@@ -141,9 +142,25 @@ skyshares.model = {
 					}
 					self.cow_mac[ evt.data.parameter.year.toString() ] = evt.data.parameter;
 					break;
+				case 'update_mac_bis' :
+					if ( !self.mac_bis ) {
+						self.mac_bis = {};
+					}
+					self.mac_bis[ evt.data.parameter.year.toString() ] = evt.data.parameter;
+					break;
 				case 'update_eq_price' :
 					console.log( 'updating eq price' );
 					self.EQPrice = evt.data.parameter;
+					//self.EQPrice_pre = evt.data.parameter;
+					//self.EQPrice_fin = evt.data.parameter;
+					break;
+				case 'update_eq_price_pre' :
+					console.log( 'updating eq price_pre' );
+					self.EQPrice_pre = evt.data.parameter;
+					break;
+				case 'update_eq_price_fin' :
+					console.log( 'updating eq price_fin' );
+					self.EQPrice_fin = evt.data.parameter;
 					break;
 				case 'update_world_emissions' : 
 					self.world_emissions = evt.data.parameter;
@@ -271,9 +288,11 @@ skyshares.model = {
 
 			
 		},
+		
 		setriskscenario : function() {
 			var risk_scenario = parseInt( document.getElementById( 'risk_scenario' ).value );			
 		},
+		
 		settradingscenario : function() {
 			self.trading_scenario = parseInt( document.getElementById( 'trading_scenario' ).value );
 			//var show_price_block = skyshares.model.getvariable( 'trading_scenario' ) == 4;
@@ -693,7 +712,9 @@ skyshares.model = {
 			var row = document.createElement( 'tr' );
 			for ( var t = 2010; t <= 2100; t += 1 ) {
 				var col = document.createElement( 'td' );
-				col.innerHTML = self.world_emissions[t-2010];
+				col.innerHTML = skyshares.utility.formatcurrency( self.world_emissions[t-2010], 0,",",".","" );
+
+				//col.innerHTML = self.world_emissions[t-2010];
 				row.appendChild( col );
 			}
 			table.appendChild(row);
@@ -705,7 +726,7 @@ skyshares.model = {
 		//
 		// summary tables
 		//
-		
+/*		
 		self.generatesummarygroupstable( {
 			title : 'Group decarbonisation costs as a share of GDP',
 			range : {
@@ -728,19 +749,20 @@ skyshares.model = {
 				return self.all_countries[ i ].totalcostGDP[ t - 2010 ];	
 			}
 		} );
+*/
 		self.generatesummarygroupstable( {
-			title : 'Group Summary Flows',
+			title : 'Flows by income group and region',
 			range : {
 				min : 2010,
 				max : 2100,
 				step : 10
 			},
 			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].flow[ t - 2010 ] );	
+				return self.all_countries[ i ].flow[ t - 2010 ];	
 			}
 		} );
 		self.generatesummarygroupstable( {
-			title : 'Costs to the polluter',
+			title : 'Decarbonisation Costs by income group and region',
 			range : {
 				min : 2010,
 				max : 2100,
@@ -751,7 +773,7 @@ skyshares.model = {
 			}
 		} );
 		self.generatesummarygroupstable( {
-			title : 'Total costs',
+			title : 'Total Costs by income group and region',
 			range : {
 				min : 2010,
 				max : 2100,
@@ -1017,34 +1039,42 @@ skyshares.model = {
 				return skyshares.utility.formatpercent( self.all_countries[ i ].totalcostGDP[ t - 2010 ] );	
 			}
 		} );	
-		if ( self.EQPrice ) {
-			function pEQ( t ) { 
-				if ( t <= self.EQPrice[ 0 ].year ) { // extrapolate back from first point
-					var dt = self.EQPrice[ 0 ].year - self.EQPrice[ 1 ].year;
-					var dp = self.EQPrice[ 0 ].price - self.EQPrice[ 1 ].price;
-					var l = Math.sqrt( dt * dt + dp * dp );
-					dt /= l;
-					dp /= l;
-					return self.EQPrice[ 0 ].price + ( ( self.EQPrice[ 0 ].year - t ) * dp )
-				} else if ( t >= self.EQPrice[ self.EQPrice.length - 1 ].year ) {
-					var dt = self.EQPrice[ self.EQPrice.length - 1 ].year - self.EQPrice[ self.EQPrice.length - 2 ].year;
-					var dp = self.EQPrice[ self.EQPrice.length - 1 ].price - self.EQPrice[ self.EQPrice.length - 2 ].price;
-					var l = Math.sqrt( dt * dt + dp * dp );
-					dt /= l;
-					dp /= l;
-					return self.EQPrice[ self.EQPrice.length - 1 ].price + ( ( t - self.EQPrice[ self.EQPrice.length - 1 ].year ) * dp );
-				} else {
-					//
-					// interpolate
-					//
-					for ( var i = 0; i < self.EQPrice.length - 1; i++ ) {
-						if ( self.EQPrice[ i ].year <= t && self.EQPrice[ i + 1 ].year >= t ) {
-							var u = ( self.EQPrice[ i + 1 ].year - t ) / ( self.EQPrice[ i + 1 ].year - self.EQPrice[ i ].year );
-							return ( u * self.EQPrice[ i ].price ) + ( ( 1.0 - u ) * self.EQPrice[ i + 1 ].price );
-						}
+		if ( self.EQPrice && self.EQPrice_pre && self.EQPrice_fin ) {
+
+
+			function price_pre( t ) {
+				//var self = model;
+				for ( var i = 0; i <= self.EQPrice_pre.length - 1; i++ ) {
+					if ( self.EQPrice_pre[ i ].year == t ) {
+						//log(self.EQPrice_pre[ i ].year + ' ' + self.EQPrice_pre[ i ].price);
+						return self.EQPrice_pre[ i ].price;
 					}
-					return self.EQPrice[ self.EQPrice.length - 1 ].price;
 				}
+			};
+
+			function price_fin( t ) {
+				//var self = model;
+				for ( var i = 0; i <= self.EQPrice_fin.length - 1; i++ ) {
+					if ( self.EQPrice_fin[ i ].year == t ) {
+						return self.EQPrice_fin[ i ].price;
+					}
+				}
+			};
+
+			function pEQ( t ) { 
+				for ( var i = 0; i <= self.EQPrice.length - 1; i++ ) {
+					if ( self.EQPrice[ i ].year == t ) {
+						return self.EQPrice[ i ].price;
+					}
+				}
+				for ( var i = 0; i < self.EQPrice.length - 1; i++ ) {
+					if ( self.EQPrice[ i ].year <= t && self.EQPrice[ i + 1 ].year >= t ) {
+						var u = ( self.EQPrice[ i + 1 ].year - t ) / ( self.EQPrice[ i + 1 ].year - self.EQPrice[ i ].year );
+						return ( u * self.EQPrice[ i ].price ) + ( ( 1.0 - u ) * self.EQPrice[ i + 1 ].price );
+					}
+				}
+				return self.EQPrice[ self.EQPrice.length - 1 ].price;
+				
 			};
 
 			var table = document.createElement('table');
@@ -1060,7 +1090,7 @@ skyshares.model = {
 			var row = document.createElement( 'tr' );
 			for ( var t = 2010; t <= 2100; t++ ) {
 				var col = document.createElement( 'td' );
-				col.innerHTML = pEQ( t );
+				col.innerHTML = skyshares.utility.formatcurrency(pEQ( t ));
 				row.appendChild( col );
 			}
 			table.appendChild(row);
@@ -1137,7 +1167,7 @@ skyshares.model = {
 							for ( var k = 0; k < income_groups[ i ].regions[ region ].length; k++ ) {
 								value += config.f( income_groups[ i ].regions[ region ][ k ].iso_index, t );
 							}
-							column.innerHTML = Math.round( value );
+							column.innerHTML = skyshares.utility.formatcurrency( value, 0 );
 						} catch( error ) {
 							//console.log( 'Error generating table ' +  config.title + ' problem with country ' +  self.cow_countries[ i ].name + ' : ' + error.message );
 							//console.log( error.stack );
@@ -1156,6 +1186,7 @@ skyshares.model = {
 		}
 	},
 	generatecharts : function() {
+		/*
 		var self = skyshares.model;
 		//
 		// World Emissions
@@ -1218,6 +1249,7 @@ skyshares.model = {
 					} );
 				}
 		}
+	*/
 	},
 	createsvg : function( id, width, height ) {
 		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");

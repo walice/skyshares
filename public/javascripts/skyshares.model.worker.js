@@ -1006,7 +1006,7 @@ var model = {
 		self.EQPrice_fin.sort(compare);
 		//console.log('EQPrice= ' + JSON.stringify(self.EQPrice));
 		//console.log('EQPrice_pre= ' + JSON.stringify(self.EQPrice_pre));
-		//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM BITCHES THIS WORKS
+		//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM THIS WORKS
 
 
 		//
