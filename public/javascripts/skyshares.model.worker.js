@@ -518,7 +518,8 @@ var model = {
 			// build data groups from COW members
 			//
 			log( 'building COW mac' );
-			self.buildcowmac();	
+			self.buildcowmac();
+
 			//
 			// calculate world emissions
 			//
@@ -582,6 +583,8 @@ var model = {
 			var emissionscapita = self.getfunction( 'emissionscapita' );
 			var allowancescapita = self.getfunction( 'allowancescapita' );
 
+
+
 			var p = self.getdata( 'p' );
 			
 			var country = self.all_countries[ 0 ];
@@ -600,6 +603,8 @@ var model = {
 				country.flowGDP = [];
 				country.emissionscapita = [];
 				country.allowancescapita = [];
+				country.debtprincipal = [];
+				country.debtservice = [];
 				if ( self.cow_countries.indexOf( country ) >= 0 ) {
 					//log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
 					for ( var year = 2010; year <= 2100; year++ ) {
@@ -900,7 +905,7 @@ var model = {
 					};
 
 					if ( isNaN( EQyear.price ) ) {
-						log( "EQyear.price isNaN" );
+						//log( "EQyear.price isNaN" );
 					}
 					if ( abatement_target < cow_mac_iqREDUC.data[ 0 ].x ) {
 						//log( cow_mac_iqREDUC.year + ' abatement_target=' + abatement_target + ' is less than min REDUC ' + cow_mac_iqREDUC.data[ 0 ].x );
@@ -1072,6 +1077,7 @@ var model = {
 			log( 'error:' + error );
 		}
 	},
+
 	//
 	//
 	//

@@ -742,11 +742,10 @@ skyshares.ui = {
 				value: self.variables.allocation_rule
 			});
 			self.allocation_rule.addEventListener( 'change', function( evt ) {
-				console.log( 'allocation_rule changed to: ' + self.allocation_rule.value );
 				//self.variables.allocation_rule = self.allocation_rule.value;
 				switch ( self.allocation_rule.value ) {
 					case 0 : 
-						self.variables.allocation_rule = 0; // carbon_debt
+						self.variables.allocation_rule = 1; // carbon_debt
 						break;
 					case 1 :
 						self.variables.allocation_rule = 0; //per_capita
@@ -758,6 +757,7 @@ skyshares.ui = {
 						//self.variables.allocation_rule = 3; // historical_responsibilities
 						//break;
 				}
+				console.log( 'allocation_rule changed to: ' + self.variables.allocation_rule );
 				self.model.postMessage( { command: 'setvariables', parameter: self.variables } );
 			}, false );
 			//
