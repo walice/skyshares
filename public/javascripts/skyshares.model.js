@@ -126,6 +126,7 @@ skyshares.model = {
 							local_country.emissionscapita	= country.emissionscapita;
 							local_country.allowancescapita	= country.allowancescapita;
 							local_country.abatement_target_bis 	= country.abatement_target_bis;
+							local_country.decarbcostnotrade = country.decarbcostnotrade;
 							//local_country.transf			= country.transf;	
 							//local_country.qBar				= country.qBar;								
 							self.countries_to_process--;
@@ -1004,6 +1005,17 @@ skyshares.model = {
 			},
 			f : function( i, t ) {
 				return skyshares.utility.formatcurrency( self.all_countries[ i ].total_cost[ t - 2010 ],0,",",".","$" );	
+			}
+		} );
+		self.generatetable( {
+			title : 'Total Costs without trade',
+			range : {
+				min : 2010,
+				max : 2100,
+				step : 1
+			},
+			f : function( i, t ) {
+				return skyshares.utility.formatcurrency( self.all_countries[ i ].decarbcostnotrade[ t - 2010 ],0,",",".","$" );	
 			}
 		} );
 		self.generatetable( {

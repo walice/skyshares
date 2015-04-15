@@ -5,8 +5,8 @@
     return parts.join(".");
 	}
 
-	var format = numberWithCommas(15416)
-	//console.log("numbers with commas: " + format);
+	var format = numberWithCommas(666666)
+	console.log("numbers with commas: " + format);
 
 	var numberArray = [40, 1, 5, 200];
 	function compareNumbers(a, b) {
@@ -477,6 +477,7 @@ var model = {
 				country.flowGDP = [];
 				country.emissionscapita = [];
 				country.allowancescapita = [];
+				country.decarbcostnotrade = [];
 				country.qBar = [];
 				postMessage( { command: 'update_country', parameter: country } );
 			});
@@ -582,6 +583,7 @@ var model = {
 			var regul = self.getfunction( 'regul' );
 			var emissionscapita = self.getfunction( 'emissionscapita' );
 			var allowancescapita = self.getfunction( 'allowancescapita' );
+			var decarbcostnotrade = self.getfunction( 'decarbcostnotrade' );
 
 
 
@@ -605,6 +607,7 @@ var model = {
 				country.allowancescapita = [];
 				country.debtprincipal = [];
 				country.debtservice = [];
+				country.decarbcostnotrade = [];
 				if ( self.cow_countries.indexOf( country ) >= 0 ) {
 					//log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
 					for ( var year = 2010; year <= 2100; year++ ) {
@@ -619,6 +622,7 @@ var model = {
 						country.flowGDP.push( flowGDP( country.iso_index, year ) );
 						country.emissionscapita.push( emissionscapita( country.iso_index, year ) );
 						country.allowancescapita.push( allowancescapita( country.iso_index, year ) );
+						country.decarbcostnotrade.push( decarbcostnotrade(country.iso_index, year ) );
 						//country.transf.push( transf( country.iso_index, year ) );
 						//country.qBar.push( qBar( country.iso_index, year ) );
 						var allowances = qBar( country.iso_index, year );
@@ -1247,7 +1251,25 @@ var model = {
 			
 			return cost;
 		},
+		decarbcostnotrade : function( i, t ) {
+			//Calculating what the total costs would be without trade
+			var self 	= model;
+			var Abat = self.scope[ 'abat' ];
+			var mac 	= self.getcountrymac( 'MAC', i, t );
+			var tu 		= Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) );
+			function interpolateMAC(u) {
+				var v0 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac0.data, u ) );
+				var v1 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac1.data, u ) );
+				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );	
+				return value;
+			};
+			var abat = Abat( i, t );
 
+			if ( abat <= 0 ) return 0;
+			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , abat );
+			
+			return cost;
+		},
 		//
 		// this is a very inefficient recursive function
 		//
