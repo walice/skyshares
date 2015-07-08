@@ -668,10 +668,15 @@ iframe.skyshares-pdf {
 }
 div.skyshares-chart {
 display: inline-block;
+/*
 width: 90%;
 height: 256px;
-min-height: 256px;
-margin-bottom: 48px;
+*/
+width: 70.0vw;
+height: 50.0vh;
+min-height: 512px;
+margin-top: 24px;
+margin-bottom: 24px;
 /*-webkit-flex: 1 1 auto;*/
 flex: 0;
 color: white;
@@ -748,7 +753,8 @@ div.skyshares-summary-table-container {
     min-height: 304px;
     -webkit-flex: 1 1 auto;
     flex: 1 1 auto;
-    margin-bottom: 48px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 div.skyshares-summary-table {
     display: block;
@@ -814,6 +820,54 @@ white-space: nowrap;
 font-weight: light;
 white-space: nowrap;
 }
+/*
+    legend
+    */
+#map-legend {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: auto;
+    padding: 16px;
+    background-color: rgba( 255, 255, 255, 0.5 );
+    color: black;
+    font-size: 12px;
+    line-height: 16px;
+    vertical-align: middle;
+}
+/*
+    { r: 147, g: 138, b: 72 },
+    { r: 198, g: 183, b: 147 },
+    { r: 232, g: 224, b: 163 },
+    { r: 147, g: 244, b: 137 },
+    { r: 113, g: 244, b: 166 },
+    { r: 34, g: 181, b: 115 }
+
+    */
+    #map-legend > div {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        margin: 4px;
+    }
+    #map-legend div:nth-child(1) {
+        background-color: rgb(147,138,72);
+    }
+    #map-legend div:nth-child(2) {
+        background-color: rgb(198,183,147);
+    }
+    #map-legend div:nth-child(3) {
+        background-color: rgb(232,224,163);
+    }
+    #map-legend div:nth-child(4) {
+        background-color: rgb(147,244,137);
+    }
+    #map-legend div:nth-child(5) {
+        background-color: rgb(113,244,166);
+    }
+    #map-legend div:nth-child(6) {
+        background-color: rgb(34,181,115);
+    }
 /*
 guide
 */
@@ -1010,6 +1064,7 @@ fill: white;
 .c3-axis-y2-label {
 stroke: none;
 fill: white;
+font-size:18px; 
 }
 
 .c3-tooltip-container {

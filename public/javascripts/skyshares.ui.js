@@ -36,9 +36,12 @@
 	                if (items[i] === item) {
 	                    items[i].classList.add('menu-item-selected');
 	                    if (target) {
-	                    	target.style.display = 'block';
-	                    	var width = target.offsetWidth;
-	                    	console.log( items[i].getAttribute('data-section') + ' width=' + width );
+	                        target.style.display = 'block';
+	                        var size = {
+	                            width: target.offsetWidth * .7,
+	                            height: target.offsetHeight * .7
+	                        };
+	                    	skyshares.chart.resizeall(size);
 	                    }
 	                } else {
 	                    items[i].classList.remove('menu-item-selected');

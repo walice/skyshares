@@ -402,7 +402,7 @@
 				var text = '<span class="tooltip_bold">' + country.name.replace(' ', '&nbsp;') + '</span>';
 				if (country.population && country.population.length > year_index) {
 				    text += '<br />•&nbsp;<span class="tooltip_light" style="font-size: 90%;" >Population&nbsp;</span><span class="tooltip_bold">' +
-                    country.population[year_index] +
+                    skyshares.utility.formatcurrency(country.population[year_index], 0, ",", ".", "") +
                     '</span>';
 				}
 				if (country.gdp && country.gdp.length > year_index) {
@@ -612,78 +612,7 @@
 			table.appendChild( body );
 			return table;
 		},
-		summary_table_row_source : [
-			{
-				title: "Allowances per capita",
-				field: "allowancescapita",
-				format : function( value ) {
-					return skyshares.utility.formatcurrency( value, 2,",",".","" );
-				}
-			},	
-			{
-				title: "Domestic Abatement",
-				field: "domabat",
-				format: function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","", "Mt" );
-				}
-			},		
-			{
-				title: "Transfers",
-				field: "transf",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","", "Mt" );
-				}
-			},
-			{
-				title: "Financial Flows ( millions )",
-				field: "flow",
-				format: function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "$" );
-				}
-			},
-			{
-				title: "Financial Flows (% GDP)",
-				field: "flowGDP",
-				format: function( value ) {
-					return skyshares.utility.formatcurrency( value, 0,",",".", "", "%" );
-				}
-			},
-			{
-				title: "Decarbonisation Costs ( millions )",
-				field: "decarb_cost",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "$" );
-				}
-			},
-			{
-				title: "Decarbonisation Costs (% GDP)",
-				field: "decarbcostGDP",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value, 0,",",".", "", "%" );
-				}
-			},
-			{
-				title: "Total costs ( millions )",
-				field: "total_cost",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "$" );
-				}
-			},
-			{
-				title: "Total costs without trade",
-				field: "decarbcostnotrade",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "$" );
-				}
-			},
-			{
-				title: "Total costs (% GDP)",
-				field: "totalcostGDP",
-				format:  function( value ) {
-					return skyshares.utility.formatcurrency( value, 0,",",".", "", "%" );
-				}
-			}
-		],
+		summary_table_row_source : undefined,
 		rendergroupsummarytables : function(button) {
 			var start = button.getAttribute('data-start');
 			var end = button.getAttribute('data-end');
@@ -709,9 +638,15 @@
 								title : source.title,
 								data : []
 							};
-							years.forEach( function( year ) {
-								row.data.push( source.format( self.getgroupdatasum( group, source.field, year ) ) );
-							});
+							if (source.f) {
+							    years.forEach(function (year) {
+							        row.data.push(source.format(source.f(group, source.field, year)));
+							    });
+							} else {
+							    years.forEach(function (year) {
+							        row.data.push(source.format(self.getgroupdatasum(group, source.field, year)));
+							    });
+							}
 							data.rows.push( row );
 						});
 						container.appendChild( self.rendersummarytable( data ) );
@@ -1358,6 +1293,87 @@
 				break;
 		}
 	};
+    //
+    //
+    //
+	self.summary_table_row_source = [
+			{
+			    title: "Allowances per capita",
+			    field: "allowancescapita",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "");
+			    }
+			},
+			{
+			    title: "Domestic Abatement",
+			    field: "domabat",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", "Mt");
+			    }
+			},
+			{
+			    title: "Transfers",
+			    field: "transf",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", "Mt");
+			    }
+			},
+			{
+			    title: "Financial Flows ( millions )",
+			    field: "flow",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
+			    }
+			},
+			{
+			    title: "Financial Flows (% GDP)",
+			    field: "flowGDP",
+			    f: self.getgroupdatapercentagegdp,
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
+			    }
+			},
+			{
+			    title: "Decarbonisation Costs ( millions )",
+			    field: "decarb_cost",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
+			    }
+			},
+			{
+			    title: "Decarbonisation Costs (% GDP)",
+			    field: "decarbcostGDP",
+			    f: self.getgroupdatapercentagegdp,
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
+			    }
+			},
+			{
+			    title: "Total costs ( millions )",
+			    field: "total_cost",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
+			    }
+			},
+			{
+			    title: "Total costs without trade",
+			    field: "decarbcostnotrade",
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
+			    }
+			},
+			{
+			    title: "Total costs (% GDP)",
+			    field: "totalcostGDP",
+			    f: self.getgroupdatapercentagegdp,
+			    format: function (value) {
+			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
+			    }
+			}
+	];
+    //
+    //
+    //
 	self.model.onerror = function( evt ) {
 		alert( 'Error in model : ' + evt.data );
 	};
