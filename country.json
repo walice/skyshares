@@ -9,7 +9,7 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac1" }, "iso" : "AUS", "name" : "Australia", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac2" }, "iso" : "AUT", "name" : "Austria", "GNI" : "$48300.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac3" }, "iso" : "AZE", "name" : "Azerbaijan", "GNI" : "$5290.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbac4" }, "iso" : "BHS", "name" : "Bahamas, The", "GNI" : "" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbac4" }, "iso" : "BHS", "name" : "The Bahamas", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac5" }, "iso" : "BHR", "name" : "Bahrain", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac6" }, "iso" : "BGD", "name" : "Bangladesh", "GNI" : "$770.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbac7" }, "iso" : "BRB", "name" : "Barbados", "GNI" : "" }
@@ -38,10 +38,10 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbade" }, "iso" : "CHN", "name" : "China", "GNI" : "$4930.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbadf" }, "iso" : "COL", "name" : "Colombia", "GNI" : "$6110.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbae0" }, "iso" : "COM", "name" : "Comoros", "GNI" : "$770.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbae1" }, "iso" : "COD", "name" : "Congo, Dem. Rep.", "GNI" : "$190.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbae2" }, "iso" : "COG", "name" : "Congo, Rep.", "GNI" : "$2,270.00" }
+{ "iso" : "COD", "name" : "Democratic Republic of the Congo", "GNI" : "$190.00", "_id" : { "$oid" : "53b56251f0eb9768376cbae1" } }
+{ "iso" : "COG", "name" : "Republic of the Congo", "GNI" : "$2,270.00", "_id" : { "$oid" : "53b56251f0eb9768376cbae2" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbae3" }, "iso" : "CRI", "name" : "Costa Rica", "GNI" : "$7660.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbae4" }, "iso" : "CIV", "name" : "Cote d'Ivoire", "GNI" : "$1100.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbae4" }, "iso" : "CIV", "name" : "C&ocirc;te d'Ivoire", "GNI" : "$1100.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbae5" }, "iso" : "HRV", "name" : "Croatia", "GNI" : "$13850.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbae6" }, "iso" : "CUB", "name" : "Cuba", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbae7" }, "iso" : "CYP", "name" : "Cyprus", "GNI" : "" }
@@ -51,7 +51,7 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaeb" }, "iso" : "DMA", "name" : "Dominica", "GNI" : "$7090.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaec" }, "iso" : "DOM", "name" : "Dominican Republic", "GNI" : "$5240.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaed" }, "iso" : "ECU", "name" : "Ecuador", "GNI" : "$4140.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbaee" }, "iso" : "EGY", "name" : "Egypt, Arab Rep.", "GNI" : "$2,600.00" }
+{ "iso" : "EGY", "name" : "Egypt", "GNI" : "$2,600.00", "_id" : { "$oid" : "53b56251f0eb9768376cbaee" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaef" }, "iso" : "SLV", "name" : "El Salvador", "GNI" : "$3480.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaf0" }, "iso" : "GNQ", "name" : "Equatorial Guinea", "GNI" : "$14540.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaf1" }, "iso" : "ERI", "name" : "Eritrea", "GNI" : "$430.00" }
@@ -63,7 +63,7 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaf7" }, "iso" : "FRA", "name" : "France", "GNI" : "$42420.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaf8" }, "iso" : "PYF", "name" : "French Polynesia", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbaf9" }, "iso" : "GAB", "name" : "Gabon", "GNI" : "$7980.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbafa" }, "iso" : "GMB", "name" : "Gambia, The", "GNI" : "$610.00" }
+{ "iso" : "GMB", "name" : "The Gambia", "GNI" : "$610.00", "_id" : { "$oid" : "53b56251f0eb9768376cbafa" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbafb" }, "iso" : "GEO", "name" : "Georgia", "GNI" : "$2860.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbafc" }, "iso" : "DEU", "name" : "Germany", "GNI" : "$43980.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbafd" }, "iso" : "GHA", "name" : "Ghana", "GNI" : "$1410.00" }
@@ -74,14 +74,14 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb02" }, "iso" : "GIN", "name" : "Guinea", "GNI" : "$440.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb03" }, "iso" : "GNB", "name" : "Guinea-Bissau", "GNI" : "$600.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb04" }, "iso" : "GUY", "name" : "Guyana", "GNI" : "" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb05" }, "iso" : "HTI", "name" : "Haiti", "GNI" : "$700.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb05" }, "iso" : "HTI", "name" : "Ha&iuml;ti", "GNI" : "$700.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb06" }, "iso" : "HND", "name" : "Honduras", "GNI" : "$1970.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb07" }, "iso" : "HKG", "name" : "Hong Kong SAR, China", "GNI" : "$35,160.00" }
+{ "iso" : "HKG", "name" : "Hong Kong", "GNI" : "$35,160.00", "_id" : { "$oid" : "53b56251f0eb9768376cbb07" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb08" }, "iso" : "HUN", "name" : "Hungary", "GNI" : "$12730.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb09" }, "iso" : "ISL", "name" : "Iceland", "GNI" : "$35020.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb0a" }, "iso" : "IND", "name" : "India", "GNI" : "$1410.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb0b" }, "iso" : "IDN", "name" : "Indonesia", "GNI" : "$2940.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb0c" }, "iso" : "IRN", "name" : "Iran, Islamic Rep.", "GNI" : "" }
+{ "iso" : "IRN", "name" : "Islamic Republic of Iran", "GNI" : "", "_id" : { "$oid" : "53b56251f0eb9768376cbb0c" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb0d" }, "iso" : "IRQ", "name" : "Iraq", "GNI" : "$2640.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb0e" }, "iso" : "IRL", "name" : "Ireland", "GNI" : "$38580.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb0f" }, "iso" : "ISR", "name" : "Israel", "GNI" : "$28930.00" }
@@ -92,19 +92,19 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb14" }, "iso" : "KAZ", "name" : "Kazakhstan", "GNI" : "$8220.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb15" }, "iso" : "KEN", "name" : "Kenya", "GNI" : "$820.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb16" }, "iso" : "KIR", "name" : "Kiribati", "GNI" : "$2110.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb17" }, "iso" : "PRK", "name" : "Korea, Dem. Rep.", "GNI" : "" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb18" }, "iso" : "KOR", "name" : "Korea, Rep.", "GNI" : "$20,870.00" }
+{ "iso" : "PRK", "name" : "Democratic Republic of Korea", "GNI" : "", "_id" : { "$oid" : "53b56251f0eb9768376cbb17" } }
+{ "iso" : "KOR", "name" : "Republic of Korea", "GNI" : "$20,870.00", "_id" : { "$oid" : "53b56251f0eb9768376cbb18" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb19" }, "iso" : "KWT", "name" : "Kuwait", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb1a" }, "iso" : "KGZ", "name" : "Kyrgyz Republic", "GNI" : "$920.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb1b" }, "iso" : "LAO", "name" : "Lao PDR", "GNI" : "$1130.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb1b" }, "iso" : "LAO", "name" : "Lao People's Democratic Republic", "GNI" : "$1130.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb1c" }, "iso" : "LVA", "name" : "Latvia", "GNI" : "$12350.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb1d" }, "iso" : "LBN", "name" : "Lebanon", "GNI" : "$9110.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb1e" }, "iso" : "LBR", "name" : "Liberia", "GNI" : "$240.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb1f" }, "iso" : "LBY", "name" : "Libya", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb20" }, "iso" : "LTU", "name" : "Lithuania", "GNI" : "$12280.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb21" }, "iso" : "LUX", "name" : "Luxembourg", "GNI" : "$78130.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb22" }, "iso" : "MAC", "name" : "Macao SAR, China", "GNI" : "" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb23" }, "iso" : "MKD", "name" : "Macedonia, FYR", "GNI" : "$4,730.00" }
+{ "iso" : "MAC", "name" : "Macao", "GNI" : "", "_id" : { "$oid" : "53b56251f0eb9768376cbb22" } }
+{ "iso" : "MKD", "name" : "Macedonia", "GNI" : "$4,730.00", "_id" : { "$oid" : "53b56251f0eb9768376cbb23" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb24" }, "iso" : "MDG", "name" : "Madagascar", "GNI" : "$430.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb25" }, "iso" : "MWI", "name" : "Malawi", "GNI" : "$340.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb26" }, "iso" : "MYS", "name" : "Malaysia", "GNI" : "$8420.00" }
@@ -145,7 +145,7 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb49" }, "iso" : "RUS", "name" : "Russian Federation", "GNI" : "$10400.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb4a" }, "iso" : "RWA", "name" : "Rwanda", "GNI" : "$570.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb4b" }, "iso" : "WSM", "name" : "Samoa", "GNI" : "$3190.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb4c" }, "iso" : "STP", "name" : "Sao Tome and Principe", "GNI" : "$1360.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb4c" }, "iso" : "STP", "name" : "S&atilde;o Tome and Princip&eacute;", "GNI" : "$1360.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb4d" }, "iso" : "SAU", "name" : "Saudi Arabia", "GNI" : "$17820.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb4e" }, "iso" : "SEN", "name" : "Senegal", "GNI" : "$1070.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb4f" }, "iso" : "SRB", "name" : "Serbia", "GNI" : "$5680.00" }
@@ -159,15 +159,15 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb57" }, "iso" : "ZAF", "name" : "South Africa", "GNI" : "$6960.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb58" }, "iso" : "ESP", "name" : "Spain", "GNI" : "$30990.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb59" }, "iso" : "LKA", "name" : "Sri Lanka", "GNI" : "$2580.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5a" }, "iso" : "KNA", "name" : "St. Kitts and Nevis", "GNI" : "$12480.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5b" }, "iso" : "LCA", "name" : "St. Lucia", "GNI" : "$6680.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5c" }, "iso" : "VCT", "name" : "St. Vincent and the Grenadines", "GNI" : "$6100.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5a" }, "iso" : "KNA", "name" : "Saint Kitts and Nevis", "GNI" : "$12480.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5b" }, "iso" : "LCA", "name" : "Saint Lucia", "GNI" : "$6680.00" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb5c" }, "iso" : "VCT", "name" : "Saint Vincent and the Grenadines", "GNI" : "$6100.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb5d" }, "iso" : "SDN", "name" : "Sudan", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb5e" }, "iso" : "SUR", "name" : "Suriname", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb5f" }, "iso" : "SWZ", "name" : "Swaziland", "GNI" : "$3300.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb60" }, "iso" : "SWE", "name" : "Sweden", "GNI" : "$53230.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb61" }, "iso" : "CHE", "name" : "Switzerland", "GNI" : "$76380.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb62" }, "iso" : "SYR", "name" : "Syrian Arab Republic", "GNI" : "" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb62" }, "iso" : "SYR", "name" : "Syria", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb63" }, "iso" : "TJK", "name" : "Tajikistan", "GNI" : "$870.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb64" }, "iso" : "TZA", "name" : "Tanzania", "GNI" : "$540.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb65" }, "iso" : "THA", "name" : "Thailand", "GNI" : "$4420.00" }
@@ -178,7 +178,7 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb6a" }, "iso" : "TUN", "name" : "Tunisia", "GNI" : "$4070.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb6b" }, "iso" : "TUR", "name" : "Turkey", "GNI" : "$10410.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb6c" }, "iso" : "TKM", "name" : "Turkmenistan", "GNI" : "$4110.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb6d" }, "iso" : "TCA", "name" : "Turks and Caicos Islands", "GNI" : "" }
+{ "_id" : { "$oid" : "53b56251f0eb9768376cbb6d" }, "iso" : "TCA", "name" : "Turks and Caicos", "GNI" : "" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb6e" }, "iso" : "UGA", "name" : "Uganda", "GNI" : "$510.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb6f" }, "iso" : "UKR", "name" : "Ukraine", "GNI" : "$3120.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb70" }, "iso" : "ARE", "name" : "United Arab Emirates", "GNI" : "$40760.00" }
@@ -187,8 +187,8 @@
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb73" }, "iso" : "URY", "name" : "Uruguay", "GNI" : "$11860.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb74" }, "iso" : "UZB", "name" : "Uzbekistan", "GNI" : "$1510.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb75" }, "iso" : "VUT", "name" : "Vanuatu", "GNI" : "$2870.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb76" }, "iso" : "VEN", "name" : "Venezuela, RB", "GNI" : "$11,920.00" }
+{ "iso" : "VEN", "name" : "Venezuela", "GNI" : "$11,920.00", "_id" : { "$oid" : "53b56251f0eb9768376cbb76" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb77" }, "iso" : "VNM", "name" : "Vietnam", "GNI" : "$1260.00" }
-{ "_id" : { "$oid" : "53b56251f0eb9768376cbb78" }, "iso" : "YEM", "name" : "Yemen, Rep.", "GNI" : "$1,070.00" }
+{ "iso" : "YEM", "name" : "Yemen", "GNI" : "$1,070.00", "_id" : { "$oid" : "53b56251f0eb9768376cbb78" } }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb79" }, "iso" : "ZMB", "name" : "Zambia", "GNI" : "$1160.00" }
 { "_id" : { "$oid" : "53b56251f0eb9768376cbb7a" }, "iso" : "ZWE", "name" : "Zimbabwe", "GNI" : "$640.00" }
