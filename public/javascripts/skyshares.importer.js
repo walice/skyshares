@@ -327,7 +327,7 @@ skyshares.importer = {
 									var level = row - 2;
 									if ( level < rows_per_entry ) {
 										for ( var i = 0; i < raw_mac.length; i++ ) {
-											var base_index = ( i * columns_per_entry ) + 1;
+											var base_index = ( i * ( columns_per_entry + 1 ) );
 											for ( j = 1; j < columns_per_entry + 1; j++ ) {
 												raw_mac[ i ].mac[ level ].push(parseFloat(columns[base_index]));
 												raw_mac[ i ].qreduc[ level ].push(parseFloat(columns[base_index+j])*1000000.0); // convert to tonnes from 1,000,000 tonnes

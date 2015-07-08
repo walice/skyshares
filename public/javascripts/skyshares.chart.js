@@ -28,6 +28,13 @@
 				container : #container_div
 			}
 		*/
+		resizeall: function (size) {
+		    if (self && self.charts) {
+		        for (var chart in self.charts) {
+		            self.charts[chart].resize(size);
+		        }
+            }
+		},
 		generategrouplinechart: function (options) {
 		    setTimeout(function () {
 		        var self = skyshares.chart;
@@ -508,5 +515,8 @@
 			},
 		},
 	}
-	
+    //
+    //
+    //
+
 })();
