@@ -291,7 +291,15 @@ skyshares.math = {
 	},
 	//
 	// skyshares extensions to mathjs
-	//
+    //
+	getdatasetmember : function( dataset, i ) {
+	    if ( dataset.type !== 'dataset' ) {
+	        throw { message: "get : invalid datatype : " + dataset.type };
+	    } else if ( i < 0 || i > dataset.members.length - 1 ) {
+	        throw { message: "get : index i=" +  i + " is out of range 0-" + ( dataset.members.length - 1 ) };
+	    }
+	   return dataset.members[ i ];
+	},
 	get : function( dataset, i, t ) {
 		var self = skyshares.math;
 		return self.getcolumn( dataset, i, t );
@@ -657,7 +665,8 @@ skyshares.math = {
 		try {
 			function interpolate( y, p0, p1 ) {
 				if ( p0.y == p1.y ) { // line is horizontal
-					p1.x + ( p1.x - p0.x );
+					return p1.x + ( p1.x - p0.x ); 
+					//p1.x + ( p1.x - p0.x );
 				}
 				var x = p0.x + ( ( y - p0.y ) / ( p1.y - p0.y ) ) * ( p1.x - p0.x );
 				if ( !isFinite( x ) ) {
@@ -668,7 +677,7 @@ skyshares.math = {
 			var np = p.length;
 			if ( y < p[ 0 ].y ) { // extrapolate back from first point
 				return interpolate( y, p[ 1 ], p[ 0 ] );
-			} else if ( y > p[ np - 1 ].y ) { // extrapolate forwards from first point
+			} else if ( y > p[ np - 1 ].y ) { // extrapolate forwards from last point
 				return interpolate( y, p[ np - 2 ], p[ np - 1 ] );
 			} else {
 				for ( var i = 0; i < np - 1; i++ ) {

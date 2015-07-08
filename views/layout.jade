@@ -6,14 +6,10 @@ html
 		script(src='/javascripts/skyshares.js')
 		script(src='/javascripts/skyshares.rest.js')
 		script(src='/javascripts/skyshares.map.js')
-		script(src='/javascripts/raphael-min.js')
-		script(src='/javascripts/raphael-svg-import.js')
-		script(src='/javascripts/snap.svg.js')
-		script(src='/javascripts/paper-full.js')
 		script(type='text/javascript').
 			function init() {
 				skyshares.init( '#{mode}' );
 			}   
-
+		block scripts
 	body( onload='init()' )
 		block content

@@ -1,0 +1,14 @@
+doctype html
+html
+	block head
+		title= title
+		link(rel='stylesheet', href='/styles/skyshares.css')
+		meta( property='og:title' content='#{title}' )
+		meta( property='og:image' content='#{image}' )
+		meta( property='og:description' content='#{description}' )
+	body
+		h1.skyshares
+			| #{title}
+		img( src='#{image}', style='width: 90%;' )
+		p
+			| #{description}

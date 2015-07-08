@@ -1,26 +1,26 @@
 //
 // db utilities
 //
-function findmac( db, year, callback ) {
-    db.collection('mac').findOne( { name: 'MAC_' + year }, callback);
+function findmac( db, name, callback ) {
+    db.collection('mac').findOne( { name: name }, callback);
 }
 function addmac( db, mac, callback ) {
 	db.collection('mac').insert(mac, callback);
 }
-function updatemac( db, year, mac, callback ) {
-	db.collection('mac').update( { name: 'MAC_' + year }, mac, callback);
+function updatemac( db, name, mac, callback ) {
+	db.collection('mac').update( { name: name }, mac, callback);
 }
 function deletemac( db, name, callback ) {
-	db.collection('mac').remove( { name: 'MAC_' + year }, callback);
+	db.collection('mac').remove( { name: name }, callback);
 }
 //
 // GET / listing methods
 //
 exports.get = function(db) {
   return function(req, res) {
-  	var year = req.params.year;
-    findmac( db, year, function (err, mac) {
-      	res.json( ( err || !mac ) ? { status: 'ERROR', message: ( err ? err : 'Unable to find MAC_' + year ) } : mac);
+  	var name = req.params.name;
+    findmac( db, name, function (err, mac) {
+      	res.json( ( err || !mac ) ? { status: 'ERROR', message: ( err ? err : 'Unable to find ' + name ) } : mac);
     });
   }
 };
@@ -31,19 +31,26 @@ exports.listall = function(db) {
     });
   }
 };
+exports.listnames = function(db) {
+  return function(req, res) {
+    db.collection('mac').find({},{name: 1, _id: 1}).toArray(function (err, items) {
+      	res.json( err ? { status: 'ERROR', message: err } : items );
+    });
+  }
+};
 //
 // PUT / POST
 //
 exports.post = function(db) {
 	return function(req, res) {
-		var year = req.params.year;
-		findmac( db, year, function( err, mac ) {
+		var name = req.params.name;
+		findmac( db, name, function( err, mac ) {
 			if ( err || !mac ) {
 				addmac( db, req.body, function(err, result) {
 					res.json( err ? { status: 'ERROR', message: err } : { status: 'OK', message: 'Added mac entry ' + req.body.name } );
 				});
 			} else {
-				updatemac( db, year, req.body, function(err, result) {
+				updatemac( db, name, req.body, function(err, result) {
 					res.json( err ? { status: 'ERROR', message: err } : { status: 'OK', message: 'Updated mac entry ' + req.body.name } );
 				});
 			}
@@ -53,8 +60,8 @@ exports.post = function(db) {
 
 exports.put = function(db) {
 	return function(req, res) {
-		var year = req.params.year;
-		updatemac( db, year, req.body, function(err, result) {
+		var name = req.params.name;
+		updatemac( db, name, req.body, function(err, result) {
 			res.json( err ? { status: 'ERROR', message: err } : { status: 'OK' } );
 		});
 	}
@@ -62,8 +69,8 @@ exports.put = function(db) {
 
 exports.delete = function(db) {
 	return function(req, res) {
-		var year = req.params.year;
-		deletemac( db, year, req.body, function(err, result) {
+		var name = req.params.name;
+		deletemac( db, name, function(err, result) {
 			res.json( err ? { status: 'ERROR', message: err } : { status: 'OK' } );
 		});
 	}

@@ -1,37 +1,21 @@
+//
+// utilities
 //	
-	function numberWithCommas(x) {
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-	}
-
-	var format = numberWithCommas(666666)
-	console.log("numbers with commas: " + format);
-
-	var numberArray = [40, 1, 5, 200];
-	function compareNumbers(a, b) {
- 		return a - b;
-	}
-	console.log('Sorted with compareNumbers:', numberArray.sort(compareNumbers));
-	
-	function compare(a,b) {
-	  if (a.year < b.year)
-	     return -1;
-	  if (a.year > b.year)
-	    return 1;
-	  return 0;
-	}
-	console.log('Sorted with compare', numberArray.sort(compare));
-
-	function sortMultiDimensional(a,b)
-	{
-    //this will sort the array using the second element    
-    return ((b[1] < a[1]) ? -1 : ((b[1] > a[1]) ? 1 : 0));
-	}
-
-	//
+function compareyear( a, b ) {
+	return ( a.year - b.year );
+}
 function log( message ) {
 	postMessage( { command: 'debug', parameter: message } );
+}
+function sendprogress( status, total, current ) {
+	postMessage( { 
+		command: 'update_progress', 
+		parameter: { 
+			status: status,
+			total: total,
+			current: current
+		}
+	} );
 }
 //
 // message dispatcher 
@@ -122,13 +106,17 @@ var localStorage = {
 };
 
 importScripts('math.js', 'skyshares.js', 'skyshares.rest.js', 'skyshares.math.js', 'skyshares.geometry.js', 'numeric-1.2.6.js' ); 
-
+//
+// 
+//
 function downloadqueue() {
 	this.queue = [];
+	this.max = 0;
 }
 downloadqueue.prototype.add = function( name ) {
 	//log( 'downloading: ' + name );
 	this.queue.push( name );
+	this.max++;
 }
 downloadqueue.prototype.remove = function( name ) {
 	//log( 'downloaded: ' + name );
@@ -140,7 +128,12 @@ downloadqueue.prototype.remove = function( name ) {
 downloadqueue.prototype.length = function() {
 	return this.queue.length;
 }
-
+downloadqueue.prototype.sendprogress = function() {
+	sendprogress( "downloading data...", this.max, this.max - this.queue.length );
+}
+//
+//
+//
 var model = {
 	//
 	// 
@@ -152,7 +145,7 @@ var model = {
 		// download countries 
 		//
 		self.download_queue.add( 'country' );
-		skyshares.rest.get( '../country', {
+		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/country', {
 			onloadend : function(evt) {
 				var items = skyshares.rest.parseresponse(evt);
 				if ( items ) {
@@ -161,9 +154,7 @@ var model = {
 					//
 					for ( var i = 0; i < items.length; i++ ) {
 						items[ i ].iso_index = i;
-						items[ i ].emissions = [];
-						items[ i ].abatement_target = [];
-						items[ i ].flow = [];
+						self.clearcountrydata(items[ i ]);
 					}
 					self.all_countries = items;
 					self.non_cow_countries = items.slice(0);
@@ -175,14 +166,18 @@ var model = {
 				}
 				self.download_queue.remove( 'country' );
 				self.ready = self.download_queue.length() == 0;
-				if ( self.ready ) postMessage( { command: 'ready' } );
+				if ( self.ready ) {
+					postMessage( { command: 'ready' } );
+				} else {
+					self.download_queue.sendprogress();
+				}
 			}
 		});
 		//
 		// download groups for multiple selection
 		//
 		self.download_queue.add( 'group' );
-		skyshares.rest.get( '../data/group', {
+		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/data/group', {
 				onloadend : function(evt) {
 					var items = skyshares.rest.parseresponse( evt );
 					if ( items ) {
@@ -199,29 +194,25 @@ var model = {
 					}
 					self.download_queue.remove( 'group' );
 					self.ready = self.download_queue.length() == 0;
-					if ( self.ready ) postMessage( { command: 'ready' } );
+					if ( self.ready ) {
+						postMessage( { command: 'ready' } );
+					} else {
+						self.download_queue.sendprogress();
+					}
 				}
 			} );
 		//
 		// download MAC data
 		//
-		self.mac_data = {
-			name	: 'MAC',
-			members : []
-		};
-		for ( var mac_year = 2010; mac_year <= 2100; mac_year += 5 ) {
-			self.download_queue.add( 'mac_' + mac_year );
-			skyshares.rest.get( '../mac/' + mac_year, {
-					onloadend : function(evt) {
-						var data = skyshares.rest.parseresponse( evt );
-						if ( data ) {
-							self.mac_data.members.push( data );
-							self.download_queue.remove( 'mac_' + data.year );
-						}
-						self.ready = self.download_queue.length() == 0;
-						if ( self.ready ) postMessage( { command: 'ready' } );
-					}
-				} );
+		self.mac_datasets = {};
+		try {
+			[ 'GCAM', 'MIT', 'McKinsey' ].forEach(function(prefix) {
+				self.mac_datasets[ prefix ] = {};
+				self.downloadmacdata(prefix);
+			});
+			self.mac_data = self.mac_datasets[ self.mac_dataset ];
+		} catch(e) {
+			log( 'ERROR : Downloading Mac : ' + e );
 		}
 		//
 		// download remainder of model
@@ -230,12 +221,49 @@ var model = {
 		data_types.forEach( function( data_type ) {
 			self.downloaddata( data_type );
 		});
-		
+		//
+		//
+		//
+		self.download_queue.sendprogress();
+	},
+	downloadmacdata : function( prefix ) {
+		var self = model;
+		//
+		// download MAC data
+		//
+		self.mac_datasets[prefix] = {
+			name	: 'MAC_' + prefix,
+			members : []
+		};
+		for ( var mac_year = 2010; mac_year <= 2100; mac_year += 5 ) {
+			log('downloading ' + prefix + '_' + mac_year);
+			self.download_queue.add( 'mac_' + prefix + '_' + mac_year );
+			(function(year) {
+				skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/mac/' + prefix + '_' + year, {
+						onloadend : function(evt) {
+							var data = skyshares.rest.parseresponse( evt );
+							if ( data ) {
+								self.mac_datasets[prefix].members.push( data );
+								self.mac_datasets[prefix].members.sort(compareyear);
+								self.download_queue.remove( 'mac_' + prefix + '_' + year );
+								log('downloaded ' + prefix + '_' + year);
+							}
+							self.ready = self.download_queue.length() == 0;
+							if ( self.ready ) {
+								postMessage( { command: 'ready' } );
+							} else {
+								self.download_queue.sendprogress();
+							}
+						}
+				} );
+			})(mac_year);
+		}
+	
 	},
 	downloaddata : function( type ) {
 		var self = model;
 		self.download_queue.add( type );
-		skyshares.rest.get( '../data/' + type, {
+		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/data/' + type, {
 			onloadend : function(evt) {
 				var items = skyshares.rest.parseresponse( evt );
 				if ( items ) {
@@ -248,7 +276,11 @@ var model = {
 				}
 				self.download_queue.remove( type );
 				self.ready = self.download_queue.length() == 0;
-				if ( self.ready ) postMessage( { command: 'ready' } );
+				if ( self.ready ) {
+					postMessage( { command: 'ready' } );
+				} else {
+					self.download_queue.sendprogress();
+				}
 			}
 		} );
 	},
@@ -420,10 +452,18 @@ var model = {
 			update = true;
 		}
 		if ( self.allocation_rule != variables.allocation_rule ) {
-		self.allocation_rule = variables.allocation_rule;
-		update = true;
+			self.allocation_rule = variables.allocation_rule;
+			update = true;
 		}
-		
+		if ( variables.gdp_dataset && self.gdp_dataset != variables.gdp_dataset ) {
+			self.gdp_dataset = variables.gdp_dataset;
+			update = true;
+		}
+		if ( variables.mac_dataset && self.mac_dataset != variables.mac_dataset ) {
+			self.mac_dataset = variables.mac_dataset;
+			self.mac_data = self.mac_datasets[ self.mac_dataset ];
+			update = true;
+		}
 		if ( update ) {
 			self.run();
 		}
@@ -434,56 +474,39 @@ var model = {
 	load : function( name ) {
 	
 	},
+	clearcountrydata: function (country) {
+	    country.population = [];
+	    country.gdp = [];
+		country.emissions = [];
+		country.abatement_target = [];
+		country.flow = [];
+		country.decarb_cost = [];
+		country.total_cost = [];
+		country.transf = [];
+		country.allowances = [];
+		country.domabat = [];
+		country.decarbcostGDP = [];
+		country.decarbcostnotrade = [];
+		country.totalcostGDP = [];
+		country.flowGDP = [];
+		country.emissionscapita = [];
+		country.allowancescapita = [];
+		country.debtprincipal = [];
+		country.debtservice = [];
+	},
 	//
 	//
 	//
 	run : function() {
 		var self = model;
-		/*
-		//
-		// test interpolation
-		//
-		var raw = [ 
-			{ x: 0.22, y: 158.05 }, 
-			{ x: 0.22, y: 689.38 }, 
-			{ x: 0.22, y: 1353.54 }, 
-			{ x: 12.95, y: 2680.17 }, 
-			{ x: 16.35, y: 4008.31 }, 
-			{ x: 49.79, y: 5335.18 },
-			{ x: 70.40, y: 6662.85 }
-		];
-		log( 'linerinterp' );
-		[ 0.22, 1, 13, 17, 43, 55, 100 ].forEach( function( x ) {
-			log( 'x=' + x + ' y=' + skyshares.math.linerinterp( raw, x ) );
-		} );
-		log( 'linerinterpinv' );
-		[ 1214.273, 1434.787, 2697.782, 4033.966, 5670.7, 5065.628, 8570.484 ].forEach( function( y ) {
-			log( 'x=' + skyshares.math.linerinterpinv( raw, y ) + ' y=' + y );
-		} );
-		*/
 		if ( self.cow_countries.length == 0 ) {
 			self.all_countries.forEach( function( country ) {
-				country.emissions = [];
-				country.abatement_target = [];
-				country.flow = [];
-				country.decarb_cost = [];
-				country.total_cost = [];
-				country.transf = [];
-				country.allowances = [];
-				country.percapitaallowances = [];
-				country.domabat = [];
-				country.decarbcostGDP = [];
-				country.totalcostGDP = [];
-				country.flowGDP = [];
-				country.emissionscapita = [];
-				country.allowancescapita = [];
-				country.decarbcostnotrade = [];
-				country.qBar = [];
+				self.clearcountrydata( country );
 				postMessage( { command: 'update_country', parameter: country } );
 			});
 
 			postMessage( { command: 'cancel_run' } );
-			return; // TODO: need to ensure all countries are cleared
+			return; 
 		}
 		try {
 			//
@@ -520,7 +543,7 @@ var model = {
 			//
 			log( 'building COW mac' );
 			self.buildcowmac();
-
+			if ( self.stop ) return;
 			//
 			// calculate world emissions
 			//
@@ -528,7 +551,8 @@ var model = {
 			var E = self.getfunction( 'E' );
 			var emissions = [];
 			log( 'tHist=' + self.scope[ 'tHist' ] + ' tM=' + self.scope[ 'tM' ] + ' m=' + self.scope[ 'm' ] );
-			for ( var year = 2010; year <= 2100; year++ ) {
+			//for ( var year = 2010; year <= 2100; year++ ) {
+			for ( var year = 1990; year <= 2200; year++ ) {
 				var e = E(year);
 				emissions.push(e);
 			}
@@ -536,39 +560,19 @@ var model = {
 			//
 			// calculate EQ price
 			//
-			var pEQ = self.getfunction( 'pEQ' );
+			log( 'pre generating wpEQ' );
+			var wpEQ = self.getfunction( 'wpEQ' );
 			var equilibrium_price = [];
 			for ( var year = 2010; year <= 2100; year++ ) {
-				var eq = pEQ(year);
-				equilibrium_price.push(eq);
+				var price = wpEQ( year );
+				equilibrium_price.push( price );
+				log( 'wpEQ( ' + year + ' ) = ' +  price );
 			}
 			postMessage( { command: 'update_equilibrium_price', parameter: equilibrium_price } );
 			//
+			// preload functions
 			//
-			//
-			/*
-			log( 'testing pEQ' );
-			var pEQ = self.getfunction( 'pEQ' );
-			for ( var year = 2010; year <= 2100; year += 1 ) {
-				log( 'pEQ( ' + year + ' ) = ' +  pEQ( year ) );
-			}
-			*/			
-			log( 'testing wpEQ' );
-			var wpEQ = self.getfunction( 'wpEQ' );
-			for ( var year = 2010; year <= 2100; year += 1 ) {
-				log( 'wpEQ( ' + year + ' ) = ' +  wpEQ( year ) );
-			}
-			
-			//This is OK even if sometimes what is outputted to UI is different ==> display issue?
-			
-			//postMessage( { command: 'cancel_run' } );
-			//return;
-			//self.printscope();
-			//
-			// calculate emissions for COW member countries
-			// TODO: this should happen on timer
-			//
-			log( 'generating country data' );
+			log( 'preloading functions' );
 			var countryemissions = self.getfunction( 'countryemissions' );
 			var abat = self.getfunction( 'abat' );
 			var flow = self.getfunction( 'flow' );
@@ -583,63 +587,130 @@ var model = {
 			var regul = self.getfunction( 'regul' );
 			var emissionscapita = self.getfunction( 'emissionscapita' );
 			var allowancescapita = self.getfunction( 'allowancescapita' );
-			var decarbcostnotrade = self.getfunction( 'decarbcostnotrade' );
-
-
-
+			//
+			// optimised functions
+			//
+			var domAbat_opt = self.getfunction( 'domAbat_opt' );
+			var decarbcost_opt = self.getfunction( 'decarbcost_opt' );
+			//
+			// preload data
+			//
+			log( 'preloading data' );
 			var p = self.getdata( 'p' );
-			
+			var GDPDataSet = 'GDP_' + self.gdp_dataset; 
+			var GDPData = self.getdata( GDPDataSet );
+			//var qBAU = self.getdata( 'qBAU' ); 
+			var qBAU = self.getdata( 'qBAU_' + self.mac_dataset ); 
+			if ( !qBAU ) {
+				//
+				// fallback onto default
+				//
+				log( 'Unable to find dataset qBAU_' + self.mac_dataset + ' falling back to default' );
+				qBAU = self.getdata( 'qBAU' ); 
+			}
+			//
+			//
+			//
+			var regulated_share = self.scope[ 'regulated_share' ];
+			//
+			// process countries
+			//
+			log( 'generating country data' );
 			var country = self.all_countries[ 0 ];
+			var progress_total = self.all_countries.length;
+			var progress_current = 0;
 			function processCountry() {
-				country.emissions = [];
-				country.abatement_target = [];
-				country.flow = [];
-				country.decarb_cost = [];
-				country.total_cost = [];
-				country.transf = [];
-				country.allowances = [];
-				country.percapitaallowances = [];
-				country.domabat = [];
-				country.decarbcostGDP = [];
-				country.totalcostGDP = [];
-				country.flowGDP = [];
-				country.emissionscapita = [];
-				country.allowancescapita = [];
-				country.debtprincipal = [];
-				country.debtservice = [];
-				country.decarbcostnotrade = [];
+				self.clearcountrydata( country );
 				if ( self.cow_countries.indexOf( country ) >= 0 ) {
-					//log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
+					log( "processing country : " + country.iso_index + " : " + country.iso + " : " + country.name );
+					sendprogress( "generating data for countries...", progress_total, progress_current );
 					for ( var year = 2010; year <= 2100; year++ ) {
-						country.emissions.push( countryemissions( country.iso_index, year ) );
-						country.abatement_target.push( abat( country.iso_index, year ) );
-						country.flow.push( flow( country.iso_index, year ) );
-						country.decarb_cost.push( decarbcost( country.iso_index, year ) );
-						country.total_cost.push( totalcost( country.iso_index, year ) );
-						country.transf.push( transf( country.iso_index, year ) );
-						country.decarbcostGDP.push( decarbcostGDP( country.iso_index, year ) );
-						country.totalcostGDP.push( totalcostGDP( country.iso_index, year ) );
-						country.flowGDP.push( flowGDP( country.iso_index, year ) );
-						country.emissionscapita.push( emissionscapita( country.iso_index, year ) );
-						country.allowancescapita.push( allowancescapita( country.iso_index, year ) );
-						country.decarbcostnotrade.push( decarbcostnotrade(country.iso_index, year ) );
-						//country.transf.push( transf( country.iso_index, year ) );
-						//country.qBar.push( qBar( country.iso_index, year ) );
-						var allowances = qBar( country.iso_index, year );
-						country.allowances.push( allowances );
+						//
+						//
+						//
+						//log("getting country data");
 						var population = parseFloat( skyshares.math.getcolumn( p, country.iso_index, year ) );
-						country.percapitaallowances.push( allowances / population );
-						//log( 'allowances: ' + allowances + ' p:' + population ); 
-						country.domabat.push( domAbat( country.iso_index, year ) );
-						
-						if ( country.iso_index === 0 ) {
-							//log( "qBar( " + country.iso + ", " + year + " ) = " + allowances );
-						}
+						var gdp = parseFloat( skyshares.math.getcolumn( GDPData, country.iso_index, year ) );
+						var mac = self.getcountrymac('MAC', country.iso_index, year);
+					    //
+					    //
+                        //
+						country.gdp.push(gdp);
+						country.population.push(population);
+						//
+						// abatement
+						//
+						//log("abat");
+						var abat_i_t = abat( country.iso_index, year );
+						country.abatement_target.push( abat_i_t );					
+						//
+						// domestic abatement
+						//
+						//log("domAbat");
+						var domabat_i_t = domAbat_opt( year, mac, abat_i_t, regulated_share );
+						country.domabat.push( domabat_i_t );	
+						//
+						// decarbonisation cost
+						// 
+						//log("decarbcost");
+						var decarbcost_i_t = decarbcost_opt( year, mac, domabat_i_t );
+						country.decarb_cost.push( decarbcost_i_t );
+						country.decarbcostGDP.push( ( decarbcost_i_t / gdp ) * 100.0 );
+						//
+						// decarbonisation cost, no trade
+						//
+						var decarbcostnotrade_i_t = decarbcost_opt( year, mac, abat_i_t );
+						country.decarbcostnotrade.push( decarbcostnotrade_i_t );
+						//
+						// flow
+						// flow(i,t) =( abat(i,t) - domAbat(i,t)  ) * wpEQ(t)
+						//
+						//log("flow");
+						var flow_i_t = ( abat_i_t - domabat_i_t ) * equilibrium_price[ year - 2010 ];
+						country.flow.push( flow_i_t );
+						country.flowGDP.push( ( flow_i_t / gdp ) * 100.0 );
+						//
+						// total cost
+						//
+						// totalcost( i,t ) = flow( i,t ) + decarbcost( i,t )
+						//
+						//log("totalcost");
+						var totalcost_i_t = flow_i_t + decarbcost_i_t;
+						country.total_cost.push( totalcost_i_t );
+						country.totalcostGDP.push( ( totalcost_i_t / gdp ) * 100.0 );
+						//
+						// transfers
+						//
+						// transf( i,t ) = abat( i,t ) - domAbat( i,t )
+						//
+						//log("transf");
+						var transf_i_t = abat_i_t - domabat_i_t 
+						country.transf.push( transf_i_t );
+						//
+						// allowances
+						//
+						//log("allowances");
+						var allowances_i_t = qBar( country.iso_index, year );
+						country.allowances.push( allowances_i_t );
+						country.allowancescapita.push( allowances_i_t / population );
+						//
+						// emissions
+						//
+						// countryemissions(i,t) = ifElse( trading_scenario == 0,  qBar( i,t ) + transf( i,t  ), ifElse( trading_scenario == 2,  getcolumn( qBAU, i, t )  - ( domAbat( i, t ) + transf( i, t ) ), qBar( i, t ) ) )
+						//
+						//log("emissions");
+						var emissions_i_t = 
+							( self.scope[ 'trading_scenario' ] === 0 ? allowances_i_t + transf_i_t : 
+								( self.scope[ 'trading_scenario' ] === 2 ? skyshares.math.getcolumn( qBAU, country.iso_index, year ) - ( domabat_i_t + transf_i_t ) :
+								allowances_i_t ) );
+						country.emissions.push( emissions_i_t );
+						country.emissionscapita.push( emissions_i_t / population );
 					}
 				}
 				//
 				//
 				//
+				progress_current++;
 				postMessage( { command: 'update_country', parameter: country } );
 				//
 				// schedule next country
@@ -660,41 +731,6 @@ var model = {
 				self.running = false;
 			};
 			processCountry();
-			/*
-			try {
-				self.all_countries.every( function( country ) {
-				
-					country.emissions = [];
-					country.abatement_target = [];
-					country.flow = [];
-					country.decarb_cost = [];
-					country.total_cost = [];
-					country.transf = [];
-					country.allowances = [];
-					country.domabat = [];
-					if ( self.cow_countries.indexOf( country ) >= 0 ) {
-						for ( var year = 2010; year <= 2100; year++ ) {
-							country.emissions.push( countryemissions( country.iso_index, year ) );
-							country.abatement_target.push( abat( country.iso_index, year ) );
-							country.flow.push( flow( country.iso_index, year ) );
-							country.decarb_cost.push( decarbcost( country.iso_index, year ) );
-							country.total_cost.push( totalcost( country.iso_index, year ) );
-							country.transf.push( transf( country.iso_index, year ) );
-							country.allowances.push( qBar( country.iso_index, year ) );
-							country.domabat.push( domAbat( country.iso_index, year ) );
-						}
-					}
-					//
-					//
-					//
-					postMessage( { command: 'update_country', parameter: country } );
-
-					return self.stop != true;
-				});
-			} catch( error ) {
-				log( 'error:' + error );
-			}
-			*/
 			//
 			//
 			//
@@ -702,8 +738,9 @@ var model = {
 			if ( typeof error == 'string' ) {
 				log( 'ERROR:' + error );
 			} else {
-				log( JSON.stringify( error ) );
+				log( 'ERROR:' + JSON.stringify( error ) );
 			}
+			self.running = false;
 		}
 	},
 	reset : function() {
@@ -786,152 +823,41 @@ var model = {
 	},
 	buildcowmac : function() {
 		try {
-		var self = model;
-		var mac = self.scope[ 'MAC' ];
-		var trading_scenario = self.scope[ 'trading_scenario' ];
-		//
-		var cow_mac = {
-			name: 'COW_MAC',
-			description: 'COW MAC data interpolated',
-			type: 'dataset',
-			index: {
-				type : 'DATE'
-			},
-			members: []
-		};
-		//
-		// interpolate mac reduct to calculate COWqREDUC[t][i][MAC]
-		//
-		var mac_value_max 	= 1000;
-		var mac_value_incr 	= 5;
-		function COWpMAC( i ) {
-			return i == 0 ? 0 : i;
-			//Not sure this works see Evernote
-		};
-		var abat = self.getfunction( 'abat' );
-		self.EQPrice = [];
-		self.EQPrice_pre = [];
-		self.EQPrice_fin = [];
-		
-		for (var yr=2010; yr <=2100; yr++) {
-			if (yr%5 == 0) {
-				mac.members.forEach( function( mac_member ) { // for each t
-					var cow_mac_iqREDUC = {
-						name: 'COW_' + mac_member.name,
-						year: mac_member.year,
-						description: mac_member.name + ' data interpolated',
-						type: 'dataset',
-						index: {
-							type : 'INT'
-						},
-						data: []
-					};
-					//log( "Processing year: " + mac_member.year );
-					//
-					// generate prices from 0 to mac_value_max
-					//
-					for ( var i = 0; i <= mac_value_max; i += mac_value_incr ) {
-						cow_mac_iqREDUC.data[ i / mac_value_incr ] = {
-						x : 0.0,
-						y : COWpMAC( i )
-						};
-					}
-					//
-					// interpolate each countries mac data
-					//
-					var abatement_target = 0;
-					self.cow_countries.forEach( function( country ) { // for each iCOW
-						//
-						//
-						//
-						var country_mac = skyshares.math.getrow( mac_member, country.iso_index );
-						//log( country.iso + ' : MAC : ' + JSON.stringify(country_mac.data) );
-						for ( var i = 0; i <= mac_value_max; i += mac_value_incr ) {
-							//var x = COWpMAC( i );
-							//
-							// get amount of reduction y for cost x
-							//
-							var y = skyshares.math.linerinterp(country_mac.data,cow_mac_iqREDUC.data[ i / mac_value_incr ].y);
-							if ( isNaN(y) ) {
-								log( 'buildcowmac : NaN');
-								//log( country.iso + ' : MAC : ' + JSON.stringify(country_mac.data) );
-							} else {
-								//
-								// store cumulative reduction in the x axis with cost in the y axis
-								//
-								cow_mac_iqREDUC.data[ i / mac_value_incr ].x += y;
-								if ( !isFinite( cow_mac_iqREDUC.data[ i / mac_value_incr ].x ) ) {
-									//log( "cow_mac_iqREDUC.data [" + ( i / mac_value_incr ) + "] is Infinite" );
-								}
-							}
-							if ( ( country.iso === "USA" || country.iso === "CHN" ) && mac_member.year === 2020 ) {
-								//log( country.iso + ' : cow_mac_iqREDUC.data [' + ( i / mac_value_incr ) + '] : ' + JSON.stringify(cow_mac_iqREDUC.data[ i / mac_value_incr ]) );
-							}
-						}
-						//
-						//
-						//
-
-					if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
-						var regul = self.getfunction( 'regul' );
-						var regul = regul( country.iso_index, cow_mac_iqREDUC.year );
-						//log(regul/100);
-						if ( abat( country.iso_index, cow_mac_iqREDUC.year ) > 0 ) {
-							abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )* ((100-regul)/100);
-						}
-						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
-						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );
-						//abatement_target = abatement_target * ((100-regul)/100);
-						for ( var y = 2015; y <= 2100; y++ ) {
-							if( y == cow_mac_iqREDUC.year ){
-								//log(cow_mac_iqREDUC.year + ": " + numberWithCommas(abatement_target) );
-								//log((100-regul)/100);
-							}
-						};
-						
-					} else {
-						abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year );						
-					}
-
-					});
-					//
-					// store COW_MAC for year
-					//
-					cow_mac.members.push(cow_mac_iqREDUC);
-					postMessage( { command: 'update_cow_mac', parameter: cow_mac_iqREDUC } );
-					//
-					// calculate Equilibrium Price for year
-					//
-					var EQyear = {
-						year	: cow_mac_iqREDUC.year,
-						//price	: skyshares.math.linerinterp(cow_mac_iqREDUC.data,abatement_target)
-						price	: Math.max( 0, skyshares.math.linerinterp(cow_mac_iqREDUC.data,abatement_target) )
-					};
-
-					if ( isNaN( EQyear.price ) ) {
-						//log( "EQyear.price isNaN" );
-					}
-					if ( abatement_target < cow_mac_iqREDUC.data[ 0 ].x ) {
-						//log( cow_mac_iqREDUC.year + ' abatement_target=' + abatement_target + ' is less than min REDUC ' + cow_mac_iqREDUC.data[ 0 ].x );
-					} else if ( abatement_target > cow_mac_iqREDUC.data[ cow_mac_iqREDUC.data.length - 1 ].x ) {
-						//log( cow_mac_iqREDUC.year + ' abatement_target= ' + abatement_target + ' is greater than REDUC ' + cow_mac_iqREDUC.data[ cow_mac_iqREDUC.data.length - 1 ].x );
-					}
-					//log( "abatement_target=" + abatement_target + " EQyear: " + JSON.stringify(EQyear) );
-					self.EQPrice.push( EQyear );
-					//console.log(JSON.stringify(self.EQPrice));
-				});
-
-
-			} else if (yr%5 !=0) {
+			var self = model;
+			var mac = self.scope[ 'MAC' ];
+			//var regul = self.getfunction( 'regul' );
+			var trading_scenario = self.scope[ 'trading_scenario' ];
+			//
+			//
+			//
+			var cow_mac = {
+				name: 'COW_MAC',
+				description: 'COW MAC data interpolated',
+				type: 'dataset',
+				index: {
+					type : 'DATE'
+				},
+				members: []
+			};
+			//
+			// interpolate mac reduct to calculate COWqREDUC[t][i][MAC]
+			//
+			var mac_value_max 	= 1000;
+			var mac_value_incr 	= 5;
+			var abat = self.getfunction( 'abat' );
+			self.EQPrice = [];
+			self.EQPrice_pre = [];
+			self.EQPrice_fin = [];
+			var regulated_share = (100.0-self.scope[ 'regulated_share' ])/100.0;
+			var progress_total = ( 2100 - 2010 ) * self.cow_countries.length;
+			var progress_current = 0;
+			sendprogress( "building model...", progress_total, progress_current );
+			for (var yr=2010; yr <=2100; yr++) {
 				//log(yr);
-				var mac_bis 	= self.getmac( 'MAC', yr );
-				//console.log(mac_bis.mac_member0);
-				//console.log(mac_bis);
+				var mac_bis = self.getmac( 'MAC', yr );
 				var cow_mac_iqREDUC_pre = {
 					name: 'COW_MAC_' + yr,
 					year: yr,
-					//name: 'COW_' + mac_bis.mac_member0, //this is correct syntax but dunno if works
-					//year: mac_bis.mac_member0.year, //this is correct syntax but dunno if works
 					description: ' data interpolated',
 					type: 'dataset',
 					index: {
@@ -950,21 +876,24 @@ var model = {
 					},
 					data: []
 				};
-				
+			
 				for ( var i = 0; i <= mac_value_max; i += mac_value_incr ) {
 					cow_mac_iqREDUC_pre.data[ i / mac_value_incr ] = {
 						x : 0.0,
-						y : COWpMAC( i )
+						y : i
 					};
 					cow_mac_iqREDUC_fin.data[ i / mac_value_incr ] = {
 						x : 0.0,
-						y : COWpMAC( i )
+						y : i
 					};
 				}
 				//console.log(JSON.stringify( cow_mac_iqREDUC_pre.data));
-				
+				//
+				// COW abatement target for year yr
+				//
 				var abatement_target_bis = 0;
 				self.cow_countries.forEach( function( country ) { // for each iCOW
+					if ( self.stop ) return;
 					var country_mac_pre = skyshares.math.getrow( mac_bis.mac_member0, country.iso_index );
 					var country_mac_fin = skyshares.math.getrow( mac_bis.mac_member1, country.iso_index );
 
@@ -974,24 +903,16 @@ var model = {
 						cow_mac_iqREDUC_pre.data[ i / mac_value_incr ].x += y_pre;
 						cow_mac_iqREDUC_fin.data[ i / mac_value_incr ].x += y_fin;
 					}
+					var abat_i_t = abat( country.iso_index, yr );
 					if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
-						var regul = self.getfunction( 'regul' );
-						var regul = regul( country.iso_index, yr );
-						//log(regul/100);
-						if ( abat( country.iso_index, yr ) > 0 ) {
-							abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100)
+						if ( abat_i_t > 0 ) {
+							abatement_target_bis += abat_i_t*regulated_share;
 						}
-						//abatement_target += abat( country.iso_index, cow_mac_iqREDUC.year )*(60/100);
-						//abatement_target_bis += abat( country.iso_index, yr )*((100-regul)/100);
-						for ( var y = 2015; y <= 2100; y++ ) {
-							if( y == yr ){
-								//log(yr + ": " + numberWithCommas(abatement_target_bis) );
-							}
-						};
-						
 					} else {
-						abatement_target_bis += abat( country.iso_index, yr );						
+						abatement_target_bis += abat_i_t;						
 					}
+					progress_current++;
+					sendprogress( "building model...", progress_total, progress_current );
 				});
 
 				cow_mac.members.push(cow_mac_iqREDUC_pre);
@@ -1008,28 +929,29 @@ var model = {
 				self.EQPrice_pre.push( EQyear_pre );
 				self.EQPrice_fin.push( EQyear_fin );
 			}		
-		}
-		
-		self.EQPrice.sort(compare);
-		self.EQPrice_pre.sort(compare);
-		self.EQPrice_fin.sort(compare);
-		//console.log('EQPrice= ' + JSON.stringify(self.EQPrice));
-		//console.log('EQPrice_pre= ' + JSON.stringify(self.EQPrice_pre));
-		//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM THIS WORKS
+			//
+			// JONS: should be no need to sort, arrays are fixed order
+			//
+			//self.EQPrice_pre.sort(compare);
+			//self.EQPrice_fin.sort(compare);
+			//console.log('EQPrice= ' + JSON.stringify(self.EQPrice));
+			//console.log('EQPrice_pre= ' + JSON.stringify(self.EQPrice_pre));
+			//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM THIS WORKS
 
 
-		//
-		// store COW_MAC
-		//
-		self.putdata( cow_mac.name, cow_mac );
-		self.scope[ cow_mac.name ] = cow_mac;
-		//console.log(JSON.stringify(cow_mac));
-		//
-		//
-		//
-		postMessage( { command: 'update_eq_price', parameter: self.EQPrice } );
-		postMessage( { command: 'update_eq_price_pre', parameter: self.EQPrice_pre } );
-		postMessage( { command: 'update_eq_price_fin', parameter: self.EQPrice_fin } );
+			//
+			// store COW_MAC
+			//
+			self.putdata( cow_mac.name, cow_mac );
+			self.scope[ cow_mac.name ] = cow_mac;
+			//console.log(JSON.stringify(cow_mac));
+			//
+			//
+			//
+			postMessage( { command: 'update_eq_price_pre', parameter: self.EQPrice_pre } );
+			postMessage( { command: 'update_eq_price_fin', parameter: self.EQPrice_fin } );
+			
+			sendprogress( "finished building model" );
 		} catch( error ) {
 			log( 'error creating COWMac : ' + error );
 		}
@@ -1041,13 +963,8 @@ var model = {
 			var self = model;
 			//
 			// calculate QTPreM
-			//
-			/*
-			var tHist = self.getvariable( 'tHist' );
-			var tM = self.getvariable( 'tM' );
-			var E = self.getfunction( 'E' );
-			log( 'tHist:' + tHist + ' tM:' + tM + ' E:' + E );
-			*/
+		    //
+			self.scope['risk_scenario'] = self.risk_scenario;
 			log( 'calculating QtFutPreM' );
 			var calculateQtPreM = self.getfunction( 'calculateQtPreM' );
 			var QtFutPreM = calculateQtPreM();
@@ -1065,7 +982,6 @@ var model = {
 			//
 			var QtoCO2 = self.getfunction( 'QtoCO2' );
 			var QCO2 = QtoCO2( Q );
-			//self.setvariable( 'kQCO2', QCO2 );
 			self.scope[ 'kQCO2' ] = QCO2;
 			log( 'SafeBudget=' + Q );		
 			log( 'QCO2=' + QCO2 );	
@@ -1074,7 +990,6 @@ var model = {
 			//
 			var findmitigationrate = self.getfunction( 'findmitigationrate' );
 			var m = findmitigationrate();
-			//self.setvariable( 'm', m );
 			self.scope[ 'm' ] = parseFloat(m);
 			log( 'm=' + m );
 		} catch( error ) {
@@ -1086,66 +1001,32 @@ var model = {
 	//
 	//
 	runtime_functions : {
+		//
 		// functions which are dependant on variable number of MAC curves so can't currently be expressed as mathjs functions
 		// to be added to scope used to run model 
 		//
 		pEQ : function( t ) { 
 
 			var self = model;
-			self.EQPrice.sort(compare);
-
-			if ( t <= self.EQPrice[ 0 ].year ) { // extrapolate back from first point
-				var dt = self.EQPrice[ 0 ].year - self.EQPrice[ 1 ].year;
-				var dp = self.EQPrice[ 0 ].price - self.EQPrice[ 1 ].price;
-				var l = Math.sqrt( dt * dt + dp * dp );
-				dt /= l;
-				dp /= l;
-				//log( self.EQPrice[ 0 ].price + ( ( self.EQPrice[ 0 ].year - t ) * dp ) );
-				return self.EQPrice[ 0 ].price + ( ( self.EQPrice[ 0 ].year - t ) * dp )
-			} else if ( t >= self.EQPrice[ self.EQPrice.length - 1 ].year ) { // extrapolate forwards from last point
-				var dt = self.EQPrice[ self.EQPrice.length - 1 ].year - self.EQPrice[ self.EQPrice.length - 2 ].year;
-				var dp = self.EQPrice[ self.EQPrice.length - 1 ].price - self.EQPrice[ self.EQPrice.length - 2 ].price;
-				/*
-				var l = Math.sqrt( dt * dt + dp * dp );
-				dt /= l;
-				dp /= l;
-				return self.EQPrice[ self.EQPrice.length - 1 ].price + ( ( t - self.EQPrice[ self.EQPrice.length - 1 ].year ) * dp );
-				*/
-				//log( self.EQPrice[ self.EQPrice.length - 1 ].price + ( dp / dt ) * ( t - self.EQPrice[ self.EQPrice.length - 1 ].year ) );
-				return self.EQPrice[ self.EQPrice.length - 1 ].price + ( dp / dt ) * ( t - self.EQPrice[ self.EQPrice.length - 1 ].year );
-			} else {
-				//
-				// interpolate
-				//
-				for ( var i = 0; i <= self.EQPrice.length - 1; i++ ) {
-					if ( self.EQPrice[ i ].year <= t && self.EQPrice[ i + 1 ].year >= t ) {
-						var u = ( self.EQPrice[ i + 1 ].year - t ) / ( self.EQPrice[ i + 1 ].year - self.EQPrice[ i ].year );
-						return ( u * self.EQPrice[ i ].price ) + ( ( 1.0 - u ) * self.EQPrice[ i + 1 ].price );
-					}
-				}
-
-				return self.EQPrice[ self.EQPrice.length - 1 ].price;
-			}
+			//
+			// JONS: override this function with wpEQ for now. TODO: remove all references
+			//
+			var wpEQ = self.getfunction( 'wpEQ' );
+			return wpEQ( t );
 		},
 
 		wpEQ : function ( t ) {
 			var self = model;
-			self.EQPrice_pre.sort(compare);
-			self.EQPrice_fin.sort(compare);
-			var mac_bis 	= self.getmac( 'MAC', t );
-			var u = Math.max( 0.0, Math.min( 1.0, ( t - mac_bis.mac_member0.year ) / ( mac_bis.mac_member1.year - mac_bis.mac_member0.year ) ) ); // clamp interpolation
 			
-			for ( var i = 0; i <= self.EQPrice.length - 1; i++ ) {
-				if ( self.EQPrice[ i ].year == t ) {
-					return self.EQPrice[ i ].price;
-				}
-			}
-			for ( var i = 0; i <= self.EQPrice_pre.length - 1; i++ ) {
-				if ( self.EQPrice_pre[ i ].year == t ) {
+			var mac_bis = self.getmac( 'MAC', t );
+			var u = Math.max( 0.0, Math.min( 1.0, ( t - mac_bis.mac_member0.year ) / ( mac_bis.mac_member1.year - mac_bis.mac_member0.year ) ) ); // clamp interpolation
+			for ( var i = 0; i < self.EQPrice_pre.length; i++ ) {
+				if ( self.EQPrice_pre[ i ].year === t ) {
 					var value = ( self.EQPrice_fin[ i ].price * u ) + ( self.EQPrice_pre[ i ].price * ( 1.0 - u ) );
 					return value;
 				}
 			}
+			return 0;
 		},
 
 		price_pre : function( t ) {
@@ -1170,7 +1051,6 @@ var model = {
 		domAbat : function( i, t ) {
 			var self 	= model;
 			var abat 	= self.getfunction( 'abat' );				
-			var wpEQ 	= self.getfunction( 'wpEQ' );
 			var mac 	= self.getcountrymac( 'MAC', i, t );
 			var price_pre = self.getfunction( 'price_pre' );
 			var price_fin = self.getfunction( 'price_fin' );
@@ -1182,33 +1062,42 @@ var model = {
 				return value;
 			} else if ( trading_scenario == self.getdata( 'endogenous_fulltrade' ).value ) {
 				var u = Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) ); // clamp interpolation
-				var price = wpEQ(t);
 				var price0 = price_pre(t);
 				var price1 = price_fin(t); 
-
-					if (t%5 != 0) {
-						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
-					} else {
-						var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price );
-					}
-					if (t%5 != 0) {
-					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
-					} else {
-					var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price );
-					}
-
+				var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
+				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
 				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
-				//log('price0: ' + price0);
-				//log( "domAbat : " + trading_scenario + " : pEQ(" + t + ")=" + price + " : iso=" + mac.country_mac0.iso + " : interpolating between : " + value0 + " and " + value1 + " by " + u + " value=" + value );
 				return value;
 
 			} else if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
 				var regul = self.getfunction( 'regul' );
 				if ( abat(i,t) > 0 ) {
 					var value = abat(i,t) * ( regul(i,t) / 100 );
-					//var test = ( regul(i,t) / 100 );
-					//log( test );
-					//log( "domAbat : " + trading_scenario + " : value=" + numberWithCommas(value) );
+				} else {
+					return 0;
+				}
+				return value;
+
+			} else {
+				return 0;
+			}
+		},
+		domAbat_opt : function( t, mac, abat, regul ) {
+			var self 				= model;
+			var trading_scenario 	= self.scope[ 'trading_scenario' ];
+			if ( trading_scenario == self.getdata( 'endogenous_notrade' ).value ) {
+				return abat;
+			} else if ( trading_scenario == self.getdata( 'endogenous_fulltrade' ).value ) {
+				var u = Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) ); // clamp interpolation
+				var price0 = self.runtime_functions.price_pre(t);
+				var price1 = self.runtime_functions.price_fin(t); 
+				var value0 = skyshares.math.linerinterp( mac.country_mac0.data, price0 );
+				var value1 = skyshares.math.linerinterp( mac.country_mac1.data, price1 );
+				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
+				return value;
+			} else if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
+				if ( abat > 0 ) {
+					var value = abat * ( regul / 100 );
 				} else {
 					return 0;
 				}
@@ -1228,61 +1117,24 @@ var model = {
 				var v0 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac0.data, u ) );
 				var v1 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac1.data, u ) );
 				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );
-				if ( i == 9 ) {
-					//log('v0: ' + v0);
-					//log('v1: ' + v1);
-					//log('value: ' + value);
-				}				
 				return value;
 			};
 			var domabat = domAbat( i, t );
-
 			if ( domabat <= 0 ) return 0;
 			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , domabat );
-			
-
-			//if ( i == 9 ) {
-			//	log(interpolateMAC);
-				//log( 'AUS MAC 0 : ' + mac.mac_member0.year + ' : ' + JSON.stringify( mac.country_mac0.data ) );
-				//log( 'AUS MAC 1 : ' + mac.mac_member1.year + ' : ' + JSON.stringify( mac.country_mac1.data ) );
-			//	log('year: ' + t + ' domabat : ' + numberWithCommas(domabat) );
-			//	log( 'cost : ' + numberWithCommas(cost) );
-			//}
-			
 			return cost;
 		},
-		decarbcostnotrade : function( i, t ) {
-			//Calculating what the total costs would be without trade
-			var self 	= model;
-			var Abat = self.scope[ 'abat' ];
-			var mac 	= self.getcountrymac( 'MAC', i, t );
-			var tu 		= Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) );
+		decarbcost_opt : function( t, mac, abatement ) { // cost with trade abatement = domabat, cost with no trade abatement = abat
+			if ( abatement <= 0 ) return 0;
+			var tu = Math.max( 0.0, Math.min( 1.0, ( t - mac.mac_member0.year ) / ( mac.mac_member1.year - mac.mac_member0.year ) ) );
 			function interpolateMAC(u) {
 				var v0 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac0.data, u ) );
 				var v1 = Math.max( 0.01, skyshares.math.linerinterpinv( mac.country_mac1.data, u ) );
-				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );	
+				var value = ( v0 * ( 1.0 - tu ) ) + ( v1 * tu );
 				return value;
 			};
-			var abat = Abat( i, t );
-
-			if ( abat <= 0 ) return 0;
-			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , abat );
-			
-			return cost;
-		},
-		//
-		// this is a very inefficient recursive function
-		//
-		calculateQBAU : function( i, t ) {
-			var self = model;
-			var tHist = self.scope[ 'tHist' ];
-			if ( t <= tHist ) {
-				var qCO2 = self.scope[ 'qCO2' ];
-				return skyshares.math.getcolumn( qCO2, i, tHist );
-			} else {
-				var GDPReal = self.scope[ 'GDPReal' ];
-				return calculateQBAU( i, t - 1 ) * ( skyshares.math.getcolumn( GDPReal, i, t ) / skyshares.math.getcolumn( GDPReal, i, t - 1 ) );
-			}
+			var cost = skyshares.math.numintegrate_bis( interpolateMAC, 0 , abatement );
+			return cost;		
 		}
 	},
 
@@ -1292,14 +1144,10 @@ var model = {
 		//
 		var self 	= model;
 		var mac 	= self.scope[ dataset ];
-		//console.log('Sorted with compareNumbers:', mac.members.sort(compareNumbers));
 		//
 		// select mac data which brackets year t
 		//
-		//console.log(mac.members.length);
-
 		var mac_member0, mac_member1;
-		mac.members.sort(compare);
 		if ( t <= mac.members[ 0 ].year ) {
 			mac_member0 = mac.members[ 0 ];
 			mac_member1 = mac.members[ 1 ];
@@ -1318,9 +1166,7 @@ var model = {
 		return {
 			mac_member0 : mac_member0,
 			mac_member1 : mac_member1
-
 		};
-		
 	},
 	getcountrymac : function( dataset, i, t ) {
 		var self 	= model;
@@ -1328,8 +1174,6 @@ var model = {
 		//
 		//
 		mac = self.getmac( dataset, t );
-		//self.mac.sort(compare);
-		
 		//
 		// get country mac
 		//
@@ -1355,6 +1199,8 @@ var model = {
 	regulated_share: 1, // endogenous = 0 to infinity, exogenous = 1
 	reference_date: 2009,
 	allocation_rule: 0, // per_capita = 0, carbon_debt = 1, GDP_basis = 2, historical_responsibilities = 3
+	mac_dataset: "GCAM",
+	gdp_dataset: "CEPII",
 	download_queue : new downloadqueue(),
 	ready: false,
 	running: false,

@@ -1,444 +1,512 @@
-//
-//
-//
 ;
-skyshares.chart = {
-	//
-	// element 
-	//
-	//
-	chart : function( element, chart ) {
-		var self = skyshares.chart;
-		//
-		//
-		//
-		switch ( chart.type ) {
-			case 'line' : {
-			
-			}
-			break;
-			case 'bar' : {
-			
-			}
-			break;
-		}
-	},
-	//
-	// element : DOM element, id or element
-	// config = {
-	//		axis : {
-	//			x : {
-	//				min : 0,
-	//				max : 0,
-	//				step : 0,
-	//				name : "name"
-	//			},
-	//			y : {
-	//				min : 0,
-	//				max : 0,
-	//				step : 0,
-	//				name : "name"
-	//			},
-	//			colour: 'rgb(...)'
-	//		},
-	//		lines : [
-	//			{
-	//				data: [] or
-	//				f: function(x) { return y for x },
-	//				stroke : {
-	//					colour:'',
-	//					width: 1
-	//				},
-	//				fill : {
-	//					colour:''
-	//				}
-	//				name : "name"
-	//			}
-	//		]
-	//		
-	//	}
-	//
-	linechart : function( element, config ) {
-		var self = skyshares.chart;
-		//
-		// 
-		//
-		var svg = dimple.newSvg(element,590,400);
-		if ( svg ) {
-			//
-			// initialise data
-			//
-			var data = [];
-			for ( var x = config.axis.x.min; x < config.axis.x.max; x += config.axis.x.step ) {
-				for ( var i = 0; i < config.lines.length; i++ ) {
-					var line = config.lines[ i ];
-					var data_point = { name: line.name };
-					data_point[ config.axis.x.name ] = line.data ? line.data[ x ].x : x;
-					data_point[ config.axis.y.name ] = line.data ? line.data[ x ].y : line.f( x );
-					data.push( data_point );
-				}
-			}
-			//
-			//
-			//
-			var chart = new dimple.chart( svg, data );
-			chart.setBounds(60, 30, 505, 305);
-			//
-			// add axis
-			//
-			//if ( config.axis.x.type == 'date' ) {
-			//	chart.addAxis("x", null, null, config.axis.x.name );
-			//} else {
-			var x_axis = chart.addCategoryAxis( 'x', config.axis.x.name );
-			if ( config.axis.x.type == 'date' ) {
-				//x_axis.tickFormat = '%Y';
-				//x_axis.addOrderRule("Date");
-			}
-			x_axis.ticks = 5;
-			//}
-			chart.addAxis( 'y', config.axis.y.name ).ticks = 5;
-			var series = chart.addSeries( 'name', dimple.plot.line);
-			series.interpolation = 'basis';
-			//chart.addLegend(60, 10, 500, 20, 'right');
-			chart.draw();
-		}
-	},
-	linechartd3 : function( element, config ) {
-		var self = skyshares.chart;
-		try {
-			//
-			// initialise data 
-			//
-			var data = [];
-			var range = {
-				y : {
-					min: ( config.axis.y.min === undefined ? Number.MAX_VALUE : config.axis.y.min ),
-					max: ( config.axis.y.max === undefined ? Number.MIN_VALUE : config.axis.y.max )
-				},
-				x : {
-					min: ( config.axis.x.min === undefined ? Number.MAX_VALUE : config.axis.x.min ),
-					max: ( config.axis.x.max === undefined ? Number.MIN_VALUE : config.axis.x.max )
-				}
-			};
-			//
-			// TODO: work out range increment for x axis with function for y
-			//
-			for ( var i = 0; i < config.lines.length; i++ ) {
-				var line = config.lines[ i ];
-				var line_data = { name: line.name, stroke: line.stroke, fill: line.fill, data: [] };
-				for ( var j = config.index.min; j <= config.index.max; j += config.index.step ) {
-					var x = line.data ? line.data[ j ].x : range.x.min + j;
-					var y = line.data ? line.data[ j ].y : line.f( x )
-					var data_point = {
-						x: x,
-						y: y
-					};
-					if ( config.axis.x.min == undefined && x < range.x.min ) range.x.min = x;
-					if ( config.axis.x.max == undefined && x > range.x.max ) range.x.max = x;
-					if ( config.axis.y.min == undefined && y < range.y.min ) range.y.min = y;
-					if ( config.axis.y.max == undefined && y > range.y.max ) range.y.max = y;
-					line_data.data.push( data_point );
-				}
-				data.push( line_data );
-			}
-			//
-			// calculate width,height scale
-			//
-			var margin = config.margin || {
-				top: 20,
-				left: 60,
-				bottom: 40,
-				right: 20
-			};
-			var width = element.offsetWidth - ( margin.left + margin.right );
-			var height = element.offsetHeight - ( margin.top + margin.bottom );
-			var x_scale = d3.scale.linear().domain( [ range.x.min, range.x.max ] ).range( [ 0, width ] );
-			var y_scale = d3.scale.linear().domain( [ range.y.min, range.y.max ] ).range( [ height, 0 ] );
-			//
-			// create graph container
-			//			
-			var graph = d3.select( '#' + element.id ).append( 'svg' )
-				.attr( 'width', element.offsetWidth )
-				.attr( 'height', element.offsetHeight )
-				.append('g')
-					.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
-			//
-			// create axis
-			//
-			var x_axis = d3.svg.axis()
-				.scale(x_scale)
-				.tickSize(-height)
-				.ticks(config.axis.x.tickcount || 4)
-				.tickFormat(config.axis.x.tickformat || d3.format('r'))
-				.orient( 'bottom' );
-			var y_axis = d3.svg.axis()
-				.scale(y_scale)
-				.tickSize(-width)
-				.ticks(config.axis.x.tickcount || 4)
-				.tickFormat(config.axis.y.tickformat || d3.format('s'))
-				.orient("left"); 
-			graph.append( 'g' )
-				.attr("class", "axis")
-				.attr('transform', 'translate(0, ' + height + ')')
-				.call( x_axis );
-			graph.append( 'g' )
-				.attr("class", "axis")
-				.call( y_axis );
-			//
-			// draw graph
-			//
-			var line = d3.svg.line()
-			.x( function( d ) {
-				return x_scale(d.x);
-			})
-			.y( function( d ) {
-				return y_scale(d.y);
-			})
-			.interpolate("basis");;
-			data.forEach( function( line_data ) {
-				graph.append("path").attr("d", line(line_data.data))
-				.attr("stroke", line_data.stroke.colour )
-				.attr("stroke-width", line_data.stroke.width )
-				.attr("fill", line_data.fill );
-			});
-			//
-			// append title
-			//
-			if ( config.title ) {
-				graph.append( 'text' )
-					.attr("class", "title")
-					.attr("text-anchor", "end")
-					.attr("x", width )
-					.text(config.title);
-			}
-			//
-			// append axis lables
-			//
-			if ( config.axis.x.name ) {
-				graph.append("text")
-					.attr("class", "x label")
-					.attr("text-anchor", "middle")
-					.attr("x", width / 2.0)
-					.attr("y", height + 28)
-					.text(config.axis.x.name);
-			}
-			if ( config.axis.y.name ) {
-				graph.append("text")
-					.attr("class", "y label")
-					.attr("text-anchor", "middle")
-					.attr("transform", "translate( -34, " + ( height / 2 ) + ") rotate(-90)")
-					.text(config.axis.y.name);		
-			}	
-		} catch( error ) {
-			console.log( 'error : skyshares.chart.linechartd3 : ' + config.name + ' : ' + error );
-		}		
-	},
-	groupedbarchartd3 : function( element, config ) {
-		var self = skyshares.chart;
-		try {
-			//
-			// initialise data 
-			//
-			var data = [];
-			var range = {
-				y : {
-					min: ( config.axis.y.min === undefined ? Number.MAX_VALUE : config.axis.y.min ),
-					max: ( config.axis.y.max === undefined ? Number.MIN_VALUE : config.axis.y.max )
-				},
-				x : {
-					min: ( config.axis.x.min === undefined ? Number.MAX_VALUE : config.axis.x.min ),
-					max: ( config.axis.x.max === undefined ? Number.MIN_VALUE : config.axis.x.max )
-				}
-			};
-			//
-			// TODO: work out range increment for x axis with function for y
-			//
-			for ( var i = 0; i < config.lines.length; i++ ) {
-				var line = config.lines[ i ];
-				var line_data = { name: line.name, stroke: line.stroke, fill: line.fill, data: [] };
-				for ( var j = config.index.min; j <= config.index.max; j += config.index.step ) {
-					var x = line.data ? line.data[ j ].x : range.x.min + j;
-					var y = line.data ? line.data[ j ].y : line.f( x )
-					var data_point = {
-						x: x,
-						y: y
-					};
-					if ( config.axis.x.min == undefined && x < range.x.min ) range.x.min = x;
-					if ( config.axis.x.max == undefined && x > range.x.max ) range.x.max = x;
-					if ( config.axis.y.min == undefined && y < range.y.min ) range.y.min = y;
-					if ( config.axis.y.max == undefined && y > range.y.max ) range.y.max = y;
-					line_data.data.push( data_point );
-				}
-				data.push( line_data );
-			}
-			//
-			// calculate width,height scale
-			//
-			var margin = config.margin || {
-				top: 20,
-				left: 60,
-				bottom: 40,
-				right: 20
-			};
-			var width = element.offsetWidth - ( margin.left + margin.right );
-			var height = element.offsetHeight - ( margin.top + margin.bottom );
-			var x0_scale	= d3.scale.ordinal().rangeRoundBands([0, width], .1).domain( data.map( function( d ) { return d.name; } ) );
-			var range_band = x0_scale.rangeBand();
-			var bar_width = ( range_band / Math.max( 1, data[ 0 ].data.length ) ) - ( .1 * data[ 0 ].data.length );
-			var y_max = range.y.min < 0 ? Math.max( Math.abs( range.y.min ), Math.abs( range.y.max ) ) : range.y.max;
-			var y_min = range.y.min < 0 ? -y_max : range.y.min;
-			var x1_scale 	= d3.scale.linear().domain( [ range.x.min, range.x.max ] ).range( [ 0, x0_scale.rangeBand() ] );
-			var y_scale 	= d3.scale.linear().domain( [ y_min, y_max ] ).range( [ height, 0 ] );
-			//
-			// create graph container
-			//			
-			var graph = d3.select( '#' + element.id ).append( 'svg' )
-				.attr( 'width', element.offsetWidth )
-				.attr( 'height', element.offsetHeight )
-				.append('g')
-					.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
-			//
-			// create axis
-			//
-			var x_axis = d3.svg.axis()
-				.scale(x0_scale)
-				.orient("bottom");
-			var y_axis = d3.svg.axis()
-				.scale(y_scale)
-				.orient("left")
-				.tickSize(-width)
-    			.tickFormat(config.axis.y.tickformat || d3.format(".2s"));
-			graph.append("g")
-				.attr("class", "x axis")
-				.attr("transform", "translate(0," + height + ")")
-				.call(x_axis);
+(function() {
 
-			graph.append("g")
-				.attr("class", "y axis")
-				.call(y_axis)
-			//
-			//
-			//
-			var group = graph.selectAll(".group")
-				.data(data)
-					.enter().append("g")
-					.attr("class", "g")
-					.attr("transform", function(d) { return "translate(" + x0_scale(d.name) + ",0)"; });
-			group.selectAll("rect")
-				.data(function(d) { return d.data; })
-					.enter().append("rect")
-						.attr("width", bar_width) 
-						.attr("x", function(d) { 
-							return x1_scale(d.x); 
-						})
-						.attr("y", function(d) { 
-							if ( range.y.min < 0 ) {
-								return d.y < 0 ? y_scale( 0.0 ) : y_scale( d.y );
-							} 
-							return y_scale(d.y); 
-						})
-						.attr("height", function(d) { 
-							if ( range.y.min < 0 ) {
-								return Math.abs(y_scale(d.y) - y_scale(0));
-							}
-							return height - y_scale(d.y); 
-						})
-						.style("fill", function(d) { 
-							var factor = ( d.x - range.x.min ) / ( range.x.max - range.x.min );
-							var s = Math.round( 255.0 * factor ).toString( 16 );
-							return '#' + s + s + s; 
-						});
-			//
-			// append title
-			//
-			if ( config.title ) {
-				graph.append( 'text' )
-					.attr("class", "title")
-					.attr("text-anchor", "end")
-					.attr("x", width )
-					.text(config.title);
+	var self = skyshares.chart = {
+		colours : [
+			'#006B77',
+			'#E8112D',
+			'#F95602',
+			'#FFBB36',
+			'#BCAD75',
+			'#D6CEA3',
+			'#F4EDD4',
+			'#6B5E4F',
+			'#A3A8A3'
+		],
+		charts : {},
+		/*
+			options = {
+				groups : [ array of group names ],
+				field : field name,
+				range : {
+					min : min year,
+					max : max year,
+					increment : year increment
+				},
+				format : function( value ) { return formated value },
+				type : 'area-spline' | 'spline' | 'line'
+				container : #container_div
 			}
-			//
-			// append axis lables
-			//
-			if ( config.axis.x.name ) {
-				graph.append("text")
-					.attr("class", "x label")
-					.attr("text-anchor", "middle")
-					.attr("x", width / 2.0)
-					.attr("y", height + 28)
-					.text(config.axis.x.name);
+		*/
+		generategrouplinechart: function (options) {
+		    setTimeout(function () {
+		        var self = skyshares.chart;
+		        //
+		        // create x axis
+		        //
+		        var x_axis = ['year'];
+		        for (var year = options.range.min; year <= options.range.max; year += options.range.increment) {
+		            x_axis.push(year);
+		        }
+		        //
+		        // data
+		        //
+		        var data = {
+		            x: 'year',
+		            columns: [
+                        x_axis,
+		            ],
+		            types: {}
+		        };
+		        if (options.stacked) {
+		            data.groups = [[]];
+		        }
+		        options.groups.forEach(function (group_name) {
+		            var group = skyshares.controller.findgroup(group_name);
+		            if (group) {
+		                var row = [group.description || group.name];
+		                for (var year = options.range.min; year <= options.range.max; year += options.range.increment) {
+		                    if (options.f) {
+		                        row.push(options.f(group, options.field, year, options.range.increment));
+		                    } else {
+		                        if (options.average) {
+		                            row.push(skyshares.controller.getgroupdataavg(group, options.field, year, options.range.increment));
+		                        } else {
+		                            row.push(skyshares.controller.getgroupdatasum(group, options.field, year));
+		                        }
+		                    }
+		                }
+		                data.columns.push(row);
+		                data.types[row[0]] = options.type || 'area-spline';
+		                if (data.groups) {
+		                    data.groups[0].push(row[0]);
+		                }
+		            }
+		        });
+		        if (self.charts[options.container]) {
+		            self.charts[options.container].load({ columns: data.columns });
+		        } else {
+		            self.charts[options.container] = c3.generate({
+		                bindto: '#' + options.container,
+		                data: data,
+		                axis: {
+		                    x: {
+		                        tick: {
+		                            rotate: 90
+		                        }
+		                    },
+		                    y: {
+		                        tick: {
+		                            format: options.format
+		                        },
+		                        label: options.label_y
+		                    }
+		                },
+		                tooltip: {
+		                    show: true,
+		                },
+		                point: {
+		                    show: false
+		                },
+		                color: {
+		                    pattern: self.colours
+		                }
+		            });
+		        }
+		    }, options.delay || 10 );
+		},
+		/*
+			options = {
+				groups : [ array of group names ],
+				field : field name,
+				range : {
+					min : min year,
+					max : max year,
+					increment : year increment
+				},
+				format : function( value ) { return formated value },
+				container : #container_div
 			}
-			if ( config.axis.y.name ) {
-				graph.append("text")
-					.attr("class", "y label")
-					.attr("text-anchor", "middle")
-					.attr("transform", "translate( -34, " + ( height / 2 ) + ") rotate(-90)")
-					.text(config.axis.y.name);		
-			}	
+		*/
+		generategroupbarchart: function (options) {
+		    setTimeout(function () {
+		        var self = skyshares.chart;
+		        //
+		        // create x axis
+		        //
+		        var categories = [];
+		        var x_axis = ['region'];
+		        options.groups.forEach(function (group_name) {
+		            var group = skyshares.controller.findgroup(group_name);
+		            if (group) {
+		                var label = group.description || group.name;
+		                categories.push(label);
+		                x_axis.push(label);
+		            }
+		        });
+		        //
+		        // data
+		        //
+		        var data = {
+		            columns: [],
+		            type: 'bar'
+		        };
+		        for (var year = options.range.min; year <= options.range.max; year += options.range.increment) {
+		            var column = [year];
+		            options.groups.forEach(function (group_name) {
+		                var group = skyshares.controller.findgroup(group_name);
+		                if (group) {
+		                    if (options.f) {
+		                        column.push(options.f(group, options.field, year, options.range.increment));
+		                    } else {
+                                if (options.average) {
+                                    column.push(skyshares.controller.getgroupdataavg(group, options.field, year, options.range.increment));
+                                } else {
+                                    column.push(skyshares.controller.getgroupdatasum(group, options.field, year));
+                                }
+		                    }
+		                }
+		            });
+		            data.columns.push(column);
+		        }
+		        if (self.charts[options.container]) {
+		            self.charts[options.container].load({ columns: data.columns });
+		        } else {
+		            self.charts[options.container] = c3.generate({
+		                bindto: '#' + options.container,
+		                data: data,
+		                tooltip: {
+		                    show: true
+		                },
+		                color: {
+		                    pattern: self.colours
+		                },
+		                axis: {
+		                    x: {
+		                        type: 'category',
+		                        categories: categories
+		                    },
+		                    y: {
+		                        tick: {
+		                            format: options.format
+		                        },
+		                        label: options.label_y
+		                    }
+		                },
+		                grid: {
+		                    y: {
+		                        lines: [{ value: 0 }]
+		                    }
+		                },
+		                legend: {
+		                    position: 'right'
+		                }
+		            });
+		        }
+		    }, options.delay || 10);
+		},
+		generateemisionschart: function () {
+		    setTimeout(function () {
+		        var self = skyshares.chart;
+		        //
+		        // create x axis
+		        //
+		        var x_axis = ['year'];
+		        for (var year = 1990; year <= 2200; year++) {
+		            x_axis.push(year);
+		        }
+		        //
+		        // data
+		        //
+		        var emissions = ['emissions'].concat(skyshares.controller.world_emissions);
+		        var data = {
+		            x: 'year',
+		            columns: [
+                        x_axis,
+                        emissions
+		            ],
+		            types: {
+		                emissions: 'area-spline'
+		            }
+		        };
+		        if (self.charts['emissions']) {
+		            self.charts['emissions'].load({ columns: data.columns });
+		        } else {
+		            self.charts['emissions'] = c3.generate({
+		                bindto: '#emissions-chart',
+		                data: data,
+		                axis: {
+		                    x: {
+		                        tick: {
+		                            rotate: 90
+		                        }
+		                    },
+		                    y: {
+		                        tick: {
+		                            format: function (value) {
+		                                return skyshares.utility.formatcurrency(value / 1000000000, 0, ",", ".", "");
+		                            }
+		                        },
+		                        label: {
+		                            text: 'GigaTonnes of CO₂',
+		                            position: 'outer-middle'
+		                        }
+		                    }
+		                },
+		                tooltip: {
+		                    show: true
+		                },
+		                point: {
+		                    show: false
+		                },
+		                legend: {
+		                    show: false
+		                },
+		                color: {
+		                    pattern: self.colours
+		                }
+		            });
+		        }
+		    }, options.delay || 10);
+		},
+		//
+		//
+		//
+		generatetransferchart: function (options) {
+		    setTimeout(function () {
+		        var self = skyshares.chart;
+		        //
+		        // create x axis and price columns
+		        //
+		        var x_axis = ['year'];
+		        var price = ['price'];
+		        for (var year = options.range.min; year <= options.range.max; year += options.range.increment) {
+		            x_axis.push(year);
+		            price.push(skyshares.controller.geteqprice(year));
+		        }
+		        //
+		        // data
+		        //
+		        var data = {
+		            x: 'year',
+		            columns: [
+                        x_axis,
+		            ],
+		            axes: {},
+		            names: {},
+		            types: {}
+		        };
+		        //
+		        // generate flow columns
+		        //
+		        options.groups.forEach(function (group_name) {
+		            var group = skyshares.controller.findgroup(group_name);
+		            if (group) {
+		                //
+		                // create x axis
+		                //
+		                //var col = [ group.description || group.name ];
+		                var col = [group.name];
+		                for (var year = options.range.min; year <= options.range.max; year += options.range.increment) {
+		                    col.push(skyshares.controller.getgroupdatasum(group, 'flow', year));
+		                }
+		                var label = group.description || group.name;
+		                data.columns.push(col);
+		                data.axes[col[0]] = 'y';
+		                data.names[col[0]] = label;
+		                data.types[col[0]] = 'spline';
+		            }
+		        });
+		        //
+		        // add price column
+		        //
+		        data.columns.push(price);
+		        data.axes[price[0]] = 'y2';
+		        data.names[price[0]] = 'Price';
+		        data.types[price[0]] = 'spline';
+		        //
+		        // generate chart
+		        //
+		        if (self.charts[options.container]) {
+		            self.charts[options.container].load({ columns: data.columns });
+		        } else {
+		            self.charts[options.container] = c3.generate({
+		                bindto: '#' + options.container,
+		                data: data,
+		                axis: {
+		                    x: {
+		                        tick: {
+		                            rotate: 90
+		                        }
+		                    },
+		                    y: {
+		                        tick: {
+		                            format: function (value) {
+		                                return skyshares.utility.formatcurrency(value / 1000000000, 0, ",", ".", "");
+		                            }
+		                        },
+		                        show: true
+		                    },
+		                    y2: {
+		                        tick: {
+		                            format: function (value) {
+		                                return skyshares.utility.formatcurrency(value, 0, ",", ".", "$");
+		                            }
+		                        },
+		                        show: true
+		                    }
+		                },
+		                tooltip: {
+		                    show: true
+		                },
+		                point: {
+		                    show: false
+		                },
+		                legend: {
+		                    show: true
+		                },
+		                color: {
+		                    pattern: self.colours
+		                }
+		            });
+		        }
 
-		} catch( error ) {
-			console.log( 'error : skyshares.chart.groupedbarchartd3 : ' + config.name + ' : ' + error );
-		}
-	},
-	//
-	//
-	//
-	path : function() {
-		function Path() {
-			this.svg = "";
-		}
-		Path.prototype.moveto = function( x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'M' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.lineto = function( x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'L' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.close = function() {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'Z';
-			return this;
-		}
-		Path.prototype.curveto = function( x1, y1, x2, y2, x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'C' + Math.round( x1 ) + ',' + Math.round( y1 ) + ',' + Math.round( x2 ) + ',' + Math.round( y2 ) + ',' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.smoothcurveto = function( x2, y2, x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'S' + Math.round( x2 ) + ',' + Math.round( y2 ) + ',' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.quadraticbezierto = function( x1, y1, x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'Q' + Math.round( x1 ) + ',' + Math.round( y1 ) + ',' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.smoothquadraticbezierto = function( x, y ) {
-			if ( this.svg.length > 0 ) this.svg += ',';
-			this.svg += 'T' + Math.round( x ) + ',' + Math.round( y );
-			return this;
-		}
-		Path.prototype.clear = function() {
-			this.svg = "";
-		}
-		Path.prototype.length = function() {
-			return this.svg.length;
-		}
-		Path.prototype.getsvg = function() {
-			return this.svg;
-		}
-		return new Path();
-	},
-	//
-	//
-	//
-	linechart_D3 : function( config ) {
+		    }, options.delay || 10);
+		},		
+		table : {
+			createtable : function( options ) {
+				function table( options ) {
+					this.options = options;
+					this.table = document.createElement( 'table' );
+					if( options.id ) {
+						this.table.id = options.id;
+					}
+					if ( options.columnheaders ) {
+						this.addcolumnheaders( options.columnheaders, options.hasrowheaders  );
+					}
+					if ( options.rows ) {
+						this.addrows( options.rows, options.hasrowheaders ); 
+					}
+				}
+				table.prototype.addcolumnheaders = function( columnheaders, hasrowheaders ) {
+					
+					var row = document.createElement( 'tr' );
+					for ( var i = ( hasrowheaders ? -1 : 0 ); i < columnheaders.length; i++ ) {
+						var column_header;
+						if ( i < 0 ) {
+							column_header = document.createElement( 'td' );
+						} else {
+							column_header = document.createElement( 'th' );
+							column_header.setAttribute( 'scope', 'column' );
+							column_header.innerHTML = columnheaders[ i ];
+						}
+						row.appendChild( column_header );
+					}
+					var header = document.createElement( 'thead' );
+					header.appendChild( row );
+					this.table.appendChild( header );
+					
+				}
+				
+				table.prototype.addrows = function( rows, hasrowheaders ) {
+					var body = document.createElement( 'tbody' );
+					var row, col;
+					for( var i = 0; i < rows.length; i++ ) {
+						row = document.createElement('tr');
+						if ( hasrowheaders ) {
+							//
+							// row header
+							//
+							col = document.createElement( 'th' );
+							col.setAttribute( 'scope', 'row' );
+							col.innerHTML = rows[ i ][ 0 ];
+							row.appendChild( col );
+						}
+						//
+						//
+						//
+						for ( var j = ( hasrowheaders ? 1 : 0 ); j < rows[ i ].length; j++ ) {
+							col  = document.createElement( 'td' );
+							col.innerHTML = rows[ i ][ j ];
+							row.appendChild( col );
+						}
+						body.appendChild( row );
+					}
+					this.table.appendChild( body );
+				}
+				
+				table.prototype.loaddata = function( data ) {
+					/* TODO
+					var body = this.table.querySelector( 'tbody' );
+					var rows = body.querySelectorAll( 'tr' );
+					for ( var i = 0; i < rows.length; i++ ) {
+						var cols = rows[ i ].querySelectorAll( 'td' );
+						for ( var j = 0; j < cols.length; j++ ) {
+							cols[ j ].innerHTML = data[ i ][ j ];
+						}
+					}
+					*/
+				}
+				
+				return new table( options );
+			},
+			/*
+				options = {
+					groups : [ array of group names ],
+					field : field name,
+					range : {
+						min : min year,
+						max : max year,
+						increment : year increment
+					},
+					format : function( value ) { return formated value },
+					container : #container_div
+				}
+			*/
+			creategroupsumtable: function (options) {
+			    setTimeout(function () {
+			        var self = skyshares.chart.table;
+			        //
+			        // initialise table options
+			        //
+			        var table_options = {
+			            hasrowheaders: true,
+			            columnheaders: [],
+			            rows: [],
+			            id: options.id
+			        }
+			        //
+			        // generate column headers
+			        //
+			        for (var i = options.range.min; i <= options.range.max; i += options.range.increment) {
+			            table_options.columnheaders.push(i);
+			        }
+			        //
+			        // generate data
+			        //
+			        options.groups.forEach(function (group_name) {
+			            var group = skyshares.controller.findgroup(group_name);
+			            if (group) {
+			                var row = [group.description || group.name];
+			                for (var i = options.range.min; i <= options.range.max; i += options.range.increment) {
+			                    if (options.f) {
+			                        row.push(options.format(options.f(group, options.field, i)));
+			                    } else {
+			                        row.push(options.format(skyshares.controller.getgroupdatasum(group, options.field, i)));
+			                    }
+			                }
+			                table_options.rows.push(row);
+			            } else {
+			                console.log('skyshares.chart.table.creategroupsumtable : unable to find group ' + group_name);
+			            }
+			        });
+			        //
+			        // create table
+			        //
+			        var table = self.createtable(table_options);
+			        //
+			        // attach table to container
+			        //
+			        if (options.container) {
+			            var container = document.getElementById(options.container);
+			            if (container) {
+			                container.innerHTML = '';
+			                container.appendChild(table.table);
+			            }
+			        }
+			    }, options.delay || 10);
+			},
+		},
+	}
 	
-	}	
-};
-
+})();

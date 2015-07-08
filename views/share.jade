@@ -1,0 +1,47 @@
+doctype html
+html
+	block head
+		title= title
+		link(rel='stylesheet', href='/styles/skyshares.css')
+		script(type='text/javascript', src='../javascripts/skyshares.js')
+		script(type='text/javascript', src='../javascripts/skyshares.rest.js')
+		script(type='text/javascript', src='../javascripts/skyshares.share.js')
+	body
+		block content
+			img#preview-image( style='width: 90%;' )
+			br
+			input#post-text.skyshares( type='text' style='width: 90%;' )
+			br
+			input.skyshares.twitter( type='button' title='share on twitter' onclick='skyshares.share.twitter.post()')
+			input.skyshares.facebook( type='button' title='share on facebook' onclick='skyshares.share.facebook.post()')
+			input.skyshares.googleplus( type='button' title='share on googleplus' onclick='skyshares.share.googleplus.post()')
+			case type
+				when 'chart'
+					input.skyshares.png( type='button' title='save as png' onclick='skyshares.share.file.topng()' )
+				when 'table'
+					input.skyshares.csv( type='button' title='save as csv' onclick='skyshares.share.file.tocsv()' )
+		// initialise
+		script(type='text/javascript').
+			function updatePreviewImage() {
+				var preview = localStorage.getItem('skyshares.share-png');
+				if ( preview ) {
+					var img = document.querySelector('#preview-image');
+					if ( img ) {
+						img.src = preview;
+						return true;
+					}
+				}
+				return false;
+			}
+			window.addEventListener('storage', function(e) {
+				console.log('storage changed ' + e.key );
+				if ( e.key === 'skyshares.share-png' ) {
+					updatePreviewImage();
+				}
+			}, true);
+			function monitorPreviewImage() {
+				if ( !updatePreviewImage() ) {
+					setTimeout( monitorPreviewImage, 100);
+				}
+			}
+			monitorPreviewImage();

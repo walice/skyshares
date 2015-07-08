@@ -70,12 +70,25 @@ html
 					input#reference_date( type='number' value='2009' min='2009' max='2100' step='1' )
 					&nbsp;
 					p
-					label( for='allocation rule' ) allocation rule:&nbsp;
+					label( for='allocation_rule' ) allocation rule:&nbsp;
 					select#allocation_rule( onchange='skyshares.model.ui.setallocationrule()' )
 						option( value='0' ) per capita
 						option( value='1' ) carbon debt
 						option( value='2' ) GDP basis
 						option( value='3' ) historical responsibilities
+					&nbsp;
+					p
+					label( for='gdp_dataset' ) GDP data source:&nbsp;
+					select#gdp_dataset
+						option( value='CEPII' ) CEPII
+						option( value='MIT' ) MIT
+					&nbsp;
+					p
+					label( for='mac_dataset' ) MAC data source:&nbsp;
+					select#mac_dataset
+						option( value='GCAM' ) GCAM
+						option( value='MIT' ) MIT
+						option( value='McKinsey' ) McKinsey
 					&nbsp;
 					p
 					input#run( type='button' value='run' onclick='skyshares.model.run();' )

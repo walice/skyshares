@@ -1,7 +1,7 @@
 extends layout
 
-block header
-  script(src='/javascripts/math.js')  
+block scripts
+  script(src='/javascripts/skyshares.admin.js')  
     
 block content
   h1= title
@@ -13,7 +13,7 @@ block content
     div.list
       div.listheader
         | <strong>Constants</strong>
-        a.listrightbutton( onclick='skyshares.addConstant();' ) +
+        a.listrightbutton( onclick='skyshares.admin.add("constant");' ) +
       #constants.listbody
     // /CONSTANTS
     
@@ -21,7 +21,7 @@ block content
     div.list
       div.listheader
         | <strong>Datasets</strong>
-        a.listrightbutton( onclick='skyshares.addDataset();' ) +
+        a.listrightbutton( onclick='skyshares.admin.add("dataset");' ) +
       #datasets.listbody
     // /DATASETS
 
@@ -29,7 +29,7 @@ block content
     div.list
       div.listheader
         | <strong>Groups</strong>
-        a.listrightbutton( onclick='skyshares.addGroup();' ) +
+        a.listrightbutton( onclick='skyshares.admin.add("group");' ) +
       #groups.listbody
     // /GROUPS
     
@@ -37,7 +37,7 @@ block content
     div.list
       div.listheader
         | <strong>Functions</strong>
-        a.listrightbutton( onclick='skyshares.addFunction();' ) +
+        a.listrightbutton( onclick='skyshares.admin.add("function");' ) +
       #functions.listbody
     // /FUNCTIONS
 
@@ -45,8 +45,16 @@ block content
     div.list
       div.listheader
         | <strong>Variables</strong>
-        a.listrightbutton( onclick='skyshares.addVariable();' ) +
+        a.listrightbutton( onclick='skyshares.admin.add("variable");' ) +
       #variables.listbody
+    // /VARIABLES
+    
+    // MAC
+    div.list
+      div.listheader
+        | <strong>MAC</strong>
+        a.listrightbutton( onclick='location="/import/mac' ) +
+      #mac.listbody
     // /VARIABLES
 
   // /WRAPPER

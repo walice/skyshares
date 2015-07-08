@@ -267,7 +267,7 @@ skyshares.importer = {
 									//
 									// get region mac codes
 									//
-									for ( var i = 0; i < columns.length; i += columns_per_entry ) {
+									for ( var i = 0; i < columns.length; i += ( columns_per_entry + 1 ) ) {
 										var mac_entry = {
 											id 			: columns[ i ],
 											year		: [],
@@ -283,31 +283,39 @@ skyshares.importer = {
 											mac_entry.mac.push( [] );	
 											mac_entry.qreduc.push( [] );	
 										}
-										for ( var col = 1; col < columns_per_entry; col++ ) {
+										for ( var col = 1; col < columns_per_entry + 1; col++ ) {
 											mac_entry.year.push( parseInt( columns[ i + col ] ) );
 										}
 										raw_mac.push( mac_entry );
 										//
 										// download mac members
-										//	
+										//
+										var group_url = '/data/byname/' + columns[ i ];
+										console.log( 'downloading : ' + group_url );	
 										skyshares.rest.get( '/data/byname/' + columns[ i ], {
 												onloadend : function(e) {
 													var request = e.target;
 													var response = request.response === undefined ? request.responseText : request.response;
 													var group = JSON.parse( response );
-													if ( group ) {
+													if ( !group || !( group.name && group.members ) ) {
+														console.log( 'invalid group at : ' +  request.responseURL );
+													} else {
 														//
 														// store members
 														//
 														var mac_group = getmacgroup(group.name);
 														for ( var i = 0; i < group.members.length; i++ ) {
-															var country = {
-																iso: group.members[ i ],
-																mac: group.name,
-																emissions: 0.0, // get these from BAU later
-																share: 0.0
-															};
-															countries.push( country );
+															var country = getcountry(group.members[ i ]);
+															if ( !country ) {
+																country = {
+																	iso: group.members[ i ],
+																	mac: group.name,
+																	name: "", // get these from BAU later
+																	emissions: 0.0, 
+																	share: 0.0
+																};
+																countries.push( country );
+															}
 															mac_group.members.push( country );	
 														}
 													}
@@ -317,13 +325,13 @@ skyshares.importer = {
 									}
 								} else {
 									var level = row - 2;
-									for ( var i = 0; i < raw_mac.length; i++ ) {
-										var mac_index = ( i * columns_per_entry );
-										var base_index = ( i * columns_per_entry ) + 1;
-										var limit = columns_per_entry -1;
-										for ( j = 0; j < limit; j++ ) {
-											raw_mac[ i ].mac[ level ].push(parseFloat(columns[mac_index]));
-											raw_mac[ i ].qreduc[ level ].push(parseFloat(columns[base_index+j])*1000000.0); // convert to tonnes from 1,000,000 tonnes
+									if ( level < rows_per_entry ) {
+										for ( var i = 0; i < raw_mac.length; i++ ) {
+											var base_index = ( i * columns_per_entry ) + 1;
+											for ( j = 1; j < columns_per_entry + 1; j++ ) {
+												raw_mac[ i ].mac[ level ].push(parseFloat(columns[base_index]));
+												raw_mac[ i ].qreduc[ level ].push(parseFloat(columns[base_index+j])*1000000.0); // convert to tonnes from 1,000,000 tonnes
+											}
 										}
 									}
 								}
@@ -493,10 +501,11 @@ skyshares.importer = {
 				// create MAC datasets 
 				//
 				var mac_datasets = [];
+				var mac_prefix = document.getElementById( 'mac_prefix' ).value;
 				for ( var i = 0; i < raw_mac[ 0 ].year.length; i++ ) {
 					var year = raw_mac[ 0 ].year[ i ];
 					var mac_entry = {
-						name: 'MAC_' + year,
+						name: mac_prefix + '_' + year,
 						description: year + ' MAC data',
 						year: year,
 						type: 'dataset',
@@ -557,7 +566,7 @@ skyshares.importer = {
 					// post
 					//
 					console.log( 'posting: ' + dataset.name );
-					skyshares.rest.post( '/mac/' + dataset.year, dataset, {
+					skyshares.rest.post( '/mac/' + dataset.name, dataset, {
 						onloadend : function( e ) {
 							var request = e.target;
 							if ( request.status === 200 ) {
@@ -574,7 +583,6 @@ skyshares.importer = {
 					//
 					// output results
 					//
-					
 					if ( output ) {
 						output.innerHTML += '<h3>' + dataset.name + '</h3>';
 						var filename = dataset.name;
