@@ -1344,7 +1344,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
 			    }
 			},
 			{
@@ -1360,7 +1360,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
 			    }
 			},
 			{
@@ -1383,7 +1383,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
 			    }
 			}
 	];
