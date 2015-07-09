@@ -691,7 +691,7 @@
 								var year_index = year - self.year.min;
 								if (country[source.field].length > year_index) {
 								    if (source.f_country) {
-								        row.data.push(source.format(f_country(country, source.field, year_index)));
+								        row.data.push(source.format(source.f_country(country, source.field, year_index)));
 								    } else {
 								        row.data.push(source.format(country[source.field][year_index]));
 								    }
