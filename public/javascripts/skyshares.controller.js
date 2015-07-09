@@ -1327,7 +1327,7 @@
 			},
 			{
 			    title: "Financial Flows (% GDP)",
-			    field: "flowGDP",
+			    field: "flow",
 			    f: self.getgroupdatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
@@ -1342,7 +1342,7 @@
 			},
 			{
 			    title: "Decarbonisation Costs (% GDP)",
-			    field: "decarbcostGDP",
+			    field: "decarb_cost",
 			    f: self.getgroupdatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
@@ -1364,7 +1364,7 @@
 			},
 			{
 			    title: "Total costs (% GDP)",
-			    field: "totalcostGDP",
+			    field: "total_cost",
 			    f: self.getgroupdatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
