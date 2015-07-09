@@ -145,7 +145,8 @@ var model = {
 		// download countries 
 		//
 		self.download_queue.add( 'country' );
-		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/country', {
+		//skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/country', {
+		skyshares.rest.get( '../country', {
 			onloadend : function(evt) {
 				var items = skyshares.rest.parseresponse(evt);
 				if ( items ) {
@@ -177,8 +178,9 @@ var model = {
 		// download groups for multiple selection
 		//
 		self.download_queue.add( 'group' );
-		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/data/group', {
-				onloadend : function(evt) {
+		//skyshares.rest.get('http://skyshares-soda.rhcloud.com/data/group', {
+		skyshares.rest.get( '../data/group', {
+		        onloadend: function (evt) {
 					var items = skyshares.rest.parseresponse( evt );
 					if ( items ) {
 						for ( var item in items ) {
@@ -239,8 +241,9 @@ var model = {
 			log('downloading ' + prefix + '_' + mac_year);
 			self.download_queue.add( 'mac_' + prefix + '_' + mac_year );
 			(function(year) {
-				skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/mac/' + prefix + '_' + year, {
-						onloadend : function(evt) {
+			    //skyshares.rest.get('http://skyshares-soda.rhcloud.com/mac/' + prefix + '_' + year, {
+			    skyshares.rest.get( '../mac/' + prefix + '_' + year, {
+			            onloadend: function (evt) {
 							var data = skyshares.rest.parseresponse( evt );
 							if ( data ) {
 								self.mac_datasets[prefix].members.push( data );
@@ -263,8 +266,9 @@ var model = {
 	downloaddata : function( type ) {
 		var self = model;
 		self.download_queue.add( type );
-		skyshares.rest.get( 'http://skyshares-soda.rhcloud.com/data/' + type, {
-			onloadend : function(evt) {
+		//skyshares.rest.get('http://skyshares-soda.rhcloud.com/data/' + type, {
+		skyshares.rest.get( '../data/' + type, {
+		        onloadend: function (evt) {
 				var items = skyshares.rest.parseresponse( evt );
 				if ( items ) {
 					items.forEach( function( item ) {

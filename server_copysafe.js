@@ -8,17 +8,13 @@ var country = require('./routes/country');
 var admin = require('./routes/admin');
 var editor = require('./routes/editor');
 var importer = require('./routes/importer'); 
-var model = require('./routes/model');
-var share = require('./routes/share');
-var mac = require('./routes/mac');
+var model = require('./routes/model'); 
+var mac = require('./routes/mac'); 
 var http = require('http');
 var path = require('path');
 var mongo = require('mongoskin');
-var twitter = require('./routes/twitter');
-var facebook = require('./routes/facebook');
-var googleplus = require('./routes/googleplus');
-var media = require('./routes/media');
-var fs = require('fs');
+
+var fs      = require('fs');
 
 /**
  *  Define the skyshares application.
@@ -161,20 +157,19 @@ var SkyShares = function() {
 		// MAC GET / list
 		//
 		self.app.get('/mac', mac.listall(self.db));
-		self.app.get('/mac/:name', mac.get(self.db));
-		self.app.get('/macnames', mac.listnames(self.db));
+		self.app.get('/mac/:year', mac.get(self.db));
 		//
 		// MAC POST
 		//
-		self.app.post( '/mac/:name', mac.post(self.db) );
+		self.app.post( '/mac/:year', mac.post(self.db) );
 		//
 		// MAC PUT
 		//
-		self.app.put( '/mac/:name', mac.put(self.db) );
+		self.app.put( '/mac/:year', mac.put(self.db) );
 		//
 		// MAC DELETE
 		//
-		self.app.delete( '/mac/:name', mac.delete(self.db) );
+		self.app.delete( '/mac/:year', mac.delete(self.db) );
 		//
 		// editor ui
 		//
@@ -187,33 +182,8 @@ var SkyShares = function() {
 		//
 		// model
 		//
-		self.app.get('/model', model.model());
-        //
-        //
-        //
-		self.app.get('/share/:type', share.share());
-        //
-        // twitter
-        //
-		self.app.get('/twitter/commitmedia/:id/:text', twitter.commitmedia(self.db));
-		self.app.get('/twitter/callback', twitter.callback(self.db));
-        //
-        // facebook
-        // TODO: deprecate all of this
-        //
-		self.app.get('/facebook/post/:id', facebook.post(self.db));
-		self.app.get('/facebook/callback', facebook.callback(self.db));
-		self.app.get('/facebook/:id', facebook.get(self.db));
-		//
-		// google plus
-		//
-		self.app.get('/googleplus/:id/:title/:description', googleplus.get(self.db));
-		//
-		// media
-		//
-		self.app.post('/media', media.post(self.db));
-		self.app.get('/media/:id', media.get(self.db));
-    };
+		self.app.get( '/model', model.model() );    
+	};
     
     /**
      *  Initialize the server (express) and create the routes and register
@@ -243,17 +213,15 @@ var SkyShares = function() {
 		self.app.set('port', self.port);
 		self.app.set('views', path.join(__dirname, 'views'));
 		self.app.set('view engine', 'jade');
-		self.app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
+		self.app.use(express.favicon());
 		self.app.use(express.logger('dev'));
 		self.app.use(express.json());
 		self.app.use(express.urlencoded());
 		self.app.use(express.methodOverride());
-		self.app.use(express.cookieParser('==5ky5har35=='));
-		self.app.use(express.cookieSession());
 		self.app.use(self.app.router);
 		self.app.use(express.static(path.join(__dirname, 'public')));
-		self.app.use(express.json({ limit: '50mb' }));
-        //self.app.use(bodyParser.urlencoded({limit: '5m0b'}));		
+		self.app.use(express.json({limit: '50mb'}));
+		//self.app.use(bodyParser.urlencoded({limit: '5m0b'}));		
 		//
 		// development only
 		//
