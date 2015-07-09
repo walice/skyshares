@@ -32,7 +32,8 @@
     "mongoskin": "*",
     "mathjs": "*",
     "numbers": "*",
-    "numeral": "*"
+	"oauth": "*",
+	"busboy": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

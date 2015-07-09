@@ -16,14 +16,14 @@ var mongo = require('mongoskin');
 //
 // database
 //
-var db = mongo.db("mongodb://localhost:27017/skyshares", {native_parser:true});
+//var db = mongo.db("mongodb://localhost:27017/skyshares", {native_parser:true});
 /*
    		user: 		"admin",
-   		password: 	"zNha1IzjZeP6",
+   		password: 	"EVit8T3tCdID",
    		db: 		"skyshares"
 */
-//var connection_string = "admin:zNha1IzjZeP6@127.0.0.1:27017/skyshares";
-//var db = mongo.db("mongodb://" + connection_string, {native_parser:true});
+var connection_string = "admin:EVit8T3tCdID@127.0.0.1:27017/skyshares";
+var db = mongo.db("mongodb://" + connection_string, {native_parser:true});
 //
 // app
 //
@@ -31,7 +31,7 @@ var app = express();
 //
 // environment
 //
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());

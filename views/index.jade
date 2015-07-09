@@ -247,16 +247,16 @@ html
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
 									h1.skyshares
-										| Financial Flows&nbsp;
-										input.skyshares.share(type='button', name='share-flow-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#flow-chart > svg'), 'flow-chart', { margin: 8, title: 'Financial Flows' });")
+										| Average Financial Flows&nbsp;
+										input.skyshares.share(type='button', name='share-flow-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#flow-chart > svg'), 'flow-chart', { margin: 8, title: 'Average Financial Flows' });")
 									#flow-chart.skyshares-chart
 
 						.skyshares-subsection
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
 									h1.skyshares
-										| Total Costs&nbsp;
-										input.skyshares.share(type='button', name='share-total_cost-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#total_cost-chart > svg'), 'total_cost-chart', { margin: 8, title: 'Total Costs' });")
+										| Average Total Costs&nbsp;
+										input.skyshares.share(type='button', name='share-total_cost-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#total_cost-chart > svg'), 'total_cost-chart', { margin: 8, title: 'Average Total Costs' });")
 									#total_cost-chart.skyshares-chart
 
 						.skyshares-subsection
@@ -401,7 +401,7 @@ html
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
 									h1.skyshares-subsection
-										| Decarbonisation Costs (millions)&nbsp;
+										| Decarbonisation Costs ( millions )&nbsp;
 										//input.skyshares.share(type='button', name='share-decarbonisationcost-table', value='', title='share')
 									|																 
 									br
@@ -420,7 +420,7 @@ html
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
 									h1.skyshares-subsection
-										| Total Costs (millions)&nbsp;
+										| Total Costs ( millions )&nbsp;
 										//input.skyshares.share(type='button', name='share-totalcost-table', value='', title='share')
 									|																 
 									br
@@ -470,7 +470,7 @@ html
 									#allowancesconverge-chart.skyshares-chart
 									|																 
 									h1.skyshares-subsection
-										| Allowances (Per Capita)&nbsp;
+										| Allowances ( Per Capita )&nbsp;
 										input.skyshares.share(type='button', name='share-allowancescapita-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#allowancescapita-chart > svg'), 'allowancescapita-chart', { margin: 8, title: 'Allowances ( Per Capita )' });")
 									|																 
 									#allowancescapita-chart.skyshares-chart
@@ -494,8 +494,8 @@ html
 									#financialflows-chart.skyshares-chart
 									|																 
 									h1.skyshares
-										| Financial Flows (share of GDP)&nbsp;
-										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#financialflowsgdp-chart > svg'), 'financialflowsgdp-chart', { margin: 8, title: 'Financial Flows (share of GDP)' });")
+										| Financial Flows ( Share of GDP )&nbsp;
+										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#financialflowsgdp-chart > svg'), 'financialflowsgdp-chart', { margin: 8, title: 'Financial Flows ( Share of GDP )' });")
 									|																 
 									#financialflowsgdp-chart.skyshares-chart
 						|										 
@@ -509,8 +509,8 @@ html
 									#decarbonisationcost-chart.skyshares-chart
 									|																 
 									h1.skyshares-subsection
-										| Decarbonisation Costs (share of GDP)&nbsp;
-										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#decarbonisationcostgdp-chart > svg'), 'decarbonisationcostgdp-chart', { margin: 8, title: 'Decarbonisation Costs (share of GDP)' });")
+										| Decarbonisation Costs ( Share of GDP )&nbsp;
+										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#decarbonisationcostgdp-chart > svg'), 'decarbonisationcostgdp-chart', { margin: 8, title: 'Decarbonisation Costs ( Share of GDP )' });")
 									|																 
 									#decarbonisationcostgdp-chart.skyshares-chart
 						|										 
@@ -524,8 +524,8 @@ html
 									#totalcost-chart.skyshares-chart
 									|																 
 									h1.skyshares-subsection
-										| Total Costs (share of GDP)&nbsp;
-										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#totalcostgdp-chart > svg'), 'totalcostgdp-chart', { margin: 8, title: 'Total Costs (share of GDP)' });")
+										| Total Costs ( Share of GDP )&nbsp;
+										input.skyshares.share(type='button', name='share-transfer-chart', value='', title='share', onclick="skyshares.share.sharechart(document.querySelector('#totalcostgdp-chart > svg'), 'totalcostgdp-chart', { margin: 8, title: 'Total Costs ( Share of GDP )' });")
 									|																 
 									#totalcostgdp-chart.skyshares-chart
 				|						 
@@ -536,10 +536,8 @@ html
 						.menu-item(onclick='skyshares.ui.selectsubsection(this);') technical overview
 						|										 
 						.menu-item(onclick='skyshares.ui.selectsubsection(this);') policy proposal
-						|										 
-						.menu-item(onclick='skyshares.ui.selectsubsection(this);') methodology
 					|								 
-					#documentation-body.skyshares-sectionbody(style='width: 400%;')
+					#documentation-body.skyshares-sectionbody(style='width: 300%;')
 						.skyshares-subsection
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
@@ -547,7 +545,7 @@ html
 										<h1 class='skyshares-subsection'>
 										Elevator Pitch
 										</h1>
-									iframe.skyshares-pdf(src='https://docs.google.com/file/d/0B2r8eP40VbQMa1VaX0lDcmpFREE/preview', width='256', height='256')
+									iframe.skyshares-pdf(src='https://docs.google.com/a/soda.co.uk/file/d/0B_eGUnStVWiKbGVoLUJyZ3BkSlE/preview', width='256', height='256')
 						|										 
 						.skyshares-subsection
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
@@ -556,7 +554,7 @@ html
 										<h1 class='skyshares-subsection'>
 										Technical Overview
 										</h1>
-									iframe.skyshares-pdf(src='https://docs.google.com/file/d/0B2r8eP40VbQMRzViWVRibGZKUnc/preview', width='256', height='256')
+									iframe.skyshares-pdf(src='https://docs.google.com/a/soda.co.uk/file/d/0B_eGUnStVWiKSnBlMUdkcXo2UE0/preview', width='256', height='256')
 						|										 
 						.skyshares-subsection
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
@@ -565,16 +563,7 @@ html
 										<h1 class='skyshares-subsection'>
 										Review
 										</h1>
-									iframe.skyshares-pdf(src='https://docs.google.com/file/d/0B2r8eP40VbQMY3ktMjZQdHd4Zzg/preview', width='256', height='256')
-						|										 
-						.skyshares-subsection
-							.skyshares-subsection-content.skyshares-subsection-content-fullheight
-								.skyshares-subsection-column.skyshares-subsection-column-flex
-									//
-										<h1 class='skyshares-subsection'>
-										Methodology
-										</h1>
-									iframe.skyshares-pdf(src='https://docs.google.com/file/d/0B2r8eP40VbQMaThpUkF1RWVLeW8/preview', width='256', height='256')
+									iframe.skyshares-pdf(src='https://docs.google.com/a/soda.co.uk/file/d/0B_eGUnStVWiKOTRlWE12MWRYN0k/preview', width='256', height='256')
 				|						 
 				#about.skyshares-sectioncontainer
 					.skyshares-sectionheader(data-target='#about-body', data-translation='-100,0')
@@ -592,7 +581,7 @@ html
 											b Comments? Feedback?
 											br
 											|																				 We&apos;d love to hear from you! Get in touch at 
-											a(href='mailto:alice@cgdev.org') alice@skyshares.org
+											a(href='mailto:SkyShares@cgdev.org') SkyShares@cgdev.org
 											| .
 											br
 										|																		 
@@ -610,17 +599,13 @@ html
 											br
 											|																				 SkyShares is free and open-source software released under the GNU Affero Public License 3.0. Creating free software is crucial so that everyone in the community can gain an understanding of the problem we are trying to solve. True scrutiny can only come from opening up your data and code so that others can review it. You are free to run the programme as you wish, for any purpose; to download the source code; to modify it and to distribute it to help the community.
 											br
-											|																				 If you have chosen to use the GCAM data-set on marginal abatement cost curves, you can download the code which was used to generate these marginal abatement cost curves on 
-											a(href='http://www.globalchange.umd.edu/models/gcam/') http://www.globalchange.umd.edu/models/gcam/
-											|. GCAM is an Integrated Assessment Model.
-											br
 											|																				 If you have chosen to use the McKinsey data-set on marginal abatement cost curves, you can download the results but unfortunately you cannot download the raw data. This data is not ours to give away.
 											br
 											|																				 If you have chosen to use the MIT data-set on marginal abatement cost curves, you can download the code which is a modified version of MIT&apos;s Emissions Prediction and Policy Analysis (EPPA) software, version 4.1, released under a Public Release License Agreement. The intellectual property rights on EPPA remain with MIT. Modifications of the model, interpretation of the results and any errors arising from this are our responsibility alone.
 											br
 											|																				 The other data-sets are all publicly available.
 											br
-											|																				 
+											|																				 Find them in the Documentation drawer!
 		// initialise
 		script(type='text/javascript', src='javascripts/skyshares.js')
 		|		 
