@@ -511,6 +511,14 @@
 		    });
 		    return sum / gdp_sum;
 		},
+		getcountrydatapercentagegdp: function (country, field, year) {
+		    var self = skyshares.controller;
+		    var year_index = year - self.year.min;
+		    if (country[field] && country[field].length > year_index) {
+		        return country[field][year_index] / country.gdp[year_index];
+		    }
+		    return 0;
+		},
 		getgroupdatapercapita: function (group, field, year) {
 		    var self = skyshares.controller;
 		    var year_index = year - self.year.min;
@@ -638,7 +646,7 @@
 								title : source.title,
 								data : []
 							};
-							if (source.f) {
+							if (source.f_group) {
 							    years.forEach(function (year) {
 							        row.data.push(source.format(source.f(group, source.field, year)));
 							    });
@@ -681,8 +689,13 @@
 							};
 							years.forEach( function( year ) {
 								var year_index = year - self.year.min;
-								if ( country[ source.field ].length > year_index ) {
-									row.data.push( source.format( country[ source.field ][ year_index ] ) );
+								if (country[source.field].length > year_index) {
+								    if (source.f_country) {
+								        row.data.push(source.format(f_country(country, source.field, year_index)));
+								    } else {
+								        row.data.push(source.format(country[source.field][year_index]));
+								    }
+									
 								} else {
 									row.data.push( 'n/a' );
 								}
@@ -1328,7 +1341,8 @@
 			{
 			    title: "Financial Flows (% GDP)",
 			    field: "flow",
-			    f: self.getgroupdatapercentagegdp,
+			    f_group: self.getgroupdatapercentagegdp,
+			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
 			    }
@@ -1343,7 +1357,8 @@
 			{
 			    title: "Decarbonisation Costs (% GDP)",
 			    field: "decarb_cost",
-			    f: self.getgroupdatapercentagegdp,
+			    f_group: self.getgroupdatapercentagegdp,
+			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
 			    }
@@ -1365,7 +1380,8 @@
 			{
 			    title: "Total costs (% GDP)",
 			    field: "total_cost",
-			    f: self.getgroupdatapercentagegdp,
+			    f_group: self.getgroupdatapercentagegdp,
+			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value, 0, ",", ".", "", "%");
 			    }
