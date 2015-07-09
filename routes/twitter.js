@@ -5,7 +5,7 @@ var twitter_oauth = new OAuth(
       "jmBunSo7KrXa5IqTIpVu107E6",
       "sxWDO0HsftklouBXuvnYpCKifHWoSldXT0LET1MjSY5xk7RwlV",
       "1.0",
-      "http://skyshares-walice.rhcloud.com/twitter/callback",
+      "http://skyshares-soda.rhcloud.com/twitter/callback",
       "HMAC-SHA1"
     );
 var twitter_endpoint = {

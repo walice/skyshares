@@ -3,7 +3,7 @@ exports.get = function (db) {
     	var variables = {
 			title: req.params.title,
 			description: req.params.description,
-			image: 'http://skyshares-walice.rhcloud.com/media/' + req.params.id
+			image: 'http://skyshares-soda.rhcloud.com/media/' + req.params.id
 		};
         res.render('googleplus', variables);
     }

@@ -148,8 +148,8 @@ skyshares.model = {
 					}
 					self.mac_bis[ evt.data.parameter.year.toString() ] = evt.data.parameter;
 					break;
-				case 'update_eq_price' :
-					console.log( 'updating eq price' );
+			    case 'update_equilibrium_price':
+			        console.log('update_equilibrium_price');
 					self.EQPrice = evt.data.parameter;
 					//self.EQPrice_pre = evt.data.parameter;
 					//self.EQPrice_fin = evt.data.parameter;
@@ -752,40 +752,74 @@ skyshares.model = {
 			}
 		} );
 */
-		self.generatesummarygroupstable( {
-			title : 'Flows by income group and region',
-			range : {
-				min : 2010,
-				max : 2100,
-				step : 10
-			},
-			f : function( i, t ) {
-				return self.all_countries[ i ].flow[ t - 2010 ];	
-			}
-		} );
-		self.generatesummarygroupstable( {
-			title : 'Decarbonisation Costs by income group and region',
-			range : {
-				min : 2010,
-				max : 2100,
-				step : 10
-			},
-			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].decarb_cost[ t - 2010 ] );	
-			}
-		} );
-		self.generatesummarygroupstable( {
-			title : 'Total Costs by income group and region',
-			range : {
-				min : 2010,
-				max : 2100,
-				step : 10
-			},
-			f : function( i, t ) {
-				return Math.round( self.all_countries[ i ].total_cost[ t - 2010 ] );	
-			}
-		} );
-		//
+		
+		self.generatesummaryincomegroupstable({
+		    title: 'Flows by income group',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return self.all_countries[i].flow[t - 2010];
+		    }
+		});
+		self.generatesummaryincomegroupstable({
+		    title: 'Decarbonisation Costs by income group',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return Math.round(self.all_countries[i].decarb_cost[t - 2010]);
+		    }
+		});
+		self.generatesummaryincomegroupstable({
+		    title: 'Total Costs by income group',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return Math.round(self.all_countries[i].total_cost[t - 2010]);
+		    }
+		});
+		self.generatesummarygroupstable({
+		    title: 'Flows by income group and region',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return self.all_countries[i].flow[t - 2010];
+		    }
+		});
+		self.generatesummarygroupstable({
+		    title: 'Decarbonisation Costs by income group and region',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return Math.round(self.all_countries[i].decarb_cost[t - 2010]);
+		    }
+		});
+		self.generatesummarygroupstable({
+		    title: 'Total Costs by income group and region',
+		    range: {
+		        min: 2010,
+		        max: 2100,
+		        step: 10
+		    },
+		    f: function (i, t) {
+		        return Math.round(self.all_countries[i].total_cost[t - 2010]);
+		    }
+		});
+	    //
 		// alowances
 		//
 		/*
@@ -1040,35 +1074,13 @@ skyshares.model = {
 			f : function( i, t ) {
 				return skyshares.utility.formatpercent( self.all_countries[ i ].totalcostGDP[ t - 2010 ] );	
 			}
-		} );	
-		if ( self.EQPrice && self.EQPrice_pre && self.EQPrice_fin ) {
-
-
-			function price_pre( t ) {
-				//var self = model;
-				for ( var i = 0; i <= self.EQPrice_pre.length - 1; i++ ) {
-					if ( self.EQPrice_pre[ i ].year == t ) {
-						//log(self.EQPrice_pre[ i ].year + ' ' + self.EQPrice_pre[ i ].price);
-						return self.EQPrice_pre[ i ].price;
-					}
-				}
-			};
-
-			function price_fin( t ) {
-				//var self = model;
-				for ( var i = 0; i <= self.EQPrice_fin.length - 1; i++ ) {
-					if ( self.EQPrice_fin[ i ].year == t ) {
-						return self.EQPrice_fin[ i ].price;
-					}
-				}
-			};
-
-			function pEQ( t ) { 
-				for ( var i = 0; i <= self.EQPrice.length - 1; i++ ) {
-					if ( self.EQPrice[ i ].year == t ) {
-						return self.EQPrice[ i ].price;
-					}
-				}
+		});
+	    //
+	    // plot eq price
+        //
+		if (self.EQPrice) {
+			function pEQ(t) {
+                
 				for ( var i = 0; i < self.EQPrice.length - 1; i++ ) {
 					if ( self.EQPrice[ i ].year <= t && self.EQPrice[ i + 1 ].year >= t ) {
 						var u = ( self.EQPrice[ i + 1 ].year - t ) / ( self.EQPrice[ i + 1 ].year - self.EQPrice[ i ].year );
@@ -1076,8 +1088,7 @@ skyshares.model = {
 					}
 				}
 				return self.EQPrice[ self.EQPrice.length - 1 ].price;
-				
-			};
+ 			};
 
 			var table = document.createElement('table');
 			var header = document.createElement('h2');
@@ -1092,7 +1103,7 @@ skyshares.model = {
 			var row = document.createElement( 'tr' );
 			for ( var t = 2010; t <= 2100; t++ ) {
 				var col = document.createElement( 'td' );
-				col.innerHTML = skyshares.utility.formatcurrency(pEQ( t ));
+				col.innerHTML = skyshares.utility.formatcurrency(self.EQPrice[t-2010]);
 				row.appendChild( col );
 			}
 			table.appendChild(row);
@@ -1100,94 +1111,159 @@ skyshares.model = {
 		}
 		
 	},
-	generatesummarygroupstable : function( config ) {
-		var self = skyshares.model;
-		//
-		// build income groups
-		//
-		var groups = [ self.getdata( 'LIC' ), self.getdata( 'LMIC' ), self.getdata( 'UMIC' ), self.getdata( 'HIC' )  ];
-		var regions = [ self.getdata( 'Africa' ), self.getdata( 'Americas' ), self.getdata( 'Asia' ), self.getdata( 'Europe' ), self.getdata( 'Oceania' ) ];
-		var income_groups = [];
-		for( var i = 0; i < groups.length; i++ ) {
-			var group_regions = { name: groups[ i ].name, regions: {} };
-			for( var j = 0; j < regions.length; j++ ) {
-				for ( var k = 0; k < groups[ i ].members.length; k++ ) {
-					if ( regions[ j ].members.indexOf( groups[ i ].members[ k ] ) >= 0 ) {
-						var country = self.getcountrybyiso( self.cow_countries, groups[ i ].members[ k ] );
-						if ( country ) {
-							if ( group_regions.regions[ regions[ j ].name ] == undefined ) {
-								group_regions.regions[ regions[ j ].name ] = [];
-							}
-							group_regions.regions[ regions[ j ].name ].push( country );
-						}
-					}
-				}
-			}
-			income_groups.push( group_regions );
-		}
-		//
-		// render table
-		//
-		try {
-			var table = document.createElement('table');
-			var header = document.createElement('h2');
-			header.innerHTML = config.title;
-			self.results.appendChild(header);
-			table.appendChild(document.createElement('th'));
-			for ( var t = config.range.min; t <= config.range.max; t += config.range.step ) {
-				header = document.createElement('th');
-				header.innerHTML = t;
-				table.appendChild(header);
-			}
-			//
-			//
-			//
-			for ( var i = 0; i < income_groups.length; i++ ) {
-				//
-				// income group header
-				//
-				var row = document.createElement('tr');
-				var name = document.createElement('th');
-				name.style.textAlign = 'left';
-				name.innerHTML = income_groups[ i ].name;			
-				row.appendChild( name );
-				table.appendChild(row);
-				//
-				// regional summaries
-				//
-				for( var region in income_groups[ i ].regions ) {
-					row = document.createElement('tr');
-					name = document.createElement('th');
-					name.style.textAlign = 'right';
-					name.innerHTML = region;			
-					row.appendChild( name );
-					
-					for ( var t = config.range.min; t <= config.range.max; t += config.range.step ) {
-						var column = document.createElement('td');
-						try {
-							var value = 0;
-							for ( var k = 0; k < income_groups[ i ].regions[ region ].length; k++ ) {
-								value += config.f( income_groups[ i ].regions[ region ][ k ].iso_index, t );
-							}
-							column.innerHTML = skyshares.utility.formatcurrency( value, 0 );
-						} catch( error ) {
-							//console.log( 'Error generating table ' +  config.title + ' problem with country ' +  self.cow_countries[ i ].name + ' : ' + error.message );
-							//console.log( error.stack );
-							console.log( 'Error generating table ' +  config.title + ' : ' + error.message + ' : ' + error.stack );
-							column.innerHTML = 'error';
-					
-						}
-						row.appendChild( column );
-					}
-					table.appendChild(row);
-				}
-			}
-			self.results.appendChild(table);
-		} catch( err ) {
-			alert( "Unable to table : " + err.message );
-		}
+	generatesummarygroupstable: function (config) {
+	    var self = skyshares.model;
+	    //
+	    // build income groups
+	    //
+	    var groups = [self.getdata('LIC'), self.getdata('LMIC'), self.getdata('UMIC'), self.getdata('HIC')];
+	    var regions = [self.getdata('Africa'), self.getdata('Americas'), self.getdata('Asia'), self.getdata('Europe'), self.getdata('Oceania')];
+	    var income_groups = [];
+	    for (var i = 0; i < groups.length; i++) {
+	        var group_regions = { name: groups[i].name, regions: {} };
+	        for (var j = 0; j < regions.length; j++) {
+	            for (var k = 0; k < groups[i].members.length; k++) {
+	                if (regions[j].members.indexOf(groups[i].members[k]) >= 0) {
+	                    var country = self.getcountrybyiso(self.cow_countries, groups[i].members[k]);
+	                    if (country) {
+	                        if (group_regions.regions[regions[j].name] == undefined) {
+	                            group_regions.regions[regions[j].name] = [];
+	                        }
+	                        group_regions.regions[regions[j].name].push(country);
+	                    }
+	                }
+	            }
+	        }
+	        income_groups.push(group_regions);
+	    }
+	    //
+	    // render table
+	    //
+	    try {
+	        var table = document.createElement('table');
+	        var header = document.createElement('h2');
+	        header.innerHTML = config.title;
+	        self.results.appendChild(header);
+	        table.appendChild(document.createElement('th'));
+	        for (var t = config.range.min; t <= config.range.max; t += config.range.step) {
+	            header = document.createElement('th');
+	            header.innerHTML = t;
+	            table.appendChild(header);
+	        }
+	        //
+	        //
+	        //
+	        for (var i = 0; i < income_groups.length; i++) {
+	            //
+	            // income group header
+	            //
+	            var row = document.createElement('tr');
+	            var name = document.createElement('th');
+	            name.style.textAlign = 'left';
+	            name.innerHTML = income_groups[i].name;
+	            row.appendChild(name);
+	            table.appendChild(row);
+	            //
+	            // regional summaries
+	            //
+	            for (var region in income_groups[i].regions) {
+	                row = document.createElement('tr');
+	                name = document.createElement('th');
+	                name.style.textAlign = 'right';
+	                name.innerHTML = region;
+	                row.appendChild(name);
+
+	                for (var t = config.range.min; t <= config.range.max; t += config.range.step) {
+	                    var column = document.createElement('td');
+	                    try {
+	                        var value = 0;
+	                        for (var k = 0; k < income_groups[i].regions[region].length; k++) {
+	                            value += config.f(income_groups[i].regions[region][k].iso_index, t);
+	                        }
+	                        column.innerHTML = skyshares.utility.formatcurrency(value, 0);
+	                    } catch (error) {
+	                        //console.log( 'Error generating table ' +  config.title + ' problem with country ' +  self.cow_countries[ i ].name + ' : ' + error.message );
+	                        //console.log( error.stack );
+	                        console.log('Error generating table ' + config.title + ' : ' + error.message + ' : ' + error.stack);
+	                        column.innerHTML = 'error';
+
+	                    }
+	                    row.appendChild(column);
+	                }
+	                table.appendChild(row);
+	            }
+	        }
+	        self.results.appendChild(table);
+	    } catch (err) {
+	        alert("Unable to table : " + err.message);
+	    }
 	},
-	generatecharts : function() {
+	generatesummaryincomegroupstable: function (config) {
+	    var self = skyshares.model;
+	    //
+	    // build income groups
+	    //
+	    var group_names = [ 'LIC', 'LMIC', 'UMIC', 'HIC' ]
+	    var groups = [self.getdata('LIC'), self.getdata('LMIC'), self.getdata('UMIC'), self.getdata('HIC')];
+	    var income_groups = [];
+	    for (var i = 0; i < groups.length; i++) {
+	        var members = [];
+	        for (var j = 0; j < groups[i].members.length; j++) {
+	            var country = self.getcountrybyiso(self.all_countries, groups[i].members[j]);
+	            if (country) {
+	                members.push(country);
+	            }
+	        }
+	        income_groups.push(members);
+	    }
+	    //
+	    // render table
+	    //
+	    try {
+	        var table = document.createElement('table');
+	        var header = document.createElement('h2');
+	        header.innerHTML = config.title;
+	        self.results.appendChild(header);
+	        table.appendChild(document.createElement('th'));
+	        for (var t = config.range.min; t <= config.range.max; t += config.range.step) {
+	            header = document.createElement('th');
+	            header.innerHTML = t;
+	            table.appendChild(header);
+	        }
+	        //
+	        //
+	        //
+	        for (var i = 0; i < income_groups.length; i++) {
+	            //
+	            // income group header
+	            //
+	            var row = document.createElement('tr');
+	            var name = document.createElement('th');
+	            name.style.textAlign = 'left';
+	            name.innerHTML = group_names[i];
+	            row.appendChild(name);
+	            for (var t = config.range.min; t <= config.range.max; t += config.range.step) {
+	                var column = document.createElement('td');
+                    try {
+	                    var value = 0;
+	                    for (var j = 0; j < income_groups[i].length; j++) {
+	                        value += config.f(income_groups[i][j].iso_index, t);
+	                    }
+	                    column.innerHTML = skyshares.utility.formatcurrency(value, 0);
+                    } catch (error) {
+                        console.log('Error generating table ' + config.title + ' : ' + error.message + ' : ' + error.stack);
+                        column.innerHTML = 'error';
+                    }
+                    row.appendChild(column);
+	            }
+	            table.appendChild(row);
+	        }
+	        self.results.appendChild(table);
+	    } catch (err) {
+	        alert("Unable to table : " + err.message);
+	    }
+	},
+	generatecharts: function () {
 		/*
 		var self = skyshares.model;
 		//

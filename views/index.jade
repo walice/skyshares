@@ -31,6 +31,15 @@ html
 				| Your browser does not support SVG
 			|				 
 			#country-details
+			#map-legend
+				| highest emitter
+				#map-legend-1
+				#map-legend-2
+				#map-legend-3
+				#map-legend-4
+				#map-legend-5
+				#map-legend-6
+				| lowest emitter
 		|		 
 		#topbar
 			img#cgd-logo(src='images/cgdlogo-inv.png', alt='Center for Global Development Logo')
@@ -264,7 +273,7 @@ html
 											.skyshares-summary-navigator-item( data-start='d', data-end='j' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') d&nbsp;-&nbsp;j
 											.skyshares-summary-navigator-item( data-start='k', data-end='p' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') k&nbsp;-&nbsp;p
 											.skyshares-summary-navigator-item( data-start='q', data-end='z' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') q&nbsp;-&nbsp;z
-										#summary-table-groups.skyshares-table( style='overflow: auto; height: 288px; width: 90%;')
+										#summary-table-groups.skyshares-table( style='overflow: auto; height: 288px; width: 100%;')
 									br
 									.skyshares-summary-table-container
 										#summary-navigator-countries.skyshares-summary-navigator
@@ -273,7 +282,7 @@ html
 											.skyshares-summary-navigator-item( data-start='d', data-end='j' data-target='#summary-table-countries' onclick='skyshares.controller.rendercountrysummarytables(this);') d&nbsp;-&nbsp;j
 											.skyshares-summary-navigator-item( data-start='k', data-end='p' data-target='#summary-table-countries' onclick='skyshares.controller.rendercountrysummarytables(this);') k&nbsp;-&nbsp;p
 											.skyshares-summary-navigator-item( data-start='q', data-end='z' data-target='#summary-table-countries' onclick='skyshares.controller.rendercountrysummarytables(this);') q&nbsp;-&nbsp;z
-										#summary-table-countries.skyshares-table( style='overflow: auto; height: 288px; width: 90%;')
+										#summary-table-countries.skyshares-table( style='overflow: auto; height: 288px; width: 100%;')
 
 				#tables.skyshares-sectioncontainer
 					.skyshares-sectionheader(data-target='#tables-body', data-translation='-100,0')
