@@ -648,7 +648,7 @@
 							};
 							if (source.f_group) {
 							    years.forEach(function (year) {
-							        row.data.push(source.format(source.f(group, source.field, year)));
+							        row.data.push(source.format(source.f_group(group, source.field, year)));
 							    });
 							} else {
 							    years.forEach(function (year) {
