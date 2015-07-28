@@ -17,7 +17,7 @@ exports.post = function (db) {
         req.session.skyshares = {
             media_id: id,
         };
-        var login_request = facebook.endpoint.login + '?client_id=' + facebook.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://skyshares-soda.rhcloud.com/facebook/callback');
+        var login_request = facebook.endpoint.login + '?client_id=' + facebook.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://www.skyshares.org/facebook/callback');
         res.redirect(login_request);
     }
 };
@@ -38,14 +38,14 @@ exports.callback = function (db) {
                 res.send("Login Successful : " + access_token + " : " + JSON.stringify(skyshares_data));
             } else {
                 var code = req.param('code');
-                facebook_oauth.getOAuthAccessToken(code, { redirect_uri: 'http://skyshares-soda.rhcloud.com/facebook/callback' }, function (error, access_token, refresh_token, results) {
+                facebook_oauth.getOAuthAccessToken(code, { redirect_uri: 'http://www.skyshares.org/facebook/callback' }, function (error, access_token, refresh_token, results) {
                     if (error) {
                         res.send("Error requesting access token : " + JSON.stringify(error));
                     } else {
 						var object = {
 							title: 'SkyShares Chart',
 							image: {
-								url: 'http://skyshares-soda.rhcloud.com/facebook/media/' + skyshares_data.media_id,
+							    url: 'http://www.skyshares.org/facebook/media/' + skyshares_data.media_id,
 								user_generated: true
 							}
 						};
@@ -77,10 +77,10 @@ exports.get = function (db) {
     return function (req, res) {
     	var variables = {
 			title: req.params.title,
-			url: 'http://skyshares-soda.rhcloud.com/facebook/' + req.params.id,
+			url: 'http://www.skyshares.org/facebook/' + req.params.id,
 			type: 'website',
 			description: req.params.description,
-			image: 'http://skyshares-soda.rhcloud.com/media/' + req.params.id
+			image: 'http://www.skyshares.org/media/' + req.params.id
 		};
         res.render('facebook', variables);
     }
