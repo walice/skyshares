@@ -82,7 +82,7 @@
                 margin_top += 48;
             }
             canvas.width = width + margin_left + margin_right;
-            canvas.height = height + margin_top + margin_bottom + 12;
+            canvas.height = height + margin_top + margin_bottom + 48;
             var context = canvas.getContext('2d');
             //
             // clear to background colour
