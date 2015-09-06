@@ -1,1 +1,1 @@
-rhc ssh skyshares
+rhc ssh --ssh "c:\git\usr\bin\ssh.exe" -a skyshares
