@@ -1,3 +1,11 @@
-The OpenShift `nodejs` cartridge documentation can be found at:
+Welcome to SkyShares!
 
-https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-nodejs/README.md
+This project started at the Center for Global Development (www.cgdev.org).
+
+SkyShares is an interactive tool to allow you to model the environmental and economic consequences of various climate agreements.
+
+Can you create a climate deal which is environmentally sound and will get political agreemnent?
+
+Try now at www.skyshares.org.
+
+If you have any questions or feedback, feel free to get in touch at alice@skyshares.org!
