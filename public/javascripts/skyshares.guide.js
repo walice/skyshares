@@ -18,7 +18,7 @@
 		script : [
 			{
 				section: 'map-controls',
-				content: '<h1>Welcome to SkyShares</h1>SkyShares allows you to visualise the financial flows and economic costs of a climate agreement.'
+				content: '<h1>Welcome to SkyShares</h1>SkyShares allows you to visualise the financial flows and economic costs of a climate agreement.:&nbsp;Can you create a climate deal which will get political agreement?'
 			},
 			{
 				section: 'options',
