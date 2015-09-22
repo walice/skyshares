@@ -23,7 +23,7 @@ function validateorigin( origin ) {
 exports.get = function(db) {
   return function(req, res) {
 	var host = req.host;
-	if ( !( req.xhr && validateorigin( host ) ) ) {
+	if ( !( /*req.xhr && */validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
