@@ -19,10 +19,10 @@ var mongo = require('mongoskin');
 //var db = mongo.db("mongodb://localhost:27017/skyshares", {native_parser:true});
 /*
    		user: 		"admin",
-   		password: 	"EVit8T3tCdID",
+   		password: 	"r6wWkmkfyItZ",
    		db: 		"skyshares"
 */
-var connection_string = "admin:EVit8T3tCdID@127.0.0.1:27017/skyshares";
+var connection_string = "127.0.0.1:27017/skyshares";
 var db = mongo.db("mongodb://" + connection_string, {native_parser:true});
 //
 // app
