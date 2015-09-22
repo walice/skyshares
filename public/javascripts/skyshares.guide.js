@@ -75,8 +75,7 @@
 			{
 				section: 'options',
 				subsection: 'coalition',
-				target: '#country-list',
-				content: 'Start by building your coalition'
+				content: '<b>Start by building your coalition.</b>'
 			}
 		],
 		//
