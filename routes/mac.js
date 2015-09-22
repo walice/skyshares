@@ -22,7 +22,7 @@ function validateorigin( origin ) {
 //
 exports.get = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) {
+	if ( !validateorigin(req.get('origin') ) ) {
 		res.end(403, 'forbidden');
 		return;
 	}
@@ -34,7 +34,7 @@ exports.get = function(db) {
 };
 exports.listall = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) {
+	if ( !validateorigin(req.get('origin') ) ) {
 		res.end(403, 'forbidden');
 		return;
 	}
@@ -45,7 +45,7 @@ exports.listall = function(db) {
 };
 exports.listnames = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) {
+	if ( !validateorigin(req.get('origin') ) ) {
 		res.end(403, 'forbidden');
 		return;
 	}
@@ -59,7 +59,7 @@ exports.listnames = function(db) {
 //
 exports.post = function(db) {
 	return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) {
+		if ( !validateorigin(req.get('origin') ) ) {
 			res.end(403, 'forbidden');
 			return;
 		}
@@ -80,6 +80,10 @@ exports.post = function(db) {
 
 exports.put = function(db) {
 	return function(req, res) {
+		if ( !validateorigin(req.get('origin') ) ) {
+			res.end(403, 'forbidden');
+			return;
+		}
 		var name = req.params.name;
 		updatemac( db, name, req.body, function(err, result) {
 			res.json( err ? { status: 'ERROR', message: err } : { status: 'OK' } );
@@ -89,6 +93,10 @@ exports.put = function(db) {
 
 exports.delete = function(db) {
 	return function(req, res) {
+		if ( !validateorigin(req.get('origin') ) ) {
+			res.end(403, 'forbidden');
+			return;
+		}
 		var name = req.params.name;
 		deletemac( db, name, function(err, result) {
 			res.json( err ? { status: 'ERROR', message: err } : { status: 'OK' } );
