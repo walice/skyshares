@@ -1338,15 +1338,15 @@
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
 			    }
 			},
-/*			{
+			{
 			    title: "Financial Flows (% GDP)",
 			    field: "flow",
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
 			    }
-			},*/
+			},
 			{
 			    title: "Decarbonisation Costs (millions)",
 			    field: "decarb_cost",
@@ -1354,15 +1354,15 @@
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
 			    }
 			},
-/*			{
+			{
 			    title: "Decarbonisation Costs (% GDP)",
 			    field: "decarb_cost",
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
 			    }
-			},*/
+			},
 			{
 			    title: "Total costs (millions)",
 			    field: "total_cost",
@@ -1377,15 +1377,15 @@
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
 			    }
 			},
-/*			{
+			{
 			    title: "Total costs (% GDP)",
 			    field: "total_cost",
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 4, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
 			    }
-			}*/
+			}
 	];
     //
     //

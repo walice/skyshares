@@ -267,6 +267,14 @@ html
 										// input.skyshares.share(type='button', name='share-summary-table', value='', title='share')
 									br
 									.skyshares-summary-table-container
+										#summary-navigator-groups.skyshares-summary-navigator
+											| &nbsp;Groups&nbsp;
+											#summary-navigator-groups-default.skyshares-summary-navigator-item( data-start='a', data-end='c' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') a&nbsp;-&nbsp;c
+											.skyshares-summary-navigator-item( data-start='d', data-end='j' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') d&nbsp;-&nbsp;j
+											.skyshares-summary-navigator-item( data-start='k', data-end='p' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') k&nbsp;-&nbsp;p
+											.skyshares-summary-navigator-item( data-start='q', data-end='z' data-target='#summary-table-groups' onclick='skyshares.controller.rendergroupsummarytables(this);') q&nbsp;-&nbsp;z
+										#summary-table-groups.skyshares-table
+										br
 										#summary-navigator-countries.skyshares-summary-navigator
 											| &nbsp;Countries&nbsp;
 											#summary-navigator-countries-default.skyshares-summary-navigator-item( data-start='a', data-end='c' data-target='#summary-table-countries' onclick='skyshares.controller.rendercountrysummarytables(this);') a&nbsp;-&nbsp;c
