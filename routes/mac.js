@@ -22,8 +22,9 @@ function validateorigin( origin ) {
 //
 exports.get = function(db) {
   return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
+  		var origin = req.get('origin');
+		if ( !validateorigin( origin ) ) {
+			res.json({ status: 'ERROR', message: origin + 'forbidden' });
   			return;
 		}
   	var name = req.params.name;
