@@ -22,10 +22,10 @@ function validateorigin( origin ) {
 //
 exports.get = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) ) {
-		res.end(403, 'forbidden');
-		return;
-	}
+		if ( !validateorigin(req.get('origin') ) ) {
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
+		}
   	var name = req.params.name;
     findmac( db, name, function (err, mac) {
       	res.json( ( err || !mac ) ? { status: 'ERROR', message: ( err ? err : 'Unable to find ' + name ) } : mac);
@@ -34,10 +34,10 @@ exports.get = function(db) {
 };
 exports.listall = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) ) {
-		res.end(403, 'forbidden');
-		return;
-	}
+		if ( !validateorigin(req.get('origin') ) ) {
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
+		}
     db.collection('mac').find().toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -45,10 +45,10 @@ exports.listall = function(db) {
 };
 exports.listnames = function(db) {
   return function(req, res) {
-	if ( !validateorigin(req.get('origin') ) ) {
-		res.end(403, 'forbidden');
-		return;
-	}
+		if ( !validateorigin(req.get('origin') ) ) {
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
+		}
     db.collection('mac').find({},{name: 1, _id: 1}).toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -60,8 +60,8 @@ exports.listnames = function(db) {
 exports.post = function(db) {
 	return function(req, res) {
 		if ( !validateorigin(req.get('origin') ) ) {
-			res.end(403, 'forbidden');
-			return;
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
 		}
 		var name = req.params.name;
 		findmac( db, name, function( err, mac ) {
@@ -81,8 +81,8 @@ exports.post = function(db) {
 exports.put = function(db) {
 	return function(req, res) {
 		if ( !validateorigin(req.get('origin') ) ) {
-			res.end(403, 'forbidden');
-			return;
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
 		}
 		var name = req.params.name;
 		updatemac( db, name, req.body, function(err, result) {
@@ -94,8 +94,8 @@ exports.put = function(db) {
 exports.delete = function(db) {
 	return function(req, res) {
 		if ( !validateorigin(req.get('origin') ) ) {
-			res.end(403, 'forbidden');
-			return;
+			res.json({ status: 'ERROR', message: 'forbidden' });
+  			return;
 		}
 		var name = req.params.name;
 		deletemac( db, name, function(err, result) {
