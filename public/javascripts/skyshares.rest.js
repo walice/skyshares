@@ -94,7 +94,7 @@
 			        xhr.setRequestHeader(name, headers[name]);
 			    }
 			}
-			xhr.setRequestHeader( 'skyshares', skyshares.generateuid() );
+			xhr.setRequestHeader( 'skyshares', skyshares.utility.generateuid() );
 			//
 			//
 			//
