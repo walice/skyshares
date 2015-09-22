@@ -71,6 +71,12 @@
 				section: 'map-controls',
 				target: 'input#flow-regional + label.skyshares',
 				content: '<b>Regional Flow:&nbsp;</b>This button allows you to see what financial flows would result on a regional basis for Africa, the Americas, Asia, Europe and Oceania. Bear in mind that this shows aggregate flows and so will average out the difference if a continent contains seller and buyer countries.'
+			},
+			{
+				section: 'options',
+				subsection: 'coalition',
+				target: '#country-list',
+				content: 'Start by building your coalition'
 			}
 		],
 		//
