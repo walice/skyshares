@@ -624,16 +624,8 @@ html
 										p
 											b See the code
 											br
-											|																				 You can find the SkyShares code on GitHub at 
+											|																				 You can find the SkyShares code on GitHub at
 											a(href='https://github.com/walice/skyshares') https://github.com/walice/skyshares
-											| .
-											br
-										|																		 
-										p
-											b Download the desktop version of SkyShares
-											br
-											|																				 You can download a macro-enabled spreadsheet version of SkyShares on 
-											a(href='http://bit.ly/SkySharesv7') http://bit.ly/SkySharesv7
 											| .
 											br
 		// initialise
