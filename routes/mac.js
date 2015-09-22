@@ -14,7 +14,7 @@ function deletemac( db, name, callback ) {
 	db.collection('mac').remove( { name: name }, callback);
 }
 function validateorigin( origin ) {
-	var authorised = [ "skyshares.org", "rhcloud.com" ];
+	var authorised = [ "www.skyshares.org", "skyshares-soda.rhcloud.com" ];
 	return authorised.indexOf( origin ) >= 0;
 }
 //
@@ -22,11 +22,11 @@ function validateorigin( origin ) {
 //
 exports.get = function(db) {
   return function(req, res) {
-  		var origin = req.host;
-		if ( !validateorigin( origin ) ) {
-			res.json({ status: 'ERROR', message: origin + ' forbidden' });
-  			return;
-		}
+	var host = req.host;
+	if ( !( req.xhr && validateorigin( host ) ) ) {
+		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		return;
+	}
   	var name = req.params.name;
     findmac( db, name, function (err, mac) {
       	res.json( ( err || !mac ) ? { status: 'ERROR', message: ( err ? err : 'Unable to find ' + name ) } : mac);
@@ -35,10 +35,11 @@ exports.get = function(db) {
 };
 exports.listall = function(db) {
   return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
-  			return;
-		}
+	var host = req.host;
+	if ( !( req.xhr && validateorigin( host ) ) ) {
+		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		return;
+	}
     db.collection('mac').find().toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -46,10 +47,11 @@ exports.listall = function(db) {
 };
 exports.listnames = function(db) {
   return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
-  			return;
-		}
+	var host = req.host;
+	if ( !( req.xhr && validateorigin( host ) ) ) {
+		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		return;
+	}
     db.collection('mac').find({},{name: 1, _id: 1}).toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -60,8 +62,9 @@ exports.listnames = function(db) {
 //
 exports.post = function(db) {
 	return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
+  		var host = req.host;
+		if ( !( req.xhr && validateorigin( host ) ) ) {
+			res.json({ status: 'ERROR', message: origin + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
@@ -81,8 +84,9 @@ exports.post = function(db) {
 
 exports.put = function(db) {
 	return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
+  		var host = req.host;
+		if ( !( req.xhr && validateorigin( host ) ) ) {
+			res.json({ status: 'ERROR', message: origin + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
@@ -94,8 +98,9 @@ exports.put = function(db) {
 
 exports.delete = function(db) {
 	return function(req, res) {
-		if ( !validateorigin(req.get('origin') ) ) {
-			res.json({ status: 'ERROR', message: 'forbidden' });
+  		var host = req.host;
+		if ( !( req.xhr && validateorigin( host ) ) ) {
+			res.json({ status: 'ERROR', message: origin + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
