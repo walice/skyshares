@@ -23,7 +23,8 @@ function validateorigin( origin ) {
 exports.get = function(db) {
   return function(req, res) {
 	var host = req.host;
-	if ( !( /*req.xhr && */validateorigin( host ) ) ) {
+	var skyshares = req.get('skyshares');
+	if ( !( skyshares && validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
@@ -36,7 +37,8 @@ exports.get = function(db) {
 exports.listall = function(db) {
   return function(req, res) {
 	var host = req.host;
-	if ( !( req.xhr && validateorigin( host ) ) ) {
+	var skyshares = req.get('skyshares');
+	if ( !( skyshares && validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
@@ -48,7 +50,8 @@ exports.listall = function(db) {
 exports.listnames = function(db) {
   return function(req, res) {
 	var host = req.host;
-	if ( !( req.xhr && validateorigin( host ) ) ) {
+	var skyshares = req.get('skyshares');
+	if ( !( skyshares && validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
@@ -62,10 +65,11 @@ exports.listnames = function(db) {
 //
 exports.post = function(db) {
 	return function(req, res) {
-  		var host = req.host;
-		if ( !( req.xhr && validateorigin( host ) ) ) {
+		var host = req.host;
+		var skyshares = req.get('skyshares');
+		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
-  			return;
+			return;
 		}
 		var name = req.params.name;
 		findmac( db, name, function( err, mac ) {
@@ -84,10 +88,11 @@ exports.post = function(db) {
 
 exports.put = function(db) {
 	return function(req, res) {
-  		var host = req.host;
-		if ( !( req.xhr && validateorigin( host ) ) ) {
+		var host = req.host;
+		var skyshares = req.get('skyshares');
+		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
-  			return;
+			return;
 		}
 		var name = req.params.name;
 		updatemac( db, name, req.body, function(err, result) {
@@ -98,10 +103,11 @@ exports.put = function(db) {
 
 exports.delete = function(db) {
 	return function(req, res) {
-  		var host = req.host;
-		if ( !( req.xhr && validateorigin( host ) ) ) {
+		var host = req.host;
+		var skyshares = req.get('skyshares');
+		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
-  			return;
+			return;
 		}
 		var name = req.params.name;
 		deletemac( db, name, function(err, result) {
