@@ -1332,7 +1332,7 @@
 			    }
 			},
 			{
-			    title: "Financial Flows ( millions )",
+			    title: "Financial Flows (millions)",
 			    field: "flow",
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
@@ -1348,7 +1348,7 @@
 			    }
 			},*/
 			{
-			    title: "Decarbonisation Costs ( millions )",
+			    title: "Decarbonisation Costs (millions)",
 			    field: "decarb_cost",
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
@@ -1364,7 +1364,7 @@
 			    }
 			},*/
 			{
-			    title: "Total costs ( millions )",
+			    title: "Total costs (millions)",
 			    field: "total_cost",
 			    format: function (value) {
 			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
