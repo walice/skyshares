@@ -509,7 +509,7 @@
 		            gdp_sum += country.gdp[year_index];
 		        }
 		    });
-		    return sum / gdp_sum;
+		    return ( sum / gdp_sum ) * 100.0;
 		},
 		getcountrydatapercentagegdp: function (country, field, year) {
 			/*
@@ -947,7 +947,7 @@
 					},
 					f: self.getgroupdatapercentagegdp,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value*100, 2,",",".", "", "%" );
+						return skyshares.utility.formatcurrency( value, 2,",",".", "", "%" );
 					},
 					container: 'financialflowsgdp-table',
                     delay: 90
@@ -982,7 +982,7 @@
 					},
 					f: self.getgroupdatapercentagegdp,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value*100, 2,",",".", "", "%" );
+						return skyshares.utility.formatcurrency( value, 2,",",".", "", "%" );
 					},
 					container: 'decarbonisationcostgdp-table',
                     delay: 200
@@ -1017,7 +1017,7 @@
 					},
 					f: self.getgroupdatapercentagegdp,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value*100, 2,",",".", "", "%" );
+						return skyshares.utility.formatcurrency( value, 2,",",".", "", "%" );
 					},
 					container: 'totalcostgdp-table',
                     delay: 400
@@ -1113,7 +1113,7 @@
 			    },
 			    f: self.getgroupdatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
 			    },
 			    container: 'financialflowsgdp-chart',
                 delay: 800
@@ -1150,7 +1150,7 @@
 					},
 					f: self.getgroupdatapercentagegdp,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value*100, 2,",",".","", "%" );
+						return skyshares.utility.formatcurrency( value, 2,",",".","", "%" );
 					},
 					container: 'decarbonisationcostgdp-chart',
                     delay: 1000
@@ -1187,7 +1187,7 @@
 					},
 					f: self.getgroupdatapercentagegdp,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value*100, 2,",",".","", "%" );
+						return skyshares.utility.formatcurrency( value, 2,",",".","", "%" );
 					},
 					container: 'totalcostgdp-chart',
                     delay: 1200
@@ -1355,7 +1355,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
 			    }
 			},
 			{
@@ -1371,7 +1371,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
 			    }
 			},
 			{
@@ -1394,7 +1394,7 @@
 			    f_group: self.getgroupdatapercentagegdp,
 			    f_country: self.getcountrydatapercentagegdp,
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value*100, 2, ",", ".", "", "%");
+			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "", "%");
 			    }
 			}
 	];
