@@ -512,9 +512,20 @@
 		    return sum / gdp_sum;
 		},
 		getcountrydatapercentagegdp: function (country, field, year) {
+			/*
 		    var self = skyshares.controller;
 		    var year_index = year - self.year.min;
 		    if (country[field] && country[field].length > year_index) {
+		        return country[field][year_index] / country.gdp[year_index];
+		    }
+		    */
+		    var self = skyshares.controller;
+		    var year_index = year - self.year.min;
+		    var fieldGDP = field + 'GDP';
+		    if (country[fieldGDP] && country[fieldGDP].length > year_index) {
+		        return country[fieldGDP][year_index];
+		    } else if (country[field] && country[field].length > year_index) {
+		    	// JONS: temporary fallback
 		        return country[field][year_index] / country.gdp[year_index];
 		    }
 		    return 0;
