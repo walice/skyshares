@@ -521,7 +521,7 @@
 		    */
 		    var self = skyshares.controller;
 		    var year_index = year - self.year.min;
-		    var fieldGDP = field + 'GDP';
+		    var fieldGDP = ( field === 'decarb_cost' ? 'decarbcost' : field ) + 'GDP'; // TODO: change field decarb_cost to decarbcost
 		    if (country[fieldGDP] && country[fieldGDP].length > year_index) {
 		        return country[fieldGDP][year_index];
 		    } else if (country[field] && country[field].length > year_index) {
