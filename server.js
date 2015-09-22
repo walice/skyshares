@@ -113,11 +113,9 @@ var SkyShares = function() {
 		// routes
 		//
 		self.app.get('/', routes.index);
-		//
-		// routes
-		//
-		self.app.get('/', routes.index);
-		self.app.get('/admin', admin.admin);
+		// JONS: remove admin for now
+		// TODO: add authentication
+		self.app.get('/admin', express.basicAuth('admin', 'letmein101'), admin.admin);
 		//
 		// data routes
 		//
@@ -211,8 +209,8 @@ var SkyShares = function() {
 		//
 		// media
 		//
-		self.app.post('/media', media.post(self.db));
 		self.app.get('/media/:id', media.get(self.db));
+		self.app.post('/media', media.post(self.db));
     };
     
     /**
