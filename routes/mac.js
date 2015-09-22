@@ -24,7 +24,7 @@ exports.get = function(db) {
   return function(req, res) {
 	var host = req.host;
 	if ( !( req.xhr && validateorigin( host ) ) ) {
-		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
   	var name = req.params.name;
@@ -37,7 +37,7 @@ exports.listall = function(db) {
   return function(req, res) {
 	var host = req.host;
 	if ( !( req.xhr && validateorigin( host ) ) ) {
-		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
     db.collection('mac').find().toArray(function (err, items) {
@@ -49,7 +49,7 @@ exports.listnames = function(db) {
   return function(req, res) {
 	var host = req.host;
 	if ( !( req.xhr && validateorigin( host ) ) ) {
-		res.json({ status: 'ERROR', message: origin + ' forbidden' });
+		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
     db.collection('mac').find({},{name: 1, _id: 1}).toArray(function (err, items) {
@@ -64,7 +64,7 @@ exports.post = function(db) {
 	return function(req, res) {
   		var host = req.host;
 		if ( !( req.xhr && validateorigin( host ) ) ) {
-			res.json({ status: 'ERROR', message: origin + ' forbidden' });
+			res.json({ status: 'ERROR', message: host + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
@@ -86,7 +86,7 @@ exports.put = function(db) {
 	return function(req, res) {
   		var host = req.host;
 		if ( !( req.xhr && validateorigin( host ) ) ) {
-			res.json({ status: 'ERROR', message: origin + ' forbidden' });
+			res.json({ status: 'ERROR', message: host + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
@@ -100,7 +100,7 @@ exports.delete = function(db) {
 	return function(req, res) {
   		var host = req.host;
 		if ( !( req.xhr && validateorigin( host ) ) ) {
-			res.json({ status: 'ERROR', message: origin + ' forbidden' });
+			res.json({ status: 'ERROR', message: host + ' forbidden' });
   			return;
 		}
 		var name = req.params.name;
