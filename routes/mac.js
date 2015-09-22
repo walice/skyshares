@@ -13,11 +13,19 @@ function updatemac( db, name, mac, callback ) {
 function deletemac( db, name, callback ) {
 	db.collection('mac').remove( { name: name }, callback);
 }
+function validateorigin( origin ) {
+	var authorised = [ "skyshares.org", "rhcloud.com" ];
+	return authorised.indexOf( origin ) >= 0;
+}
 //
 // GET / listing methods
 //
 exports.get = function(db) {
   return function(req, res) {
+	if ( !validateorigin(req.get('origin') ) {
+		res.end(403, 'forbidden');
+		return;
+	}
   	var name = req.params.name;
     findmac( db, name, function (err, mac) {
       	res.json( ( err || !mac ) ? { status: 'ERROR', message: ( err ? err : 'Unable to find ' + name ) } : mac);
@@ -26,6 +34,10 @@ exports.get = function(db) {
 };
 exports.listall = function(db) {
   return function(req, res) {
+	if ( !validateorigin(req.get('origin') ) {
+		res.end(403, 'forbidden');
+		return;
+	}
     db.collection('mac').find().toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -33,6 +45,10 @@ exports.listall = function(db) {
 };
 exports.listnames = function(db) {
   return function(req, res) {
+	if ( !validateorigin(req.get('origin') ) {
+		res.end(403, 'forbidden');
+		return;
+	}
     db.collection('mac').find({},{name: 1, _id: 1}).toArray(function (err, items) {
       	res.json( err ? { status: 'ERROR', message: err } : items );
     });
@@ -43,6 +59,10 @@ exports.listnames = function(db) {
 //
 exports.post = function(db) {
 	return function(req, res) {
+		if ( !validateorigin(req.get('origin') ) {
+			res.end(403, 'forbidden');
+			return;
+		}
 		var name = req.params.name;
 		findmac( db, name, function( err, mac ) {
 			if ( err || !mac ) {
