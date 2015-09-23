@@ -108,21 +108,21 @@ app.delete( '/country/:name', country.delete(db) );
 //
 // MAC GET / list
 //
-app.get('/mac', mac.listall(self.db));
-app.get('/mac/:name', mac.get(self.db));
-app.get('/macnames', mac.listnames(self.db));
+app.get('/mac', mac.listall(db));
+app.get('/mac/:name', mac.get(db));
+app.get('/macnames', mac.listnames(db));
 //
 // MAC POST
 //
-app.post( '/mac/:name', mac.post(self.db) );
+app.post( '/mac/:name', mac.post(db) );
 //
 // MAC PUT
 //
-app.put( '/mac/:name', mac.put(self.db) );
+app.put( '/mac/:name', mac.put(db) );
 //
 // MAC DELETE
 //
-app.delete( '/mac/:name', mac.delete(self.db) );
+app.delete( '/mac/:name', mac.delete(db) );
 //
 // editor ui
 //
