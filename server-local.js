@@ -36,7 +36,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
@@ -108,20 +108,21 @@ app.delete( '/country/:name', country.delete(db) );
 //
 // MAC GET / list
 //
-app.get('/mac', mac.listall(db));
-app.get('/mac/:year', mac.get(db));
+app.get('/mac', mac.listall(self.db));
+app.get('/mac/:name', mac.get(self.db));
+app.get('/macnames', mac.listnames(self.db));
 //
 // MAC POST
 //
-app.post( '/mac/:year', mac.post(db) );
+app.post( '/mac/:name', mac.post(self.db) );
 //
 // MAC PUT
 //
-app.put( '/mac/:year', mac.put(db) );
+app.put( '/mac/:name', mac.put(self.db) );
 //
 // MAC DELETE
 //
-app.delete( '/mac/:year', mac.delete(db) );
+app.delete( '/mac/:name', mac.delete(self.db) );
 //
 // editor ui
 //
