@@ -53,6 +53,9 @@
             //
             //
             //
+			localStorage.removeItem('skyshares.share-png');
+			localStorage.removeItem('skyshares.share-hash');
+			localStorage.removeItem('skyshares.share-title');
             window.open('share/chart', 'skyshares.share', 'width=640,height=480,modal=yes');
             //
             // duplicate svg
@@ -82,7 +85,7 @@
                 margin_top += 48;
             }
             canvas.width = width + margin_left + margin_right;
-            canvas.height = height + margin_top + margin_bottom + 48;
+            canvas.height = height + margin_top + margin_bottom + 64;
             var context = canvas.getContext('2d');
             //
             // clear to background colour
