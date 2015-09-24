@@ -1216,7 +1216,7 @@ var model = {
 	convergence_date: 2030,
 	trading_scenario: 0, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2
 	regulated_share: 1, // endogenous = 0 to infinity, exogenous = 1
-	reference_date: 2009,
+	//reference_date: 2009,
 	allocation_rule: 0, // per_capita = 0, carbon_debt = 1, GDP_basis = 2, historical_responsibilities = 3
 	mac_dataset: "GCAM",
 	gdp_dataset: "CEPII",

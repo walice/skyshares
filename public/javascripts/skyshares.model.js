@@ -396,7 +396,7 @@ skyshares.model = {
 			convergence_date: parseInt(document.getElementById( 'convergence_date' ).value),
 			trading_scenario: parseInt( document.getElementById( 'trading_scenario' ).selectedIndex ), // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2, endogenous.BAU = 3,  exogenous = 4
 			regulated_share: parseInt(document.getElementById( 'regulated_share' ).value), // endogenous = 0 to infinity, exogenous = 1
-			reference_date: parseInt(document.getElementById( 'reference_date' ).value),
+			//reference_date: parseInt(document.getElementById( 'reference_date' ).value),
 			allocation_rule: parseInt(document.getElementById( 'allocation_rule' ).value),
 			mac_dataset: document.getElementById( 'mac_dataset' ).value,
 			gdp_dataset: document.getElementById( 'gdp_dataset' ).value,
@@ -1444,7 +1444,7 @@ skyshares.model = {
 	convergence_date: 2030,
 	trading_scenario: 0, // endogenous.fulltrade = 0, endogenous.notrade = 1, endogenous.regulation = 2
 	regulated_share: 100, // endogenous = 0 to infinity, exogenous = 1
-	reference_date: 2009,
+	//reference_date: 2009,
 	allocation_rule: 0, // per_capita = 0, carbon_debt = 1, GDP_basis = 2, historical_responsibilities = 3
 	//
 	//

@@ -23,7 +23,7 @@ html
 			
 			#cow_container( style='display: inline-block; vertical-align:text-top;' )				
 				h2
-					strong Coalition
+					strong Pick your Coalition
 				div.list( style='display: inline-block;' )
 					div.listheader
 						| <strong>Countries</strong>
@@ -39,13 +39,13 @@ html
 
 			#variable_container( style='display: inline-block; vertical-align:text-top;' )
 				h2
-					strong Variables
+					strong Set your Variables
 				div( style='padding: 32px;' )
-					label( for='risk_scenario' ) risk scenario:&nbsp;
+					label( for='risk_scenario' ) probability of staying below target:&nbsp;
 					select#risk_scenario( onchange='skyshares.model.ui.setriskscenario()' ) 
-						option( value='0' ) optimistic
-						option( value='1' selected ) cautious
-						option( value='2' ) pessimistic
+						option( value='0' ) 66%
+						option( value='1' selected ) 50%
+						option( value='2' ) 33%
 					p
 					label( for='target_temperature' ) temperature target:&nbsp;
 					input#target_temperature( type='number' value='2' min='0' max='10' step='0.1' )
@@ -58,23 +58,19 @@ html
 					p
 					label( for='trading_scenario' ) trading scenario:&nbsp;
 					select#trading_scenario( onchange='skyshares.model.ui.settradingscenario()' )
-						option( value='0' ) endogenous fulltrade
-						option( value='1' ) endogenous no trade
-						option( value='2' ) endogenous regulation
+						option( value='0' ) full trade
+						option( value='1' ) no trade
+						option( value='2' ) regulation
 					&nbsp;
 					label( for='regulated_share' ) % of mandated decarbonisation:&nbsp;
 					input#regulated_share( type='number' value='40'  )
-					&nbsp;
-					p
-					label( for='reference_date' ) reference year:&nbsp;
-					input#reference_date( type='number' value='2009' min='2009' max='2100' step='1' )
 					&nbsp;
 					p
 					label( for='allocation_rule' ) allocation rule:&nbsp;
 					select#allocation_rule( onchange='skyshares.model.ui.setallocationrule()' )
 						option( value='0' ) per capita
 						option( value='1' ) carbon debt
-						option( value='2' ) GDP basis
+						option( value='2' ) per dollar
 						option( value='3' ) historical responsibilities
 					&nbsp;
 					p
