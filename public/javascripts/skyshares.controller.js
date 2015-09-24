@@ -642,7 +642,7 @@
 			var container = document.querySelector(target);
 			if ( container ) {
 				container.innerHTML = '';
-				var years = [ 2015, 2020, 2030, 2050 ];
+				var years = [ 2020, 2025, 2030, 2050 ];
 				self.groups.forEach( function( group ) {
 					var title = group.description || group.name;
 					var first = title.toLowerCase().charAt(0);
@@ -683,7 +683,7 @@
 			var container = document.querySelector(target);
 			if ( container ) {
 				container.innerHTML = '';
-				var years = [ 2015, 2020, 2030, 2050 ];
+				var years = [ 2020, 2025, 2030, 2050 ];
 				self.countries.forEach( function( country ) {
 					var title = country.name + ( self.cow_countries.indexOf(country.iso) < 0 ? '( not in COW )' : '' );
 					var first = title.toLowerCase().charAt(0);
