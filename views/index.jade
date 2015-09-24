@@ -535,8 +535,10 @@ html
 						.menu-item(onclick='skyshares.ui.selectsubsection(this);') policy proposal
 						|										 
 						.menu-item(onclick='skyshares.ui.selectsubsection(this);') methodology
+						|										 
+						.menu-item(onclick='skyshares.ui.selectsubsection(this);') desktop
 					|								 
-					#documentation-body.skyshares-sectionbody(style='width: 400%;')
+					#documentation-body.skyshares-sectionbody(style='width: 500%;')
 						.skyshares-subsection
 							.skyshares-subsection-content.skyshares-subsection-content-fullheight
 								.skyshares-subsection-column.skyshares-subsection-column-flex
@@ -572,7 +574,16 @@ html
 										Methodology
 										</h1>
 									iframe.skyshares-pdf(src='https://docs.google.com/file/d/0B2r8eP40VbQMZ2tDNEtnNUVIVkk/preview', width='256', height='256')
-				|						 
+						|										 
+						.skyshares-subsection
+							.skyshares-subsection-content.skyshares-subsection-content-fullheight
+								.skyshares-subsection-column.skyshares-subsection-column-flex
+									//
+										<h1 class='skyshares-subsection'>
+										Desktop
+										</h1>
+									iframe.skyshares-pdf(src='https://drive.google.com/embeddedfolderview?id=0B2r8eP40VbQMb19FZUNnT21wNTQ#grid', width='256', height='256')
+				|						
 				#about.skyshares-sectioncontainer
 					.skyshares-sectionheader(data-target='#about-body', data-translation='-100,0')
 					|								 
@@ -589,7 +600,7 @@ html
 											b Comments? Feedback? Found any bugs?
 											br
 											|																				 We&apos;d love to hear from you! Get in touch at 
-											a(href='mailto:alice@cgdev.org') alice@skyshares.org
+											a(href='mailto:alice@skyshares.org') alice@skyshares.org
 											| .
 											br
 										|																		 
@@ -606,15 +617,13 @@ html
 											b Boring corporate stuff (our lawyers made us write this)
 											br
 											|																				 SkyShares is free and open-source software released under the GNU Affero Public License 3.0. Creating free software is crucial so that everyone in the community can gain an understanding of the problem we are trying to solve. True scrutiny can only come from opening up your data and code so that others can review it. You are free to run the programme as you wish, for any purpose; to download the source code; to modify it and to distribute it to help the community.
-											br
+											p
 											|																				 If you have chosen to use the GCAM data-set on marginal abatement cost curves, you can download the code which was used to generate these marginal abatement cost curves on 
 											a(href='http://www.globalchange.umd.edu/models/gcam/') http://www.globalchange.umd.edu/models/gcam/
 											|. GCAM is an Integrated Assessment Model.
-											br
-											|																				 If you have chosen to use the McKinsey data-set on marginal abatement cost curves, you can download the results but unfortunately you cannot download the raw data. This data is not ours to give away.
-											br
+											p
 											|																				 If you have chosen to use the MIT data-set on marginal abatement cost curves, you can download the code which is a modified version of MIT&apos;s Emissions Prediction and Policy Analysis (EPPA) software, version 4.1, released under a Public Release License Agreement. The intellectual property rights on EPPA remain with MIT. Modifications of the model, interpretation of the results and any errors arising from this are our responsibility alone.
-											br
+											p
 											|																				 The other data-sets are all publicly available.
 											br
 										|																		 
