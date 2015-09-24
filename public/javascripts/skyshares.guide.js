@@ -24,58 +24,80 @@
 				section: 'options',
 				subsection: 'options',
 				target: '#carbon-budget',
-				content: '<b>Cap:&nbsp;</b>Set the temperature target and the likelihood for the world to stay below it.'
+				content: '<h3>Cap</h3>Set the temperature target and the likelihood for the world to stay below it.'
 			},
 			{
 				section: 'options',
 				subsection: 'options',
 				target: '#allocation-rule',
-				content: '<b>Allocate:&nbsp;</b>Decide how the carbon budget should be shared among countries in the world.'
+				content: '<h3>Allocate</h3>Decide how the carbon budget should be shared among countries in the world.'
 			},
 			{
 				section: 'options',
 				subsection: 'options',
 				target: 'input#allocation-historical + label.skyshares',
-				content: '<b>Equal Stocks:&nbsp;</b>In this scenario, the stock of past emissions since 1800 is taken into account and future allowances are adjusted accordingly.'
+				content: '<h3>Equal Stocks</h3>In this scenario, the stock of past emissions since 1800 is taken into account and future allowances are adjusted accordingly.'
 			},
 			{
 				section: 'options',
 				subsection: 'options',
 				target: 'input#allocation-percapita + label.skyshares',
-				content: '<b>Per Capita:&nbsp;</b>Allowances are shared on an equal per capita basis.'
+				content: '<h3>Per Capita</h3>Allowances are shared on an equal per capita basis.'
 			},
 			{
 				section: 'options',
 				subsection: 'options',
 				target: 'input#allocation-money + label.skyshares',
-				content: '<b>Per Dollar:&nbsp;</b>Use this scenario to visualise what the distribution of allowances would be if the richest countries were allowed to emit more than poor countries.'
+				content: '<h3>Per Dollar</h3>Use this scenario to visualise what the distribution of allowances would be if the richest countries were allowed to emit more than poor countries.'
 			},
 			{
 				section: 'options',
 				subsection: 'options',
 				target: '#trading-scenario',
-				content: '<b>Trade:&nbsp;</b>Enable trading so that decarbonisation happens where it is cheapest. You can also choose to regulate, and mandate how much of the abatement target should be met by decarnonising at home.'
+				content: '<h3>Trade</h3>Enable trading so that decarbonisation happens where it is cheapest. You can also choose to regulate, and mandate how much of the abatement target should be met by decarbonising at home.'
 			},
 			{
 				section: 'options',
 				subsection: 'coalition',
 				target: '#country-list',
-				content: '<b>Coalition:&nbsp;</b>Choose how many countries or groups of countries should be part of the SkyShares coalition.'
+				content: '<h3>Coalition</h3>Choose how many countries or groups of countries should be part of the SkyShares coalition.'
 			},
 			{
-				section: 'map-controls',
-				target: 'input#flow-country + label.skyshares',
-				content: '<b>Country Flow:&nbsp;</b>This button allows you to toggle financial flows on a country basis. The bigger the circle, the bigger the value of the financial flows. Red circles means a country spends money to buy allowances from the coalition. Black circles represent financial inflows, from money received for making sales of allowances. Financial outflows have a plus sign in front of them, but financial inflows have a minus sign to represent the money coming in.'
+				section: 'options',
+				subsection: 'advanced',
+				target: '#advanced',
+				content: '<h3>Advanced</h3>Toggle between different GDP or marginal abatement cost data-sets.'
 			},
 			{
 				section: 'map-controls',
 				target: 'input#flow-regional + label.skyshares',
-				content: '<b>Regional Flow:&nbsp;</b>This button allows you to see what financial flows would result on a regional basis for Africa, the Americas, Asia, Europe and Oceania. Bear in mind that this shows aggregate flows and so will average out the difference if a continent contains seller and buyer countries.'
+				content: '<h3>Regional Flow</h3>This button allows you to see what financial flows would result on a regional basis for Africa, the Americas, Asia, Europe and Oceania. Bear in mind that this shows aggregate flows and so will average out the difference if a continent contains seller and buyer countries.'
+			},
+			{
+				section: 'map-controls',
+				target: 'input#flow-country + label.skyshares',
+				content: '<h3>Country Flow</h3>This button allows you to toggle financial flows on a country basis. The bigger the circle, the bigger the value of the financial flows. Red circles means a country spends money to buy allowances from the coalition. Black circles represent financial inflows, from money received for making sales of allowances. Financial outflows have a plus sign in front of them, but financial inflows have a minus sign to represent the money coming in.'
+			},
+			{
+				section: 'map-controls',
+				target: 'input#year',
+				content: '<h3>Timeline</h3>Scroll to see what happens in every year.'
+			},
+			{
+				section: 'summary',
+				target: 'input#summary-body',
+				content: '<h3>Summary</h3>Once you have built your scenario, go here to see the results at a glance, including summary tables for the groups and countries in your coalition.'
+			},
+			{
+				section: 'documentation',
+				subsection: 'elevator pitch',
+				target: '#menu',
+				content: '<h3>Documentation</h3>Find all of SkyShares documentation in this drawer, including the technical paper and data files to download.'
 			},
 			{
 				section: 'options',
 				subsection: 'coalition',
-				content: '<b>Start by building your coalition.</b>'
+				content: '<h3>Start by building your coalition.</h3>'
 			}
 		],
 		//
