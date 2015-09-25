@@ -842,7 +842,7 @@
 					},
 					f: self.getgroupdatasum,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 2,",",".","", "Mt" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","", "" );
 					},
 					container: 'abatement-table',
                     delay: 30
@@ -858,7 +858,7 @@
 					},
 					f: self.getgroupdatasum,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 2,",",".","", "Mt" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","", "" );
 					},
 					container: 'domesticabatement-table',
                     delay: 40
@@ -877,7 +877,7 @@
 					},
 					f: self.getgroupdatasum,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 2,",",".", "", "Mt" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "", "" );
 					},
 					container: 'transfers-table',
                     delay: 50
@@ -896,7 +896,7 @@
 					},
 					f: self.getgroupdatasum,
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 2,",",".", "", "Mt" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".", "", "" );
 					},
 					container: 'emissions-table',
                     delay: 60
