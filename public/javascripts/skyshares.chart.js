@@ -339,7 +339,7 @@
 		                    y: {
 		                        tick: {
 		                            format: function (value) {
-		                                return skyshares.utility.formatcurrency(value / 1000000000, 0, ",", ".", "");
+		                                return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "$");
 		                            }
 		                        },
 		                        show: true

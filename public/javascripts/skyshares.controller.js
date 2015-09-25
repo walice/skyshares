@@ -720,8 +720,8 @@
 		},
 		updatecharts : function() {
 			var self = skyshares.controller;
-			var groups_including_cow = [ 'COW', 'LIC', 'LMIC', 'UMIC', 'HIC', 'G8', 'G20', 'G77'/*, 'CHN', 'EU', 'IND', 'USA'*/ ];
-			var groups_excluding_cow = [ 'LIC', 'LMIC', 'UMIC', 'HIC', 'G8', 'G20', 'G77'/*, 'CHN', 'EU', 'IND', 'USA'*/ ];
+			var groups_including_cow = [ 'COW', 'LIC', 'LMIC', 'UMIC', 'HIC'/*, 'G8', 'G20', 'G77', 'CHN', 'EU', 'IND', 'USA'*/ ];
+			var groups_excluding_cow = [ 'LIC', 'LMIC', 'UMIC', 'HIC'/*, 'G8', 'G20', 'G77', 'CHN', 'EU', 'IND', 'USA'*/ ];
 			//
 			// summary charts
 		    //
@@ -739,6 +739,10 @@
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","" );
 					},
+					label_y : {
+						text: 'MegaTonnes of CO₂',
+						position: 'outer-middle'
+					},
 					type : 'area-spline',
 					stacked : true,
 					average : true,
@@ -753,7 +757,7 @@
 						increment : 10
 					},
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","$" );
 					},
 					label_y : {
 						text: 'Millions',
@@ -771,7 +775,11 @@
 						increment : 10
 					},
 					format : function( value ) {
-						return skyshares.utility.formatcurrency( value / 1000000, 2,",",".","" );
+						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","$" );
+					},
+					label_y : {
+						text: 'Millions',
+						position: 'outer-middle'
 					},
 					average: true,
 					container : 'total_cost-chart'		
@@ -1040,6 +1048,10 @@
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","" );
 					},
+					label_y : {
+						text: 'MegaTonnes of CO₂',
+						position: 'outer-middle'
+					},
 					type : 'area-spline',
 					stacked : true,
 					container: 'allowancesconverge-chart',
@@ -1056,6 +1068,10 @@
 					f: self.getgroupdatapercapita,
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value, 0,",",".","" );
+					},
+					label_y : {
+						text: 'Tonnes of CO₂ per person',
+						position: 'outer-middle'
 					},
 					type : 'spline',
 					container: 'allowancescapita-chart',
@@ -1322,24 +1338,24 @@
     //
 	self.summary_table_row_source = [
 			{
-			    title: "Allowances per capita",
-			    field: "allowancescapita",
+			    title: "Allowances",
+			    field: "allowances",
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value, 2, ",", ".", "");
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", " Mt");
 			    }
 			},
 			{
 			    title: "Domestic Abatement",
 			    field: "domabat",
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", "Mt");
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", " Mt");
 			    }
 			},
 			{
 			    title: "Transfers",
 			    field: "transf",
 			    format: function (value) {
-			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", "Mt");
+			        return skyshares.utility.formatcurrency(value / 1000000, 0, ",", ".", "", " Mt");
 			    }
 			},
 			{
