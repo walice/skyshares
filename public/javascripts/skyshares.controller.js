@@ -736,6 +736,7 @@
 						max : 2100,
 						increment : 5
 					},
+					f: self.getgroupdatasum,
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","" );
 					},
@@ -745,7 +746,7 @@
 					},
 					type : 'area-spline',
 					stacked : true,
-					average : true,
+					//average : true,
 					container : 'allowances-chart'		
 				});
 			skyshares.chart.generategroupbarchart( {
@@ -756,6 +757,7 @@
 						max : 2100,
 						increment : 10
 					},
+					f: self.getgroupdatasum,
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","$" );
 					},
@@ -763,7 +765,7 @@
 						text: 'Millions',
 						position: 'outer-middle'
 					},
-					average: true,
+					//average: true,
 					container : 'flow-chart'		
 				});
 			skyshares.chart.generategroupbarchart( {
@@ -774,6 +776,7 @@
 						max : 2100,
 						increment : 10
 					},
+					f: self.getgroupdatasum,
 					format : function( value ) {
 						return skyshares.utility.formatcurrency( value / 1000000, 0,",",".","$" );
 					},
@@ -781,7 +784,7 @@
 						text: 'Millions',
 						position: 'outer-middle'
 					},
-					average: true,
+					//average: true,
 					container : 'total_cost-chart'		
 				});
 			//
