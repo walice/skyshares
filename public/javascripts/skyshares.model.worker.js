@@ -549,6 +549,13 @@ var model = {
 			self.buildcowmac();
 			if ( self.stop ) return;
 			//
+			// COW abatement
+			log( 'Coalition abatement targets');
+			self.COWtarget();
+			self.COWdeficit();
+			self.surpluscountries();
+			//if ( self.stop ) return;
+			//
 			// calculate world emissions
 			//
 			log( 'calculating emission curve' );
@@ -708,7 +715,7 @@ var model = {
 						//log("emissions");
 						var emissions_i_t = 
 							( self.scope[ 'trading_scenario' ] === 0 ? allowances_i_t + transf_i_t : 
-								( self.scope[ 'trading_scenario' ] === 2 ? skyshares.math.getcolumn( qBAU, country.iso_index, year ) - ( domabat_i_t + transf_i_t ) :
+								( self.scope[ 'trading_scenario' ] === 2 ? allowances_i_t + transf_i_t :
 								allowances_i_t ) );
 						country.emissions.push( emissions_i_t );
 						country.emissionscapita.push( emissions_i_t / population );
@@ -840,6 +847,83 @@ var model = {
 		} 
 		self.scope['qBAU'] = qBAU;
 	},
+	COWtarget : function() {
+		var self = model;
+		var abat = self.getfunction( 'abat' );
+		self.COW_target = [];
+		//
+		for (var yr=2010; yr <=2100; yr++) {
+			//
+			var COWabatement = 0;
+			self.cow_countries.forEach( function( country ) {
+				var abat_i_t = abat( country.iso_index, yr );
+				COWabatement += abat_i_t;
+			});
+			//
+			var blah = {
+					year	: yr,
+					target	: COWabatement
+			};
+			self.COW_target.push( blah );
+		}
+		//
+		//console.log('COW_target= ' + JSON.stringify(self.COW_target));
+	},
+	COWdeficit : function() {
+		var self = model;
+		var abat = self.getfunction( 'abat' );
+		var regulated_share = self.scope[ 'regulated_share' ]/100.0
+		//
+		self.COW_deficit = [];
+		//
+		for (var yr=2010; yr <=2100; yr++) {
+			//
+			var COWabatement = 0;
+			self.cow_countries.forEach( function( country ) {
+				var abat_i_t = abat( country.iso_index, yr );
+				if ( abat_i_t > 0 ) {
+					COWabatement += abat_i_t * regulated_share;
+				} else {
+					COWabatement += 0
+				}
+			});
+			//
+			var blah = {
+					year	: yr,
+					target	: COWabatement
+			};
+			self.COW_deficit.push( blah );
+		}
+		//
+		//console.log('COW_deficit= ' + JSON.stringify(self.COW_deficit));
+	},
+	surpluscountries : function() {
+		var self = model;
+		var abat = self.getfunction( 'abat' );
+		//
+		self.surplus_countries = [];
+		//
+		for (var yr=2010; yr <=2100; yr++) {
+			//
+			var COWabatement = 0;
+			self.cow_countries.forEach( function( country ) {
+				var abat_i_t = abat( country.iso_index, yr );
+				if ( abat_i_t < 0 ) {
+					COWabatement += 1;
+				} else {
+					COWabatement += 0
+				}
+			});
+			//
+			var blah = {
+					year	: yr,
+					target	: COWabatement
+			};
+			self.surplus_countries.push( blah );
+		}
+		//
+		//console.log('surplus_countries= ' + JSON.stringify(self.surplus_countries));
+	},
 	buildcowmac : function() {
 		try {
 			var self = model;
@@ -956,8 +1040,6 @@ var model = {
 			//console.log('EQPrice= ' + JSON.stringify(self.EQPrice));
 			//console.log('EQPrice_pre= ' + JSON.stringify(self.EQPrice_pre));
 			//console.log('EQPrice_fin= ' + JSON.stringify(self.EQPrice_fin)); //BOOOOOOM THIS WORKS
-
-
 			//
 			// store COW_MAC
 			//
@@ -1058,6 +1140,36 @@ var model = {
 			}
 		},
 
+		qBar_COW : function( t ) {
+			var self = model;
+			for ( var i = 0; i <= self.COW_target.length - 1; i++ ) {
+				if ( self.COW_target[ i ].year == t ) {
+					return self.COW_target[ i ].target;
+				}
+			}
+		},
+		q_deficit : function( t ) {
+			var self = model;
+			for ( var i = 0; i <= self.COW_deficit.length - 1; i++ ) {
+				if ( self.COW_deficit[ i ].year == t ) {
+					return self.COW_deficit[ i ].target;
+				}
+			}
+		},
+		n_surplus : function( t ) {
+			var self = model;
+			for ( var i = 0; i <= self.surplus_countries.length - 1; i++ ) {
+				if ( self.surplus_countries[ i ].year == t ) {
+					return self.surplus_countries[ i ].target;
+				}
+			}
+		},
+		extra_demand : function( t ) {
+			var self = model;
+			var qBar_COW = self.runtime_functions.qBar_COW(t);
+			var q_deficit = self.runtime_functions.q_deficit(t);
+			return qBar_COW - q_deficit;
+		},
 		price_fin : function( t ) {
 			var self = model;
 			for ( var i = 0; i <= self.EQPrice_fin.length - 1; i++ ) {
@@ -1115,13 +1227,15 @@ var model = {
 				var value = ( value1 * u ) + ( value0 * ( 1.0 - u ) );
 				return value;
 			} else if ( trading_scenario == self.getdata( 'endogenous_regulation' ).value ) {
-				if ( abat > 0 ) {
-					var value = abat * ( regul / 100 );
+				var extra_demand = self.runtime_functions.extra_demand(t);
+				var n_surplus = self.runtime_functions.n_surplus(t);
+				if ( n_surplus > 0 ) {
+					if ( abat > 0 ) { var value = abat * ( regul / 100 ); } else { var value = extra_demand / n_surplus;
+					}
 				} else {
-					return 0;
+					var value = abat;
 				}
 				return value;
-
 			} else {
 				return 0;
 			}
