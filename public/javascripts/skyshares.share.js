@@ -280,7 +280,7 @@
             },
             topng: function () {
                 var self = skyshares.share.file;
-                var filename = 'test.png';
+                var filename = 'SkyShares.png';
                 var data = localStorage.getItem('skyshares.share-png');
                 if (filename && data) {
                     self.download(data, filename);
@@ -288,7 +288,7 @@
             },
             tosvg: function () {
                 var self = skyshares.share.file;
-                var filename = 'test.svg';
+                var filename = 'SkyShares.svg';
                 var data = localStorage.getItem('skyshares.share-svg');
                 if (filename && data) {
                     self.download(data, filename);
@@ -296,7 +296,7 @@
             },
             tocsv: function () {
                 var self = skyshares.share.file;
-                var filename = 'test.csv';
+                var filename = 'SkyShares.csv';
                 var data = localStorage.getItem('skyshares.share-csv');
                 if (filename && data) {
                     self.download(data, filename);
@@ -304,7 +304,7 @@
             },
             toxls: function () {
                 var self = skyshares.share.file;
-                var filename = 'test.xls';
+                var filename = 'SkyShares.xls';
                 var data = localStorage.getItem('skyshares.share-xls');
                 if (filename && data) {
                     self.download(data, filename);
