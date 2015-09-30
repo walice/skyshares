@@ -69,9 +69,8 @@ html
 					label( for='allocation_rule' ) allocation rule:&nbsp;
 					select#allocation_rule( onchange='skyshares.model.ui.setallocationrule()' )
 						option( value='0' ) per capita
-						option( value='1' ) carbon debt
+						option( value='1' ) equal stocks
 						option( value='2' ) per dollar
-						option( value='3' ) historical responsibilities
 					&nbsp;
 					p
 					label( for='gdp_dataset' ) GDP data source:&nbsp;
@@ -88,8 +87,6 @@ html
 					&nbsp;
 					p
 					input#run( type='button' value='run' onclick='skyshares.model.run();' )
-					&nbsp;
-					input#reset( type='button' value='reset' onclick='skyshares.model.reset();' )
 					br
 					progress#model_progress( min='0' max='100' style='visibility: hidden;' )
 			#results
