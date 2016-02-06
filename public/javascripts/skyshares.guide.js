@@ -75,7 +75,7 @@
 			},
 			{
 				section: 'map-controls',
-				target: 'input#flow-regional + label.skyshares',
+				target: 'input#flow-country',
 				content: '<h3>Country Flow</h3>This button allows you to toggle financial flows on a country basis. The bigger the circle, the bigger the value of the financial flows. Red circles means a country spends money to buy allowances from the coalition. Black circles represent financial inflows, from money received for making sales of allowances. Financial outflows have a plus sign in front of them, but financial inflows have a minus sign to represent the money coming in.'
 			},
 			{
