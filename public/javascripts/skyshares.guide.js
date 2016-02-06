@@ -86,7 +86,7 @@
 			{
 				section: 'documentation',
 				subsection: 'elevator pitch',
-				target: '#menu',
+				target: '#documentation',
 				content: '<h3>Documentation</h3>Find all of SkyShares documentation in this drawer, including the technical paper and data files to download.'
 			},
 			{
