@@ -1,5 +1,5 @@
 var OAuth2 = require('oauth').OAuth2;
-var config = require('config/configuration').facebook;
+var config = require('../config/configuration').facebook;
 var facebook_oauth = new OAuth2(config.app_id, config.app_secret, 'https://graph.config.com/v2.3/', '/dialog/oauth', 'oauth/access_token');
 //
 //

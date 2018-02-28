@@ -1,4 +1,4 @@
-var config = require('config/configuration').twitter;
+var config = require('../config/configuration').twitter;
 var OAuth = require('oauth').OAuth;
 var twitter_oauth = new OAuth(config.requestUrl, config.accessUrl, config.consumerKey, config.consumerSecret, config.version, config.authorizeCallback, config.signatureMethod);
 
