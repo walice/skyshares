@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "description": "SkyShares Application",
   "keywords": [
-    "OpenShift",
     "Node.js",
     "application",
-    "openshift",
+    "climate",
     "SkyShares"
   ],
   "author": {
@@ -14,10 +13,10 @@
     "email": "jons@soda.co.uk",
     "url": "http://soda.co.uk/"
   },
-  "homepage": "http://soda.co.uk/",
+  "homepage": "http://skyshares.org/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openshift/origin-server"
+    "url": "https://github.com/walice/skyshares.git"
   },
 
   "engines": {
@@ -32,8 +31,8 @@
     "mongoskin": "*",
     "mathjs": "*",
     "numbers": "*",
-	"oauth": "*",
-	"busboy": "*"
+    "oauth": "*",
+    "busboy": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
