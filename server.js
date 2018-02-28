@@ -240,7 +240,7 @@ var SkyShares = function() {
 		//
 		self.app.set('port', self.port);
 		self.app.set('views', path.join(__dirname, 'views'));
-		self.app.set('view engine', 'jade');
+		self.app.set('view engine', 'pug');
 		self.app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
 		self.app.use(express.logger('dev'));
 		self.app.use(express.json());
