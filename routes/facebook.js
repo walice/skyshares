@@ -1,13 +1,6 @@
 var OAuth2 = require('oauth').OAuth2;
-var facebook = {
-    app_id: '771729846278358',
-    app_secret: 'd24ce9b2ad2620c1e211ea23213e8a1c',
-    endpoint : {
-        login: 'https://www.facebook.com/dialog/oauth',
-        access_token: 'https://graph.facebook.com/v2.3/oauth/access_token'
-    }
-};
-var facebook_oauth = new OAuth2(facebook.app_id, facebook.app_secret, 'https://graph.facebook.com/v2.3/', '/dialog/oauth', 'oauth/access_token');
+var config = require('config/configuration').facebook;
+var facebook_oauth = new OAuth2(config.app_id, config.app_secret, 'https://graph.config.com/v2.3/', '/dialog/oauth', 'oauth/access_token');
 //
 //
 //
@@ -17,7 +10,7 @@ exports.post = function (db) {
         req.session.skyshares = {
             media_id: id,
         };
-        var login_request = facebook.endpoint.login + '?client_id=' + facebook.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://www.skyshares.org/facebook/callback');
+        var login_request = config.endpoint.login + '?client_id=' + config.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://www.skyshares.org/facebook/callback');
         res.redirect(login_request);
     }
 };
@@ -53,7 +46,7 @@ exports.callback = function (db) {
 						//
 						//
 						//console.log('object:' + JSON.stringify(object));
-						var url = 'https://graph.facebook.com/me/objects/skyshares:chart?access_token=' + access_token;
+						var url = 'https://graph.config.com/me/objects/skyshares:chart?access_token=' + access_token;
 						url += '&object=' + JSON.stringify(object);
 						url = encodeURI(url);
 						console.log('url:' + url);
