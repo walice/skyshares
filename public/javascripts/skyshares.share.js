@@ -15,7 +15,7 @@
                 var c3_rules = {};
                 for (var i = 0; i < document.styleSheets.length; i++) {
                     try {
-                        var rules = document.styleSheets[i].rules || document.styleSheets[i].cssRules;
+                        var rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules;
                     } catch( error ) {
                         console.log( 'skyshares.share.getstyleelement : error : ' + error );
                     }
