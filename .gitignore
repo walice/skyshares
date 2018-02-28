@@ -1,6 +1,6 @@
 #ignore
-config
-data
-node_modules
+config/
+data/
+node_modules/
 
 
