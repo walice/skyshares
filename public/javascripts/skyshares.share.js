@@ -14,7 +14,11 @@
             if (!self.style) {
                 var c3_rules = {};
                 for (var i = 0; i < document.styleSheets.length; i++) {
-                    var rules = document.styleSheets[i].rules;
+                    try {
+                        var rules = document.styleSheets[i].rules || document.styleSheets[i].cssRules;
+                    } catch( error ) {
+                        console.log( 'skyshares.share.getstyleelement : error : ' + error );
+                    }
                     for (var j = 0; rules && j < rules.length; j++) {
                         if (rules[j].type == 1) {
                             var selectors = rules[j].selectorText.split(','); // split multiple declarations
