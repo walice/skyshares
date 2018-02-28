@@ -60,7 +60,7 @@
 			localStorage.removeItem('skyshares.share-png');
 			localStorage.removeItem('skyshares.share-hash');
 			localStorage.removeItem('skyshares.share-title');
-            window.open('share/chart', 'skyshares.share', 'width=640,height=480,modal=yes');
+            var shareWindow = window.open('share/chart', 'skyshares.share', 'width=640,height=480,modal=yes');
             //
             // duplicate svg
             //
@@ -126,9 +126,18 @@
             //
             //
             setTimeout(function () {
-                localStorage.setItem('skyshares.share-png', canvas.toDataURL("image/png"));
-                localStorage.setItem('skyshares.share-hash', skyshares.controller.getoptionshash()+id);
-                if ( options.title ) localStorage.setItem('skyshares.share-title', options.title);
+                try {
+                    localStorage.setItem('skyshares.share-hash', skyshares.controller.getoptionshash()+id);
+                    if ( options.title ) localStorage.setItem('skyshares.share-title', options.title);
+                    localStorage.setItem('skyshares.share-png', canvas.toDataURL("image/png"));
+                } catch( error ) {
+                    var message = {
+                        png : canvas.toDataURL("image/png"),
+                        hash : skyshares.controller.getoptionshash()+id,
+                        title : options.title
+                    };
+                    shareWindow.postMessage(JSON.stringify( message ), location);
+                }
             }, 400);
         },
         sharetable: function( table, options ) {

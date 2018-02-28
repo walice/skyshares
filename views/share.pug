@@ -44,4 +44,12 @@ html
 					setTimeout( monitorPreviewImage, 100);
 				}
 			}
+            window.onmessage = function(event) {
+                var message = JSON.parse(event.data);
+                var img = document.querySelector('#preview-image');
+                if ( img ) {
+                    img.src = message.png;
+                }
+            }
 			monitorPreviewImage();
+
