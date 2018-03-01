@@ -45,6 +45,7 @@ html
 				}
 			}
 			window.onmessage = function(event) {
+				console.log( 'recieved preview message' );
 				var message = JSON.parse(event.data);
 				var img = document.querySelector('#preview-image');
 				if ( img ) {

@@ -131,6 +131,7 @@
                     if ( options.title ) localStorage.setItem('skyshares.share-title', options.title);
                     localStorage.setItem('skyshares.share-png', canvas.toDataURL("image/png"));
                 } catch( error ) {
+					console.log( 'skyshares.share : unable to use localStorage so sending message' );
                     var message = {
                         png : canvas.toDataURL("image/png"),
                         hash : skyshares.controller.getoptionshash()+id,
