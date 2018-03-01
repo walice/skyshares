@@ -282,6 +282,7 @@
                     }
                     navigator.msSaveBlob(dataURLtoBlob(data), filename);
                 } else {
+					
                     var a = document.createElement('a');
                     a.setAttribute('download', filename);
                     a.setAttribute('href', data);
@@ -295,7 +296,7 @@
             topng: function () {
                 var self = skyshares.share.file;
                 var filename = 'SkyShares.png';
-                var data = localStorage.getItem('skyshares.share-png');
+                var data = document.querySelector('#preview-image').src;//localStorage.getItem('skyshares.share-png');
                 if (filename && data) {
                     self.download(data, filename);
                 }
