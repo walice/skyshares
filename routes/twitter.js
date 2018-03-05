@@ -34,6 +34,7 @@ exports.callback = function (db) {
 			req.session.verifier = req.query.oauth_verifier;
 			var oauth_data = req.session.oauth;
 			var skyshares_data = req.session.skyshares;
+			console.log( 'twitter oauth session data : ' + JSON.stringify(req.session) );
 			twitter_oauth.getOAuthAccessToken(
 				oauth_data.token,
 				oauth_data.token_secret,
