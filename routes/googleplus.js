@@ -5,6 +5,7 @@ exports.get = function (db) {
 			description: req.params.description,
 			image: 'http://skyshares.org/media/' + req.params.id
 		};
+		console.log( 'googleplus : parameters : ' + JSON.stringify(varables) );
         res.render('googleplus', variables);
     }
 };
