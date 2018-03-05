@@ -20,7 +20,8 @@ html
 	body( onload='skyshares.model.init();' style='padding: 50px;')
 		block content
 			h1= title
-			#cow_container( style='display: inline-block; vertical-align:text-top;' )				
+			
+			#cow_container( style='display: inline-block; vertical-align:text-top;' )
 				h2
 					strong Pick your Coalition
 				div.list( style='display: inline-block;' )
@@ -60,30 +61,30 @@ html
 						option( value='0' ) full trade
 						option( value='1' ) no trade
 						option( value='2' ) regulation
-					&nbsp;
+					| &nbsp;
 					label( for='regulated_share' ) % of mandated decarbonisation:&nbsp;
 					input#regulated_share( type='number' value='40'  )
-					&nbsp;
+					| &nbsp;
 					p
 					label( for='allocation_rule' ) allocation rule:&nbsp;
 					select#allocation_rule( onchange='skyshares.model.ui.setallocationrule()' )
 						option( value='0' ) per capita
 						option( value='1' ) equal stocks
 						option( value='2' ) per dollar
-					&nbsp;
+					| &nbsp;
 					p
 					label( for='gdp_dataset' ) GDP data source:&nbsp;
 					select#gdp_dataset
 						option( value='CEPII' ) CEPII
 						option( value='MIT' ) MIT
-					&nbsp;
+					| &nbsp;
 					p
 					label( for='mac_dataset' ) MAC data source:&nbsp;
 					select#mac_dataset
 						option( value='GCAM' ) GCAM
 						option( value='MIT' ) MIT
 						option( value='McKinsey' ) McKinsey
-					&nbsp;
+					| &nbsp;
 					p
 					input#run( type='button' value='run' onclick='skyshares.model.run();' )
 					br
