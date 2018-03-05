@@ -6,7 +6,7 @@ exports.commitmedia = function (db) {
     return function (req, res) {
         var id = req.params.id;
         var text = req.params.text;
-        twitter_getOAuthRequestToken(function (error, oauth_token, oauth_token_secret, results) {
+        twitter_oauth.getOAuthRequestToken(function (error, oauth_token, oauth_token_secret, results) {
             if (error) {
                 console.log(error);
                 res.send("Authentication Failed : " + JSON.stringify(error));
@@ -34,7 +34,7 @@ exports.callback = function (db) {
 			req.session.verifier = req.query.oauth_verifier;
 			var oauth_data = req.session.oauth;
 			var skyshares_data = req.session.skyshares;
-			twitter_getOAuthAccessToken(
+			twitter_oauth.getOAuthAccessToken(
 				oauth_data.token,
 				oauth_data.token_secret,
 				oauth_data.verifier,
