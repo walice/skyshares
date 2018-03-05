@@ -31,7 +31,7 @@ exports.commitmedia = function (db) {
 exports.callback = function (db) {
 	return function (req, res) {
 		if (req.session.oauth) {
-			req.session.verifier = req.query.oauth_verifier;
+			req.session.oauth.verifier = req.query.oauth_verifier;
 			var oauth_data = req.session.oauth;
 			var skyshares_data = req.session.skyshares;
 			console.log( 'twitter oauth session data : ' + JSON.stringify(req.session) );
