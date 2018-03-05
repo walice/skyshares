@@ -54,8 +54,8 @@ exports.callback = function (db) {
 											//
 											// upload media
 											//
-											twitter_post(
-												twitter.endpoint.media_upload,
+											twitter_oauth._post(
+												config.endpoint.media_upload,
 												oauth_access_token,
 												oauth_access_token_secret,
 												{ media: image_parts[ 1 ] },
@@ -69,8 +69,8 @@ exports.callback = function (db) {
 														// post tweet
 														//
 														var image_data = JSON.parse(data);
-														twitter_post(
-															twitter.endpoint.update_statuses,
+														twitter_oauth._post(
+															config.endpoint.update_statuses,
 															oauth_access_token,
 															oauth_access_token_secret,
 															{ status: post_text, media_ids: [image_data.media_id_string] },
