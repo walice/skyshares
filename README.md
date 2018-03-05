@@ -6,6 +6,6 @@ SkyShares is an interactive tool to allow you to model the environmental and eco
 
 Can you create a climate deal which is environmentally sound and will get political agreemnent?
 
-Try now at www.skyshares.org.
+Try now at skyshares.org.
 
 If you have any questions or feedback, feel free to get in touch at alice@skyshares.org!

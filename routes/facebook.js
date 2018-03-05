@@ -10,7 +10,7 @@ exports.post = function (db) {
         req.session.skyshares = {
             media_id: id,
         };
-        var login_request = config.endpoint.login + '?client_id=' + config.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://www.skyshares.org/facebook/callback');
+        var login_request = config.endpoint.login + '?client_id=' + config.app_id + '&response_type=code' + '&scope=publish_actions' + '&redirect_uri=' + escape('http://skyshares.org/facebook/callback');
         res.redirect(login_request);
     }
 };
@@ -31,14 +31,14 @@ exports.callback = function (db) {
                 res.send("Login Successful : " + access_token + " : " + JSON.stringify(skyshares_data));
             } else {
                 var code = req.param('code');
-                facebook_oauth.getOAuthAccessToken(code, { redirect_uri: 'http://www.skyshares.org/facebook/callback' }, function (error, access_token, refresh_token, results) {
+                facebook_oauth.getOAuthAccessToken(code, { redirect_uri: 'http://skyshares.org/facebook/callback' }, function (error, access_token, refresh_token, results) {
                     if (error) {
                         res.send("Error requesting access token : " + JSON.stringify(error));
                     } else {
 						var object = {
 							title: 'SkyShares Chart',
 							image: {
-							    url: 'http://www.skyshares.org/facebook/media/' + skyshares_data.media_id,
+							    url: 'http://skyshares.org/facebook/media/' + skyshares_data.media_id,
 								user_generated: true
 							}
 						};
@@ -70,10 +70,10 @@ exports.get = function (db) {
     return function (req, res) {
     	var variables = {
 			title: req.params.title,
-			url: 'http://www.skyshares.org/facebook/' + req.params.id,
+			url: 'http://skyshares.org/facebook/' + req.params.id,
 			type: 'website',
 			description: req.params.description,
-			image: 'http://www.skyshares.org/media/' + req.params.id
+			image: 'http://skyshares.org/media/' + req.params.id
 		};
         res.render('facebook', variables);
     }
