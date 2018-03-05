@@ -3,7 +3,7 @@ exports.get = function (db) {
     	var variables = {
 			title: req.params.title,
 			description: req.params.description,
-			image: 'http://www.skyshares.org/media/' + req.params.id
+			image: 'http://skyshares.org/media/' + req.params.id
 		};
         res.render('googleplus', variables);
     }
