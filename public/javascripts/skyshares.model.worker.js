@@ -1055,7 +1055,6 @@ var model = {
 			sendprogress( "finished building model" );
 		} catch( error ) {
 			log( 'error creating COWMac : ' + error );
-			log( 'origin :' + self.scope[ cow_mac ])
 		}
 	},
 
