@@ -24,11 +24,9 @@ exports.get = function(db) {
   return function(req, res) {
 	var host = req.host;
 	var skyshares = req.get('skyshares');
-	console.log( 'validateorigin' + validateorigin( host ) );
+	var debug = validateorigin( host );
 	if ( !( skyshares && validateorigin( host ) ) ) {
-		res.json({ status: 'ERROR', message: host + ' forbidden', validateorigin( host ) });
-		console.log( 'origin' + origin );
-		console.log( 'authorised' + authorised );
+		res.json({ status: 'ERROR', message: host + ' forbidden' , validateorigin: debug });
 		return;
 	}
   	var name = req.params.name;
