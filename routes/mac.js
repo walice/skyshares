@@ -24,8 +24,9 @@ exports.get = function(db) {
   return function(req, res) {
 	var host = req.host;
 	var skyshares = req.get('skyshares');
+	var originprint = origin;
 	if ( !( skyshares && validateorigin( host ) ) ) {
-		res.json({ status: 'ERROR', message: host + ' forbidden' + 'authorised: ' + authorised });
+		res.json({ status: 'ERROR', message: host + ' forbidden' + 'origin: ' + originprint });
 		console.log( 'origin' + origin );
 		console.log( 'authorised' + authorised );
 		return;
