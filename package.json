@@ -18,25 +18,36 @@
     "type": "git",
     "url": "https://github.com/walice/skyshares.git"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server-local.js"
+  },
   "dependencies": {
+    "busboy": "*",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
+    "dotenv": "^16.0.3",
+    "errorhandler": "^1.5.1",
     "express": "4.17.1",
-    "pug": "*",
+    "express-basic-auth": "^1.2.1",
+    "mathjs": "*",
+    "method-override": "^3.0.0",
     "mongodb": "2.0",
     "mongoskin": "*",
-    "mathjs": "*",
+    "morgan": "^1.10.0",
     "numbers": "*",
     "oauth": "*",
-    "busboy": "*"
+    "pug": "*",
+    "serve-favicon": "^2.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
   "bundleDependencies": [],
-
   "private": true,
   "main": "server.js"
 }
