@@ -17,6 +17,8 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const methodOverride = require('method-override')
 const errorHandler = require('errorhandler')
+
+require('dotenv').config()
 //
 // database
 //

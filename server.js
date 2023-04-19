@@ -27,6 +27,7 @@ const errorHandler = require('errorhandler')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 
+require('dotenv').config()
 /**
  *  Define the skyshares application.
  */
@@ -115,10 +116,13 @@ const SkyShares = function () {
     self.app.get('/', routes.index)
     // JONS: remove admin for now
     // TODO: add authentication
+
+    const adminUsername = process.env.ADMIN_USERNAME
+    const adminPassword = process.env.ADMIN_PASSWORD
     self.app.get(
       '/admin',
       basicAuth({
-        users: { admin: 'letmein101' },
+        users: { [adminUsername]: adminPassword },
         challenge: true
       }),
       admin.admin
@@ -262,11 +266,11 @@ const SkyShares = function () {
     self.app.use(express.json({ limit: '50mb' }))
     self.app.use(express.urlencoded({ extended: true }))
     self.app.use(methodOverride())
-    self.app.use(cookieParser('==5ky5har35=='))
+    self.app.use(cookieParser(process.env.PARSER_KEY))
     self.app.use(
       cookieSession({
         name: 'session',
-        secret: 'test',
+        secret: process.env.SESSION_SECRET,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       })
     )
