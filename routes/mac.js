@@ -22,7 +22,7 @@ function validateorigin( origin ) {
 //
 exports.get = function(db) {
   return function(req, res) {
-	var host = req.host;
+	var host = req.hostname;
 	var skyshares = req.get('skyshares');
 	var debug = validateorigin( host );
 	if ( !( skyshares && validateorigin( host ) ) ) {
@@ -37,7 +37,7 @@ exports.get = function(db) {
 };
 exports.listall = function(db) {
   return function(req, res) {
-	var host = req.host;
+	var host = req.hostname;
 	var skyshares = req.get('skyshares');
 	if ( !( skyshares && validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
@@ -50,7 +50,7 @@ exports.listall = function(db) {
 };
 exports.listnames = function(db) {
   return function(req, res) {
-	var host = req.host;
+	var host = req.hostname;
 	var skyshares = req.get('skyshares');
 	if ( !( skyshares && validateorigin( host ) ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
@@ -66,7 +66,7 @@ exports.listnames = function(db) {
 //
 exports.post = function(db) {
 	return function(req, res) {
-		var host = req.host;
+		var host = req.hostname;
 		var skyshares = req.get('skyshares');
 		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
@@ -89,7 +89,7 @@ exports.post = function(db) {
 
 exports.put = function(db) {
 	return function(req, res) {
-		var host = req.host;
+		var host = req.hostname;
 		var skyshares = req.get('skyshares');
 		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
@@ -104,7 +104,7 @@ exports.put = function(db) {
 
 exports.delete = function(db) {
 	return function(req, res) {
-		var host = req.host;
+		var host = req.hostname;
 		var skyshares = req.get('skyshares');
 		if ( !( skyshares && validateorigin( host ) ) ) {
 			res.json({ status: 'ERROR', message: host + ' forbidden' });
