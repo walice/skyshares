@@ -7,10 +7,8 @@ skyshares.editor = {
   //
   type: '',
   data: [],
-  init: function () {
-    const values = window?.location?.href?.split('/editor/new/')
-    skyshares.editor.type = values ? values[1] : ''
-    console.log('type', skyshares.editor.type)
+  init: function (type) {
+    skyshares.editor.type = type
 
     var editor = document.getElementById('editor')
     if (editor) {

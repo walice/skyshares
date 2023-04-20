@@ -10,7 +10,13 @@ html
 		script(src='/javascripts/skyshares.editor.js')
 		script(src='/javascripts/skyshares.math.js')
 		script(src='/javascripts/skyshares.filereader.js')
-	body( onload='skyshares.editor.init();' )
+		script(type="text/javascript").
+			const type = '#{type}'
+			window.addEventListener('load', () => {
+				skyshares.editor.init(type);
+			})
+		
+	body()
 		block content
 			form#editor()
 				if data
