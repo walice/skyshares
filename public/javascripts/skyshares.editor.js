@@ -27,9 +27,9 @@ skyshares.editor = {
           if (data_table) {
             var data_rows = data_table.rows
             skyshares.editor.data = []
-            for (var row = 0; row < data_rows.length; row++) {
+            for (var row = 1; row < data_rows.length; row++) {
               var row_data = []
-              for (var col = 0; col < data_rows[row].children.length; col++) {
+              for (var col = 1; col < data_rows[row].children.length; col++) {
                 row_data.push(data_rows[row].children[col].innerHTML)
               }
               skyshares.editor.data.push(row_data)
@@ -136,9 +136,9 @@ skyshares.editor = {
       var header = document.createElement('thead')
       var row = document.createElement('tr')
       var col
-      for (var i = -1; i < data[0].length; i++) {
+      for (var i = -0; i <= data[0].length; i++) {
         col = document.createElement('th')
-        if (i >= 0) {
+        if (i >= 1) {
           col.innerText = i.toString()
         }
         row.appendChild(col)
@@ -152,7 +152,7 @@ skyshares.editor = {
           row.classList.add('data')
           row.classList.add(i % 2 ? 'odd' : 'even')
           col = document.createElement('th')
-          col.innerText = i.toString()
+          col.innerText = (i + 1).toString()
           row.appendChild(col)
           for (var j = 0; j < data[i].length; j++) {
             col = document.createElement('td')
@@ -220,7 +220,7 @@ skyshares.editor = {
           }
         },
         onerror: function (e) {
-          var message = e.target
+          var request = e.target
           alert(
             'Failed to save ' +
               json.name +
@@ -250,7 +250,7 @@ skyshares.editor = {
           }
         },
         onerror: function (e) {
-          var message = e.target
+          var request = e.target
           alert(
             'Failed to add ' +
               json.name +
@@ -281,24 +281,31 @@ skyshares.editor = {
     var dataendrow = 0
     var datastartcolumn = 0
     var dataendcolumn = 0
+
+    let editCheck = window.location.href.includes('/editor/edit')
     if (document.getElementById('dataid')) {
       var data_table = document.getElementById('displayarea')
       if (data_table) {
         var data_rows = data_table.rows
-        skyshares.editor.data = []
-        for (var row = 0; row < data_rows.length; row++) {
-          var row_data = []
-          for (var col = 0; col < data_rows[row].children.length; col++) {
-            row_data.push(data_rows[row].children[col].innerHTML)
+
+        if (!editCheck) {
+          skyshares.editor.data = []
+          for (var row = 0; row < data_rows.length; row++) {
+            var row_data = []
+            for (var col = 0; col < data_rows[row].children.length; col++) {
+              row_data.push(data_rows[row].children[col].innerHTML)
+            }
+            skyshares.editor.data.push(row_data)
           }
-          skyshares.editor.data.push(row_data)
         }
         headerrow = 0
         indexcolumn = 0
-        datastartrow = 1
+        datastartrow = editCheck ? 0 : 1
         dataendrow = data_rows.length - 1
         datastartcolumn = 1
-        dataendcolumn = skyshares.editor.data[0].length - 1
+        dataendcolumn = editCheck
+          ? skyshares.editor.data[0].length
+          : skyshares.editor.data[0].length - 1
       }
     } else {
       //
@@ -325,12 +332,13 @@ skyshares.editor = {
     }
     var member_index = {
       type: 'DATE',
-      min_index: parseInt(skyshares.editor.data[headerrow][datastartcolumn]),
-      max_index: parseInt(skyshares.editor.data[headerrow][dataendcolumn])
+      min_index: 1,
+      max_index: parseInt(dataendcolumn)
     }
+
     var multiplier = document.getElementById('multiplier')
     multiplier = multiplier ? parseFloat(multiplier.value) : 1.0
-    for (var i = datastartrow; i <= dataendrow; i++) {
+    for (var i = datastartrow; i <= dataendrow - 1; i++) {
       var member = {
         iso: skyshares.editor.data[i][indexcolumn],
         index: member_index,
@@ -338,11 +346,25 @@ skyshares.editor = {
         data: []
       }
 
-      for (var j = datastartcolumn; j <= dataendcolumn; j++) {
-        var number_string = skyshares.editor.data[i][j].replace(/[^0-9.]/gi, '')
+      for (var j = datastartcolumn; j <= dataendcolumn - 1; j++) {
+        var number_string = skyshares.editor.data[i][j]
+          .toString()
+          .replace(/[^0-9.]/gi, '')
+        if (j == 0) {
+          continue
+        }
         if (number_string.length == 0) number_string = '0'
-        member.data.push(parseFloat(number_string) * multiplier)
+        if (i === 0) {
+          member.data.push(parseFloat(number_string))
+        } else {
+          member.data.push(
+            editCheck
+              ? parseFloat(number_string)
+              : parseFloat(number_string) * multiplier
+          )
+        }
       }
+
       json.members.push(member)
     }
     //
@@ -723,7 +745,9 @@ skyshares.editor = {
       var multiplier = document.getElementById('multiplier')
       multiplier = multiplier ? parseFloat(multiplier.value) : 1.0
       // skip row and column headers
-      for (var i = 2; i < data.length; i++) {
+      let editCheck = window.location.href.includes('/editor/edit')
+      let start = editCheck ? 1 : 2
+      for (var i = start; i < data.length; i++) {
         for (var j = 1; j < data[i].length; j++) {
           data[i][j] = parseFloat(data[i][j]) * multiplier
         }

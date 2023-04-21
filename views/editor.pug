@@ -71,14 +71,17 @@ html
 						div.datacontainer
 							table.data#displayarea( class='data' )
 								if data
+									- let rowIndex = 1
 									each member, i in data.members
 										if i == 0
 											tr
-												td ISO
+												td
 												- for (var index = member.index.min_index; index <= member.index.max_index; index++) {
 												td= index
 												- }											
 										tr( class=(i % 2 == 0) ? 'data odd' : 'data even' contenteditable='true' ) 
+											td= rowIndex
+											- rowIndex++
 											td( class='data' )= member.iso
 											each item in member.data
 												if member.dimension == 2
