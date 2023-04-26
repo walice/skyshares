@@ -38,8 +38,8 @@ exports.get = function(db) {
 exports.listall = function(db) {
   return function(req, res) {
 	var host = req.hostname;
-	var skyshares = req.get('skyshares');
-	if ( !( skyshares && validateorigin( host ) ) ) {
+	// var skyshares = req.get('skyshares');
+	if ( !validateorigin( host ) ) {
 		res.json({ status: 'ERROR', message: host + ' forbidden' });
 		return;
 	}
