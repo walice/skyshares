@@ -10,7 +10,13 @@ html
 		script(src='/javascripts/skyshares.editor.js')
 		script(src='/javascripts/skyshares.math.js')
 		script(src='/javascripts/skyshares.filereader.js')
-	body( onload='skyshares.editor.init("#{ type }");' )
+		script(type="text/javascript").
+			const type = '#{type}'
+			window.addEventListener('load', () => {
+				skyshares.editor.init(type);
+			})
+		
+	body()
 		block content
 			form#editor()
 				if data
@@ -68,17 +74,17 @@ html
 									each member, i in data.members
 										if i == 0
 											tr
-												td ISO
+												td= data.index.type
 												- for (var index = member.index.min_index; index <= member.index.max_index; index++) {
 												td= index
 												- }											
 										tr( class=(i % 2 == 0) ? 'data odd' : 'data even' contenteditable='true' ) 
-											td( class='data' )= member.iso
-											each item in member.data
-												if member.dimension == 2
-													td( class='data' )= item.x + ',' + item.y
-												else
-													td( class='data' )= item
+												td( class='data' )= member.iso
+												each item in member.data
+													if member.dimension == 2
+														td( class='data' )= item.x + ',' + item.y
+													else
+														td( class='data' )= item
 						div.datacontrols#datacontrols
 							label( for='headerrow' ) header row
 							input#headerrow( type='number' )
