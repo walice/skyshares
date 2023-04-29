@@ -10,9 +10,14 @@ const admin = require('./routes/admin')
 const editor = require('./routes/editor')
 const importer = require('./routes/importer')
 const model = require('./routes/model')
+const share = require('./routes/share')
 const http = require('http')
 const path = require('path')
 const mongo = require('mongoskin')
+const twitter = require('./routes/twitter')
+const facebook = require('./routes/facebook')
+const googleplus = require('./routes/googleplus')
+const media = require('./routes/media')
 const favicon = require('serve-favicon')
 const logger = require('morgan')
 const methodOverride = require('method-override')
@@ -141,6 +146,10 @@ app.get('/import/:type', importer.import())
 // model
 //
 app.get('/model', model.model())
+//
+//
+//
+app.get('/share/:type', share.share())
 //
 // server
 //
