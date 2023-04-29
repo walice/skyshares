@@ -1,6 +1,6 @@
 #ignore
 config/
-data/
 node_modules/
 desktop.ini
 .env
+/data
