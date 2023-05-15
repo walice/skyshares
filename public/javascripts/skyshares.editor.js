@@ -232,9 +232,21 @@ skyshares.editor = {
     //
     // save
     //
-    var dataid = document.getElementById('dataid')
+    let dataid = document.getElementById('dataid')
+    let id
+    
+    if (dataid.value) {
+      try {
+        id = decodeURIComponent(dataid.value).split(/"/).join('')
+      } catch (err) {
+        id = dataid.value
+      }
+    }
+
+    console.log('id', id)
+
     if (dataid) {
-      var url = '/data/' + dataid.value
+      var url = '/data/' + id
       skyshares.rest.put(url, json, {
         onloadend: function (e) {
           var request = e.target
