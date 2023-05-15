@@ -235,7 +235,7 @@ skyshares.editor = {
     let dataid = document.getElementById('dataid')
     let id
     
-    if (dataid.value) {
+    if (dataid?.value) {
       try {
         id = decodeURIComponent(dataid.value).split(/"/).join('')
       } catch (err) {
