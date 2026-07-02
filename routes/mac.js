@@ -14,7 +14,7 @@ function deletemac( db, name, callback ) {
 	db.collection('mac').remove( { name: name }, callback);
 }
 function validateorigin( origin ) {
-	var authorised = [ "skyshares.org", "159.65.80.116", "localhost", "127.0.0.1", "http://www.skyshares.org", "www.skyshares.org" ];
+	var authorised = [ "skyshares.org", "skyshares.io", "159.65.80.116", "localhost", "127.0.0.1", "http://www.skyshares.org", "www.skyshares.org", "www.skyshares.io" ];
 	return authorised.indexOf( origin ) >= 0;
 }
 //
